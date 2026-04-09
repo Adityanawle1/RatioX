@@ -1,0 +1,139 @@
+{
+  "quotes": [
+    {
+      "exchange": "NSI",
+      "shortname": "RELIANCE INDUSTRIES LTD",
+      "quoteType": "EQUITY",
+      "symbol": "RELIANCE.NS",
+      "index": "quotes",
+      "score": 20016,
+      "typeDisp": "equity",
+      "longname": "Reliance Industries Limited",
+      "exchDisp": "NSE",
+      "sector": "Energy",
+      "sectorDisp": "Energy",
+      "industry": "Oil & Gas Refining & Marketing",
+      "industryDisp": "Oil & Gas Refining & Marketing",
+      "dispSecIndFlag": false,
+      "isYahooFinance": true
+    },
+    {
+      "exchange": "NYQ",
+      "shortname": "Reliance, Inc.",
+      "quoteType": "EQUITY",
+      "symbol": "RS",
+      "index": "quotes",
+      "score": 20011,
+      "typeDisp": "equity",
+      "longname": "Reliance, Inc.",
+      "exchDisp": "NYSE",
+      "sector": "Basic Materials",
+      "sectorDisp": "Basic Materials",
+      "industry": "Steel",
+      "industryDisp": "Steel",
+      "isYahooFinance": true,
+      "prevName": "Reliance Steel & Aluminum Co.",
+      "nameChangeDate": "2026-03-29"
+    },
+    {
+      "exchange": "JKT",
+      "shortname": "Reliance Sekuritas Indonesia Tb",
+      "quoteType": "EQUITY",
+      "symbol": "RELI.JK",
+      "index": "quotes",
+      "score": 20003,
+      "typeDisp": "equity",
+      "longname": "PT Reliance Sekuritas Indonesia Tbk",
+      "exchDisp": "Jakarta",
+      "sector": "Financial Services",
+      "sectorDisp": "Financial Services",
+      "industry": "Capital Markets",
+      "industryDisp": "Capital Markets",
+      "isYahooFinance": true
+    },
+    {
+      "exchange": "BSE",
+      "shortname": "RELIANCE INFRASTRUCTURE LTD.",
+      "quoteType": "EQUITY",
+      "symbol": "RELINFRA.BO",
+      "index": "quotes",
+      "score": 20003,
+      "typeDisp": "equity",
+      "longname": "Reliance Infrastructure Limited",
+      "exchDisp": "Bombay",
+      "sector": "Utilities",
+      "sectorDisp": "Utilities",
+      "industry": "Utilities—Independent Power Producers",
+      "industryDisp": "Utilities—Independent Power Producers",
+      "isYahooFinance": true
+    },
+    {
+      "exchange": "ASX",
+      "shortname": "RWC CORP FPO [RWC]",
+      "quoteType": "EQUITY",
+      "symbol": "RWC.AX",
+      "index": "quotes",
+      "score": 20002,
+      "typeDisp": "equity",
+      "longname": "Reliance Worldwide Corporation Limited",
+      "exchDisp": "Australian",
+      "sector": "Industrials",
+      "sectorDisp": "Industrials",
+      "industry": "Building Products & Equipment",
+      "industryDisp": "Building Products & Equipment",
+      "isYahooFinance": true
+    },
+    {
+      "exchange": "NSI",
+      "shortname": "RELIANCE INFRASTRUCTU LTD",
+      "quoteType": "EQUITY",
+      "symbol": "RELINFRA.NS",
+      "index": "quotes",
+      "score": 20002,
+      "typeDisp": "equity",
+      "longname": "Reliance Infrastructure Limited",
+      "exchDisp": "NSE",
+      "sector": "Utilities",
+      "sectorDisp": "Utilities",
+      "industry": "Utilities—Independent Power Producers",
+      "industryDisp": "Utilities—Independent Power Producers",
+      "isYahooFinance": true
+    },
+    {
+      "exchange": "VIE",
+      "shortname": "RELIANCE INDS-SPONS GDR 144A",
+      "quoteType": "EQUITY",
+      "symbol": "RLI.VI",
+      "index": "quotes",
+      "score": 20002,
+      "typeDisp": "equity",
+      "longname": "Reliance Industries Limited",
+      "exchDisp": "Vienna",
+      "sector": "Energy",
+      "sectorDisp": "Energy",
+      "industry": "Oil & Gas Refining & Marketing",
+      "industryDisp": "Oil & Gas Refining & Marketing",
+      "isYahooFinance": true
+    }
+  ],
+  "filteredQuotes": [
+    {
+      "symbol": "RELIANCE",
+      "name": "Reliance Industries Limited",
+      "exchange": "NSE",
+      "type": "equity"
+    },
+    {
+      "symbol": "RELINFRA",
+      "name": "Reliance Infrastructure Limited",
+      "exchange": "BSE",
+      "type": "equity"
+    },
+    {
+      "symbol": "RELINFRA",
+      "name": "Reliance Infrastructure Limited",
+      "exchange": "NSE",
+      "type": "equity"
+    }
+  ]
+}

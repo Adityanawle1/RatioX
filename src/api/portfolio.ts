@@ -1,0 +1,299 @@
+import { supabase as typedSupabase } from '@/lib/supabase';
+
+// Bypass type inference issues resolving to 'never' in the current schema
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const supabase = typedSupabase as any;
+
+// Risk Profile Templates
+export const RISK_PROFILES = {
+  conservative: {
+    name: 'Conservative',
+    description: 'Lower risk, stable returns',
+    allocations: [
+      { asset_class: 'Large Cap Equity', target_pct: 40, drift_threshold: 5 },
+      { asset_class: 'Debt', target_pct: 35, drift_threshold: 5 },
+      { asset_class: 'Gold', target_pct: 10, drift_threshold: 3 },
+      { asset_class: 'Mid Cap Equity', target_pct: 10, drift_threshold: 5 },
+      { asset_class: 'Cash', target_pct: 5, drift_threshold: 2 },
+    ],
+  },
+  moderate: {
+    name: 'Moderate',
+    description: 'Balanced risk and returns',
+    allocations: [
+      { asset_class: 'Large Cap Equity', target_pct: 30, drift_threshold: 5 },
+      { asset_class: 'Mid Cap Equity', target_pct: 25, drift_threshold: 5 },
+      { asset_class: 'Debt', target_pct: 20, drift_threshold: 5 },
+      { asset_class: 'Small Cap Equity', target_pct: 15, drift_threshold: 5 },
+      { asset_class: 'Gold', target_pct: 10, drift_threshold: 3 },
+    ],
+  },
+  aggressive: {
+    name: 'Aggressive',
+    description: 'Higher risk, higher potential returns',
+    allocations: [
+      { asset_class: 'Mid Cap Equity', target_pct: 30, drift_threshold: 5 },
+      { asset_class: 'Small Cap Equity', target_pct: 25, drift_threshold: 5 },
+      { asset_class: 'Large Cap Equity', target_pct: 20, drift_threshold: 5 },
+      { asset_class: 'Debt', target_pct: 15, drift_threshold: 5 },
+      { asset_class: 'Gold', target_pct: 5, drift_threshold: 3 },
+      { asset_class: 'International Equity', target_pct: 5, drift_threshold: 3 },
+    ],
+  },
+};
+
+// User Profile Management
+export const getUserProfile = async (userId: string) => {
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+  
+  // If risk_profile column doesn't exist, add a default value
+  if (data && !Object.prototype.hasOwnProperty.call(data, 'risk_profile')) {
+    data.risk_profile = null;
+  }
+  
+  return { data, error };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const updateUserProfile = (userId: string, updates: any) =>
+  supabase.from('profiles').update(updates).eq('id', userId);
+
+export const setUserRiskProfile = async (userId: string, riskProfile: keyof typeof RISK_PROFILES) => {
+  try {
+    // First, always set onboarded to true regardless of risk_profile column
+    const { error: onboardedError } = await supabase
+      .from('profiles')
+      .update({ onboarded: true })
+      .eq('id', userId);
+
+    if (onboardedError) {
+      console.error('Failed to set onboarded status:', onboardedError);
+    }
+
+    // Try to set risk_profile if column exists
+    const { error: riskProfileError } = await supabase
+      .from('profiles')
+      .update({ risk_profile: riskProfile })
+      .eq('id', userId);
+
+    if (riskProfileError && riskProfileError.message.includes('risk_profile')) {
+      console.warn('risk_profile column not found, but onboarded status was set');
+    }
+
+    // Get or create portfolio
+    const { data: portfolios } = await getUserPortfolios(userId);
+    let portfolio = portfolios?.[0];
+    
+    if (!portfolio) {
+      const { data: newPortfolio, error: portfolioError } = await createPortfolio(userId, 'My Portfolio');
+      if (portfolioError) return { error: portfolioError };
+      portfolio = newPortfolio;
+    }
+
+    // Set target allocations based on risk profile
+    const profile = RISK_PROFILES[riskProfile];
+    const { error: targetsError } = await upsertAssetTargets(portfolio.id, profile.allocations);
+    
+    return { error: targetsError, portfolio };
+    
+  } catch (err) {
+    console.error('Unexpected error in setUserRiskProfile:', err);
+    
+    // As a last resort, just try to set onboarded = true
+    try {
+      await supabase
+        .from('profiles')
+        .update({ onboarded: true })
+        .eq('id', userId);
+    } catch (finalErr) {
+      console.error('Failed to set onboarded as fallback:', finalErr);
+    }
+    
+    return { error: null, portfolio: null };
+  }
+};
+
+// Portfolios
+export const getUserPortfolios = (userId: string) =>
+  supabase.from('portfolios').select('*').eq('user_id', userId).order('created_at');
+
+export const createPortfolio = (userId: string, name: string) =>
+  supabase.from('portfolios').insert({ user_id: userId, name }).select().single();
+
+// Asset Targets
+export const getAssetTargets = (portfolioId: string) =>
+  supabase.from('asset_targets').select('*').eq('portfolio_id', portfolioId);
+
+export const upsertAssetTargets = async (
+  portfolioId: string,
+  targets: { asset_class: string; target_pct: number; drift_threshold: number }[]
+) => {
+  // Validate that targets sum to 100%
+  const totalPct = targets.reduce((sum, t) => sum + t.target_pct, 0);
+  if (Math.abs(totalPct - 100) > 0.01) {
+    return { error: new Error('Target allocations must sum to exactly 100%') };
+  }
+
+  await supabase.from('asset_targets').delete().eq('portfolio_id', portfolioId);
+  return supabase
+    .from('asset_targets')
+    .insert(targets.map((t) => ({ ...t, portfolio_id: portfolioId })));
+};
+
+// Holdings
+export const getHoldings = (portfolioId: string) =>
+  supabase.from('holdings').select('*').eq('portfolio_id', portfolioId).order('asset_class');
+
+export const addHolding = async (data: {
+  portfolio_id: string;
+  user_id: string;
+  symbol: string;
+  name?: string;
+  asset_class: string;
+  instrument_type?: string;
+  quantity: number;
+  avg_buy_price: number;
+  purchase_date?: string | null;
+}) => {
+  // Validation
+  if (data.quantity <= 0) {
+    return { error: new Error('Quantity must be greater than 0') };
+  }
+  if (data.avg_buy_price <= 0) {
+    return { error: new Error('Average buy price must be greater than 0') };
+  }
+  if (data.purchase_date) {
+    const purchaseDate = new Date(data.purchase_date);
+    const today = new Date();
+    if (purchaseDate > today) {
+      return { error: new Error('Purchase date cannot be in the future') };
+    }
+  }
+
+  // Check for existing holding with same symbol and asset class
+  const { data: existingHoldings } = await supabase
+    .from('holdings')
+    .select('*')
+    .eq('portfolio_id', data.portfolio_id)
+    .eq('symbol', data.symbol.toUpperCase())
+    .eq('asset_class', data.asset_class);
+
+  if (existingHoldings && existingHoldings.length > 0) {
+    // Merge with existing holding - calculate blended average price
+    const existing = existingHoldings[0];
+    const totalQuantity = existing.quantity + data.quantity;
+    const blendedAvgPrice = 
+      (existing.quantity * existing.avg_buy_price + data.quantity * data.avg_buy_price) / totalQuantity;
+
+    return supabase
+      .from('holdings')
+      .update({
+        quantity: totalQuantity,
+        avg_buy_price: blendedAvgPrice,
+        // Keep the earlier purchase date if both exist
+        purchase_date: existing.purchase_date && data.purchase_date 
+          ? (new Date(existing.purchase_date) < new Date(data.purchase_date) 
+             ? existing.purchase_date 
+             : data.purchase_date)
+          : existing.purchase_date || data.purchase_date,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', existing.id)
+      .select()
+      .single();
+  }
+
+  // Create new holding
+  return supabase.from('holdings').insert({
+    ...data,
+    symbol: data.symbol.toUpperCase(),
+  }).select().single();
+};
+
+export const updateHoldingPrice = (id: string, price: number) =>
+  supabase.from('holdings').update({
+    current_price: price,
+    last_price_updated: new Date().toISOString(),
+  }).eq('id', id);
+
+export const deleteHolding = (id: string) =>
+  supabase.from('holdings').delete().eq('id', id);
+
+// Transactions
+export const addTransaction = (data: {
+  portfolio_id: string;
+  user_id: string;
+  symbol: string;
+  transaction_type: 'buy' | 'sell';
+  quantity: number;
+  price: number;
+  notes?: string;
+}) => supabase.from('transactions').insert(data).select().single();
+
+export const getTransactions = (portfolioId: string) =>
+  supabase
+    .from('transactions')
+    .select('*')
+    .eq('portfolio_id', portfolioId)
+    .order('transacted_at', { ascending: false });
+
+// Rebalance Events
+export const saveRebalanceEvent = (data: {
+  portfolio_id: string;
+  user_id: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  snapshot: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  trades: any;
+  health_score_before: number;
+  health_score_after: number;
+  status?: string;
+}) => supabase.from('rebalance_events').insert(data).select().single();
+
+export const getRebalanceHistory = (portfolioId: string) =>
+  supabase
+    .from('rebalance_events')
+    .select('*')
+    .eq('portfolio_id', portfolioId)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+export const updateRebalanceStatus = (
+  id: string,
+  status: 'suggested' | 'executed' | 'dismissed'
+) => supabase.from('rebalance_events').update({ status }).eq('id', id);
+
+// Rebalance Logs (Manual History)
+export const saveRebalanceLog = (data: {
+  user_id: string;
+  portfolio_id: string;
+  orders: any[];
+  new_inflow: number;
+  before_score: number;
+  after_score: number;
+  status?: string;
+}) => 
+  supabase.from('rebalance_logs').insert({
+    ...data,
+    date: new Date().toISOString().split('T')[0],
+  }).select().single();
+
+export const getRebalanceLogs = (portfolioId: string) =>
+  supabase
+    .from('rebalance_logs')
+    .select('*')
+    .eq('portfolio_id', portfolioId)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+// Alerts
+export const getUnreadAlerts = (portfolioId: string) =>
+  supabase
+    .from('alerts')
+    .select('*')
+    .eq('portfolio_id', portfolioId)
+    .eq('read', false)
+    .order('created_at', { ascending: false });
+
+export const markAlertRead = (id: string) =>
+  supabase.from('alerts').update({ read: true }).eq('id', id);

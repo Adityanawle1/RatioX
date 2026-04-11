@@ -9,8 +9,13 @@ const Nav = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-surface-border">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="font-display text-xl font-bold text-foreground tracking-tight hover:text-amber transition-colors duration-200">
-          Ratio x
+        <Link to="/" className="flex flex-col leading-tight group">
+          <span className="font-display text-xl font-bold text-foreground tracking-tight group-hover:text-amber transition-colors duration-200">
+            Ratio x
+          </span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground/80 transition-colors">
+            By Quantr
+          </span>
         </Link>
 
         {/* Desktop */}
@@ -18,7 +23,7 @@ const Nav = () => {
           {[
             { label: "Features", href: "/#features" },
             { label: "How It Works", href: "/learn-drift" },
-            { label: "Quantr Screener", href: "https://quantr.vercel.app/" },
+            { label: "Quantr Terminal", href: "https://quantr.vercel.app/" },
             { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
           ].map(({ label, href }) => (
@@ -81,7 +86,7 @@ const Nav = () => {
           {[
             { label: "Features", href: "/#features" },
             { label: "How It Works", href: "/learn-drift" },
-            { label: "Quantr Screener", href: "https://quantr.vercel.app/" },
+            { label: "Quantr Terminal", href: "https://quantr.vercel.app/" },
             { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
           ].map(({ label, href }) => (

@@ -34,8 +34,8 @@ const LearnDrift: React.FC = () => {
         </div>
 
         {/* Mechanism Section */}
-        <div className="w-full mb-24">
-          <div className="border border-surface-border bg-card">
+        <div className="w-full mb-24 grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch">
+          <div className="lg:col-span-3 border border-surface-border bg-card">
             <div className="border-b border-surface-border px-6 py-4 bg-surface/50">
               <span className="font-mono text-xs uppercase tracking-widest text-foreground">1. The Mechanism</span>
             </div>
@@ -51,6 +51,54 @@ const LearnDrift: React.FC = () => {
                 <p className="font-body text-sm text-muted-foreground mt-2">
                   You are now over-allocated to equities. A sudden market drawdown will result in steeper losses than your original 60/40 design could sustain. Your risk profile has shifted without your explicit consent.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 3D Mechanical Visualization */}
+          <div className="lg:col-span-2 flex flex-col items-center justify-center p-8 bg-card border border-surface-border relative overflow-hidden perspective-[1200px]">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:2rem_2rem]" />
+            
+            <div 
+              className="relative w-full aspect-square transition-transform duration-1000 ease-out flex items-center justify-center"
+              style={{ 
+                transformStyle: 'preserve-3d',
+                transform: 'rotateX(55deg) rotateZ(-25deg)'
+              }}
+            >
+              {/* Target Baseline Layer (Bottom) */}
+              <div className="absolute w-48 h-48 border border-white/10 bg-white/5 flex flex-col justify-end p-4 rounded-sm" style={{ transform: 'translateZ(-40px)' }}>
+                <div className="h-full flex flex-col">
+                  <div className="flex-grow bg-amber/20 h-[60%] border-t border-amber/30" />
+                  <div className="h-[40%] bg-surface-border/30 border-t border-surface-border/50" />
+                </div>
+                <span className="absolute -top-6 left-0 font-mono text-[9px] text-muted-foreground uppercase tracking-widest">Baseline Matrix</span>
+              </div>
+
+              {/* Drifted Layer (Top) */}
+              <div className="absolute w-48 h-48 border border-amber/30 bg-amber/5 flex flex-col justify-end p-4 rounded-sm shadow-[0_0_40px_rgba(232,147,16,0.1)]" style={{ transform: 'translateZ(40px)' }}>
+                <div className="h-full flex flex-col">
+                  {/* The drifted highlight */}
+                  <div className="flex-grow bg-amber/40 h-[68%] border-t border-amber" />
+                  <div className="h-[32%] bg-surface-border/50 border-t border-surface-border" />
+                </div>
+                <span className="absolute -top-6 left-0 font-mono text-[9px] text-amber uppercase tracking-widest">Shift Detected</span>
+                
+                {/* 3D Indicator lines */}
+                <div className="absolute left-0 w-full h-px bg-drift-red/50 top-[60%] -translate-z-20 border-dashed border-t" />
+              </div>
+
+              {/* Connecting Drift Vector */}
+              <div 
+                className="absolute w-1 h-20 bg-gradient-to-t from-transparent via-drift-red to-drift-red opacity-60"
+                style={{ transform: 'rotateX(-90deg) translateZ(0px) translateY(-10px) translateX(60px)' }}
+              />
+            </div>
+
+            <div className="mt-8 text-center relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-drift-red/10 border border-drift-red/20 rounded-full">
+                <div className="w-1.5 h-1.5 bg-drift-red rounded-full animate-pulse" />
+                <span className="font-mono text-[10px] text-drift-red uppercase tracking-widest">+8% Equity Drift</span>
               </div>
             </div>
           </div>

@@ -9,8 +9,11 @@ import { supabase, type Database } from "@/lib/supabase";
 type PortfolioRow = Database['public']['Tables']['portfolios']['Row'];
 type HoldingRow = Database['public']['Tables']['holdings']['Row'];
 import AddHoldingModal from "@/components/AddHoldingModal";
+import ImportCSVModal from "@/components/ImportCSVModal";
 import RebalanceModal from "@/components/RebalanceModal";
+import SharePortfolioModal from "@/components/SharePortfolioModal";
 import { format } from "date-fns";
+import { Share2 } from "lucide-react";
 
 const statusColor = { healthy: "text-drift-green", drifting: "text-amber", critical: "text-drift-red" };
 const statusBg = { healthy: "bg-drift-green", drifting: "bg-amber", critical: "bg-drift-red" };
@@ -31,7 +34,9 @@ const Dashboard = () => {
   const [overallPnlPct, setOverallPnlPct] = useState(0);
   const [loading, setLoading] = useState(true);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [importCSVModalOpen, setImportCSVModalOpen] = useState(false);
   const [rebalanceModalOpen, setRebalanceModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [minsAgo, setMinsAgo] = useState(0);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -268,34 +273,50 @@ const Dashboard = () => {
                     {failedPriceSymbols.length} price(s) unavailable
                   </p>
                 )}
+
+                <div className="flex flex-col items-end mt-6">
+                  <button 
+                    onClick={() => setShareModalOpen(true)}
+                    className="group flex items-center gap-2 text-[10px] uppercase tracking-widest font-mono text-muted-foreground hover:text-foreground transition-all bg-surface-border/30 hover:bg-surface-border/60 border border-surface-border px-3 py-1.5 rounded"
+                  >
+                    <Share2 className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 group-hover:text-amber transition-colors" />
+                    Export Tear Sheet
+                  </button>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <span className="w-1 inset-y-0 h-1 rounded-full bg-drift-green/60"></span>
+                    <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-mono">
+                      Data Anonymized
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Drift Table */}
             {driftResults.length > 0 ? (
-              <div className="border border-surface-border rounded-sm overflow-hidden bg-card mb-8">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-surface-border">
+              <div className="border border-surface-border rounded-[2px] overflow-hidden bg-card mb-8">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-surface-border bg-surface-hover/20">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-display font-semibold text-foreground">Portfolio Drift Monitor</span>
+                    <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Drift Analysis Engine</span>
                     <Link 
                       to="/learn-drift" 
-                      className="text-[10px] uppercase tracking-wider font-mono bg-surface-border/50 hover:bg-surface-border text-muted-foreground hover:text-foreground px-2 py-0.5 rounded transition-colors"
+                      className="text-[9px] uppercase tracking-wider font-mono border border-surface-border/60 bg-background/50 hover:bg-surface-border text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded-[2px] transition-colors"
                     >
-                      How it works
+                      Algorithm
                     </Link>
                   </div>
                   <button
                     onClick={() => setRebalanceModalOpen(true)}
-                    className="text-xs bg-amber text-background font-body font-medium px-3 py-1.5 rounded-sm hover:brightness-110 transition-all">
-                    Rebalance Now
+                    className="text-[10px] uppercase tracking-wider font-mono bg-amber text-background font-medium px-3 py-1.5 rounded-[2px] hover:brightness-110 transition-all">
+                    Execute Rebalance
                   </button>
                 </div>
-                <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-xs text-muted-foreground font-body px-4 py-2 border-b border-surface-border">
+                <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-4 py-2 bg-surface/30 border-b border-surface-border">
                   <span>Asset Class</span>
                   <span className="text-right">Target</span>
-                  <span className="text-right">Current</span>
-                  <span className="text-right">Drift</span>
-                  <span className="pl-4">Status</span>
+                  <span className="text-right">Actual</span>
+                  <span className="text-right">Variance</span>
+                  <span className="pl-4">State</span>
                 </div>
                 {driftResults.map((row) => (
                   <div key={row.assetClass} className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-sm font-body px-4 py-3 border-b border-surface-border last:border-b-0">
@@ -318,85 +339,128 @@ const Dashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="border border-surface-border rounded-sm bg-card p-12 text-center mb-8">
-                <p className="text-sm text-muted-foreground font-body mb-4">
-                  No holdings yet. Add your first position to start tracking drift.
-                </p>
-                <button
-                  onClick={() => setAddModalOpen(true)}
-                  className="text-sm bg-amber text-background font-body font-medium px-5 py-2.5 rounded-sm hover:brightness-110 transition-all">
-                  + Add Holdings
-                </button>
+              <div className="border border-surface-border rounded-[2px] bg-card p-12 text-center mb-8 relative overflow-hidden border-dashed">
+                <div className="absolute inset-0 bg-background/40 z-0 flex items-center justify-center opacity-10 pointer-events-none">
+                   <div className="w-full h-px bg-amber rotate-45 transform origin-center translate-y-[200px]" />
+                   <div className="w-full h-px bg-amber -rotate-45 transform origin-center -translate-y-[200px]" />
+                </div>
+                <div className="relative z-10">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground font-mono mb-5 opacity-80">
+                    System empty. Awaiting data ingestion.
+                  </p>
+                  <div className="flex justify-center items-center gap-4">
+                    <button
+                      onClick={() => setAddModalOpen(true)}
+                      className="text-[11px] uppercase tracking-widest font-mono bg-amber text-background font-medium px-6 py-2.5 rounded-[2px] hover:brightness-110 transition-all shadow-glow-amber">
+                      Manual Entry
+                    </button>
+                    <button
+                      onClick={() => setImportCSVModalOpen(true)}
+                      className="text-[11px] uppercase tracking-widest font-mono border border-surface-border bg-transparent text-foreground font-medium px-6 py-2.5 rounded-[2px] hover:bg-surface transition-all">
+                      Bulk Import
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
             {/* Holdings list */}
             {holdingsWithValues.length > 0 && (
-              <div className="border border-surface-border rounded-sm overflow-hidden bg-card">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-surface-border">
-                  <span className="text-sm font-display font-semibold text-foreground">Holdings</span>
-                  <button
-                    onClick={() => setAddModalOpen(true)}
-                    className="text-xs border border-surface-border text-muted-foreground font-body px-3 py-1 rounded-sm hover:text-foreground transition-colors"
-                  >
-                    + Add
-                  </button>
+              <div className="border border-surface-border rounded-[2px] overflow-hidden bg-card">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-surface-border bg-surface-hover/20">
+                  <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Positions Ledger</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setImportCSVModalOpen(true)}
+                      className="text-[10px] uppercase tracking-wider border border-surface-border text-muted-foreground bg-background/50 font-mono px-3 py-1 rounded-[2px] hover:text-foreground hover:border-surface-border/80 transition-colors"
+                    >
+                      Bulk Import
+                    </button>
+                    <button
+                      onClick={() => setAddModalOpen(true)}
+                      className="text-[10px] uppercase tracking-wider border border-surface-border text-muted-foreground bg-background/50 font-mono px-3 py-1 rounded-[2px] hover:text-foreground hover:border-surface-border/80 transition-colors"
+                    >
+                      Add Position
+                    </button>
+                  </div>
                 </div>
                 {holdingsWithValues.map((h: HoldingWithValue) => (
-                  <div key={h.id} className="flex items-center justify-between px-4 py-3 border-b border-surface-border last:border-b-0">
+                  <div key={h.id} className="flex items-center justify-between px-4 py-3.5 border-b border-surface-border last:border-b-0 hover:bg-surface-hover/10 transition-colors">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-body text-foreground">{h.name}</p>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="text-xs font-mono font-medium text-foreground">{h.symbol}</span>
+                        <span className="text-xs text-muted-foreground/40">—</span>
+                        <p className="text-xs font-body text-muted-foreground truncate max-w-[180px] sm:max-w-xs">{h.name}</p>
                         {!h.livePriceAvailable && (
-                          <span className="text-xs bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-sm font-body">
-                            Price unavailable
+                          <span className="text-[9px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-[2px] font-mono ml-1 border border-drift-red/20 opacity-90">
+                            Stale Pricing
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground font-body">{h.assetClass} · {h.symbol}</p>
-                      <div className="flex items-center gap-4 mt-1">
-                        <span className="text-xs font-mono text-muted-foreground">{h.quantity} units</span>
+                      
+                      <div className="flex items-center gap-3 mt-1.5">
+                        <span className="text-[10px] uppercase tracking-wider text-amber/80 font-mono px-1.5 py-0.5 rounded-[2px] bg-amber/5 border border-amber/10 mix-blend-screen">
+                          {h.assetClass}
+                        </span>
+                        
+                        <div className="w-px h-3 bg-surface-border/60" />
+                        
+                        <span className="text-[11px] font-mono text-muted-foreground">
+                          {h.quantity} <span className="opacity-40 ml-0.5">QTY</span>
+                        </span>
+
+                        <div className="w-px h-3 bg-surface-border/60" />
+
                         {h.cagr !== undefined ? (
-                          <span className="text-xs font-mono text-muted-foreground">
-                            CAGR: {h.cagr > 0 ? '+' : ''}{h.cagr.toFixed(1)}%
+                          <span className={`text-[11px] font-mono ${h.cagr > 0 ? 'text-drift-green' : h.cagr < 0 ? 'text-drift-red' : 'text-muted-foreground'}`}>
+                            <span className="opacity-50 mr-1.5 text-muted-foreground/70 tracking-widest text-[9px] uppercase">IRR</span>
+                            {h.cagr > 0 ? '+' : ''}{h.cagr.toFixed(1)}%
                           </span>
                         ) : h.holdingPeriodDays !== undefined && h.holdingPeriodDays < 30 ? (
-                          <span className="text-xs font-mono text-muted-foreground">
-                            CAGR: Too early (&lt;30d)
+                          <span className="text-[9.5px] uppercase tracking-wider text-amber/60 font-mono flex items-center gap-1.5 border border-amber/10 bg-amber/5 px-1.5 py-0.5 rounded-[2px]">
+                            <span className="w-1 h-1 rounded-full bg-amber/50 animate-pulse" />
+                            Incubating 
+                            <span className="opacity-60 lowercase">({30 - h.holdingPeriodDays}d left)</span>
                           </span>
                         ) : null}
+
                         {h.taxStatus && h.taxStatus !== 'unknown' && (
-                          <span className={`text-xs px-1.5 py-0.5 rounded-sm font-body ${
-                            h.taxStatus === 'LTCG' ? 'bg-drift-green/10 text-drift-green' : 'bg-amber/10 text-amber'
-                          }`}>
-                            {h.taxStatus}
-                          </span>
+                          <>
+                            <div className="w-px h-3 bg-surface-border/60" />
+                            <span className={`text-[10px] uppercase tracking-wider font-mono px-1.5 py-0.5 rounded-[2px] border ${
+                              h.taxStatus === 'LTCG' ? 'bg-drift-green/5 text-drift-green/80 border-drift-green/20' : 'bg-amber/5 text-amber/80 border-amber/20'
+                            }`}>
+                              {h.taxStatus}
+                            </span>
+                          </>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="text-sm font-mono text-foreground">
+                    <div className="flex items-center gap-5">
+                      <div className="text-right flex flex-col items-end">
+                        <p className="text-[13px] font-mono font-medium text-foreground tracking-tight">
                           ₹{h.marketValue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                         </p>
-                        <p className={`text-xs font-mono ${h.pnl >= 0 ? 'text-drift-green' : 'text-drift-red'}`}>
+                        <p className={`text-[10px] uppercase tracking-wider font-mono mt-1 px-1.5 py-0.5 rounded-[2px] border ${h.pnl >= 0 ? 'bg-drift-green/10 text-drift-green/90 border-drift-green/20' : 'bg-drift-red/10 text-drift-red/90 border-drift-red/20'}`}>
                           {h.pnl >= 0 ? '+' : ''}₹{h.pnl.toLocaleString("en-IN", { maximumFractionDigits: 0 })} 
-                          ({h.pnl >= 0 ? '+' : ''}{h.pnlPercent.toFixed(1)}%)
+                          <span className="ml-1.5 opacity-60">
+                            ({h.pnl >= 0 ? '+' : ''}{h.pnlPercent.toFixed(1)}%)
+                          </span>
                         </p>
                       </div>
                       <button
                         onClick={() => handleDeleteHolding(h.id)}
                         disabled={deletingId === h.id}
-                        className="text-muted-foreground hover:text-drift-red transition-colors disabled:opacity-40"
-                        title="Remove holding"
+                        className="text-muted-foreground/30 hover:text-drift-red/80 hover:bg-drift-red/10 rounded p-1 transition-all disabled:opacity-40"
+                        title="Liquidate position tracking"
                       >
                         {deletingId === h.id ? (
-                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" className="animate-spin">
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" className="animate-spin">
                             <circle cx="7" cy="7" r="5" strokeDasharray="20" strokeDashoffset="10" />
                           </svg>
                         ) : (
-                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 3.5l.5 8M9 3.5l-.5 8" strokeLinecap="round" />
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2">
+                            <path d="M2.5 3.5h9M5.5 3.5v-1l3 0v1m-3 0l.5 8M8.5 3.5l-.5 8" strokeLinecap="round" />
                           </svg>
                         )}
                       </button>
@@ -407,32 +471,34 @@ const Dashboard = () => {
             )}
             {/* Rebalance History */}
             {rebalanceLogs.length > 0 && (
-              <div className="mt-8 border border-surface-border rounded-sm overflow-hidden bg-card">
-                <div className="px-4 py-3 border-b border-surface-border bg-surface-hover/30">
-                  <span className="text-sm font-display font-semibold text-foreground">Rebalance History</span>
+              <div className="mt-8 border border-surface-border rounded-[2px] overflow-hidden bg-card">
+                <div className="px-4 py-3 border-b border-surface-border bg-surface-hover/20">
+                  <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Rebalance Ledger</span>
                 </div>
                 {rebalanceLogs.map((log) => (
-                  <div key={log.id} className="flex items-center justify-between px-4 py-3 border-b border-surface-border last:border-b-0 hover:bg-surface-hover/20 transition-colors">
+                  <div key={log.id} className="flex items-center justify-between px-4 py-4 border-b border-surface-border last:border-b-0 hover:bg-surface-hover/10 transition-colors group">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-body text-foreground">
-                          {format(new Date(log.date), "MMM d, yyyy")}
+                      <div className="flex items-center gap-3 mb-1.5">
+                        <p className="text-[13px] font-mono font-medium text-foreground">
+                          {format(new Date(log.date), "dd MMM yyyy")}
                         </p>
-                        <span className="text-[10px] uppercase tracking-wider font-mono bg-surface-border/50 text-muted-foreground px-1.5 py-0.5 rounded">
+                        <span className="text-[9px] uppercase tracking-wider font-mono bg-surface-border/40 text-muted-foreground px-1.5 py-0.5 rounded-[2px] border border-surface-border/50 group-hover:border-surface-border/80 transition-colors">
                           {log.status}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground font-body mt-0.5">
-                        Suggested {log.orders?.length || 0} trades
+                      <p className="text-[11px] text-muted-foreground/70 font-mono tracking-tight">
+                        <span className="text-amber/80 font-medium">{log.orders?.length || 0}</span> EXECUTION INSTRUCTIONS GENERATED
                       </p>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center gap-2 justify-end">
-                        <span className="font-mono text-sm text-amber">{log.before_score}</span>
-                        <span className="text-muted-foreground">→</span>
-                        <span className="font-mono text-sm text-drift-green">{log.after_score}</span>
+                      <div className="flex items-center gap-3 justify-end mb-1">
+                        <span className="font-mono text-[13px] text-muted-foreground opacity-70">{log.before_score}</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-surface-border/80">
+                          <path d="M4 12h16M14 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span className="font-mono text-[13px] text-drift-green/90 font-medium">{log.after_score}</span>
                       </div>
-                      <p className="text-[10px] text-muted-foreground font-body mt-0.5">Score improvement</p>
+                      <p className="text-[9px] uppercase tracking-widest text-muted-foreground/50 font-mono text-right border-t border-surface-border/30 pt-1 mt-1">Health Impact</p>
                     </div>
                   </div>
                 ))}
@@ -453,6 +519,14 @@ const Dashboard = () => {
             assetClasses={assetTargets.map(t => t.name)}
             onSuccess={initDashboard}
           />
+          <ImportCSVModal
+            open={importCSVModalOpen}
+            onOpenChange={setImportCSVModalOpen}
+            portfolioId={portfolio.id}
+            userId={user!.id}
+            assetClasses={assetTargets.map(t => t.name)}
+            onSuccess={initDashboard}
+          />
           <RebalanceModal
             open={rebalanceModalOpen}
             onOpenChange={setRebalanceModalOpen}
@@ -461,6 +535,20 @@ const Dashboard = () => {
             holdings={holdingsWithValues}
             targets={assetTargets}
             onSuccess={initDashboard}
+          />
+          <SharePortfolioModal
+            open={shareModalOpen}
+            onOpenChange={setShareModalOpen}
+            data={{
+              healthScore,
+              totalValue,
+              totalInvested,
+              pnl: overallPnl,
+              pnlPct: overallPnlPct,
+              holdingsCount: holdings.length,
+              lastRebalanced: rebalanceLogs.length > 0 ? rebalanceLogs[0].date : null,
+              driftResults,
+            }}
           />
         </>
       )}

@@ -4,7 +4,10 @@ const Footer = () => (
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
         {/* Left */}
         <div>
-          <span className="font-display text-lg font-bold text-foreground">Ratio x</span>
+          <div className="flex flex-col leading-tight">
+            <span className="font-display text-lg font-bold text-foreground">Ratio x</span>
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">By Quantr</span>
+          </div>
           <p className="text-xs text-muted-foreground font-body mt-1">Allocation discipline, automated.</p>
         </div>
 
@@ -20,7 +23,7 @@ const Footer = () => (
           <div className="flex flex-col gap-4">
             <span className="text-foreground font-semibold uppercase tracking-widest text-[10px]">Ecosystem</span>
             <a href="https://quantr.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1.5">
-              <span>Quantr Screener</span>
+              <span>Quantr Terminal</span>
               <span className="text-[10px] opacity-50">↗</span>
             </a>
           </div>

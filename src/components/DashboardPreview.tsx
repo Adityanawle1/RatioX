@@ -57,7 +57,7 @@ const DashboardPreview = () => {
                 <div className="w-1 h-1 bg-amber rounded-full"></div> Volatility Tracking
               </li>
               <li className="flex items-center gap-2">
-                <div className="w-1 h-1 bg-drift-red rounded-full"></div> Execution Routing
+                <div className="w-1 h-1 bg-drift-red rounded-full"></div> Analysis Reports
               </li>
             </ul>
           </div>
@@ -134,10 +134,10 @@ const DashboardPreview = () => {
                   </div>
                   
                   <div className={`flex justify-between items-center transition-all duration-700 delay-[1000ms] ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}>
-                    <span className="font-mono flex-shrink-0 text-[10px] uppercase tracking-widest text-muted-foreground">System Rec</span>
+                    <span className="font-mono flex-shrink-0 text-[10px] uppercase tracking-widest text-muted-foreground">Status</span>
                     <span className="font-mono text-xs text-background bg-amber px-2 py-0.5 rounded-sm flex items-center gap-1">
                       <div className="w-1.5 h-1.5 bg-background rounded-full animate-pulse"></div>
-                      Immediate
+                      Review Needed
                     </span>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ const DashboardPreview = () => {
                 <div className={`pt-2 transition-all duration-700 delay-[1200ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
                   <button className="w-full relative group overflow-hidden bg-surface border border-surface-border text-foreground font-mono text-xs uppercase tracking-widest py-4 transition-all duration-300 hover:border-amber/50">
                     <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0"></div>
-                    <span className="relative z-10 group-hover:text-background transition-colors font-semibold">Execute Rebalance</span>
+                    <span className="relative z-10 group-hover:text-background transition-colors font-semibold">View Analysis</span>
                   </button>
                 </div>
               </div>

@@ -2,9 +2,9 @@ import { useScrollReveal } from "./useScrollReveal";
 import { useEffect, useState } from "react";
 
 const stats = [
-  { prefix: "₹", target: 1, suffix: " in 3", label: "Portfolios drift significantly every 6 months." },
-  { prefix: "", target: 8, suffix: "%", label: "Average annualized return lost due to unmanaged drift." },
-  { prefix: "", target: 0, suffix: " Action", label: "Most investors never act without an algorithmic system in place." },
+  { prefix: "₹", target: 1, suffix: " in 3", label: "Portfolios drift significantly over a 6‑month period." },
+  { prefix: "", target: 8, suffix: "%", label: "Studies suggest unmanaged drift can erode returns by this much annually." },
+  { prefix: "", target: 0, suffix: " Action", label: "Most investors never track drift without a systematic tool in place." },
 ];
 
 const ProblemStatement = () => {

@@ -60,7 +60,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
         status: "executed",
       });
 
-      toast.success("Rebalance plan saved. Execute trades in your broker app.");
+      toast.success("Rebalance analysis saved. This is for informational purposes only.");
     } else {
       await saveRebalanceEvent({
         portfolio_id: portfolioId,
@@ -83,7 +83,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-surface-border max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-display text-foreground">Rebalance Portfolio</DialogTitle>
+          <DialogTitle className="font-display text-foreground">Rebalance Analysis</DialogTitle>
         </DialogHeader>
 
         {/* Health Score Comparison */}
@@ -132,7 +132,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
                         ? "bg-drift-green/10 text-drift-green"
                         : "bg-drift-red/10 text-drift-red"
                     }`}>
-                      {trade.action.toUpperCase()}
+                      {trade.action === "buy" ? "INCREASE" : "DECREASE"}
                     </span>
                     <div className="flex-1">
                       <p className="text-sm font-body text-foreground">{trade.assetClass}</p>
@@ -152,10 +152,13 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
         ) : (
           <div className="py-8 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
             <p className="text-sm text-foreground font-body leading-relaxed mb-1">
-              This will log your rebalance plan.
+              This will save your rebalance analysis.
             </p>
             <p className="text-sm text-muted-foreground font-body">
-              You'll need to manually execute these trades in your broker app.
+              This is for informational purposes only — not investment advice.
+            </p>
+            <p className="text-[10px] text-muted-foreground/50 font-body mt-3">
+              Consult a SEBI-registered advisor before making any financial decisions.
             </p>
           </div>
         )}
@@ -174,7 +177,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
             disabled={loading || (!confirming && result.trades.length === 0)}
             className="flex-1 bg-amber text-background font-body text-sm font-medium py-2.5 rounded-sm hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Saving..." : confirming ? "Yes, log it" : "Execute Rebalance"}
+            {loading ? "Saving..." : confirming ? "Save Analysis" : "Generate Plan"}
           </button>
         </div>
       </DialogContent>

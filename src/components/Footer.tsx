@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => (
   <footer className="border-t border-surface-border">
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -8,7 +10,7 @@ const Footer = () => (
             <span className="font-display text-lg font-bold text-foreground">Ratio x</span>
             <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">By Quantr</span>
           </div>
-          <p className="text-xs text-muted-foreground font-body mt-1">Allocation discipline, automated.</p>
+          <p className="text-xs text-muted-foreground font-body mt-1">Portfolio tracking & drift analysis.</p>
         </div>
 
         {/* Links grid */}
@@ -17,7 +19,6 @@ const Footer = () => (
             <span className="text-foreground font-semibold uppercase tracking-widest text-[10px]">Product</span>
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Features</a>
             <a href="/learn-drift" className="text-muted-foreground hover:text-foreground transition-colors duration-200">How It Works</a>
-            <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Pricing</a>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -30,8 +31,8 @@ const Footer = () => (
 
           <div className="flex flex-col gap-4">
             <span className="text-foreground font-semibold uppercase tracking-widest text-[10px]">Legal</span>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Privacy Policy</a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Terms of Service</a>
+            <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Privacy Policy</Link>
+            <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Terms of Service</Link>
           </div>
         </div>
 
@@ -45,8 +46,15 @@ const Footer = () => (
           </a>
         </div>
       </div>
-      <div className="border-t border-surface-border mt-8 pt-6">
-        <p className="text-xs text-muted-foreground font-body">© 2025 Ratio x. Built for investors who take allocation seriously.</p>
+
+      {/* SEBI Disclaimer & Copyright */}
+      <div className="border-t border-surface-border mt-8 pt-6 space-y-3">
+        <p className="text-[10px] text-muted-foreground/50 font-body leading-relaxed max-w-4xl">
+          Ratio x is not a SEBI-registered Investment Adviser (IA), Research Analyst (RA), or Portfolio Manager. 
+          The platform is an educational portfolio tracking tool and does not provide investment, trading, or tax advice. 
+          All information is for informational purposes only. Users should consult qualified professionals before making financial decisions.
+        </p>
+        <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} Ratio x. An educational portfolio tracking tool.</p>
       </div>
     </div>
   </footer>

@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useScrollReveal } from "./useScrollReveal";
 
 const faqs = [
-  { q: "Is my portfolio data safe?", a: "Your telemetry is encrypted end-to-end. We use read-only exchange and broker connections. Your execution keys remain local." },
-  { q: "Which broker gateways are supported?", a: "We natively bridge with Zerodha, Groww, Kuvera, MF Central, and offer raw CSV parsing for offline folios." },
-  { q: "How is drift calculated?", a: "Drift = (Current Asset Weight % \u2212 Target Configured %). The system tracks real-time matrix divergence against your thresholds." },
-  { q: "Can I deploy this across multiple clients?", a: "Yes. The Tier_02 (Enterprise) infrastructure supports multi-folio monitoring with independent compliance mandates." },
-  { q: "Is rebalancing executed automatically?", a: "Not by default. Variance flags are surfaced for manual sign-off. Full autonomous routing can be enabled via settings." },
+  { q: "Is my portfolio data safe?", a: "Your data is encrypted end-to-end using enterprise-grade security. We use read-only data inputs — you manually enter your holdings. No broker credentials or trading passwords are ever stored." },
+  { q: "How do I add my holdings?", a: "You can manually enter individual holdings or bulk import via CSV files from your broker statements (Zerodha, Groww, Angel One, etc.). All data entry is manual — we do not connect to any broker account." },
+  { q: "How is drift calculated?", a: "Drift = (Current Asset Weight % − Target Configured %). The system tracks real-time divergence against your user-defined thresholds. This is a mathematical calculation for educational tracking purposes." },
+  { q: "Does Ratio x provide investment advice?", a: "No. Ratio x is a portfolio tracking and educational analysis tool only. We are not a SEBI-registered investment advisor, research analyst, or portfolio manager. All information is for your personal tracking and educational purposes. Always consult a qualified professional before making financial decisions." },
+  { q: "Does Ratio x execute any trades?", a: "No. Ratio x has zero execution capability. We do not connect to any broker, trading platform, or exchange. Any scenario analysis shown is purely educational. You make all decisions independently through your own broker." },
+  { q: "Is rebalancing done automatically?", a: "No. Ratio x only shows you drift analysis and educational scenarios. It does not execute, automate, or facilitate any trades. All financial decisions and actions are entirely yours to make independently." },
 ];
 
 const FAQ = () => {

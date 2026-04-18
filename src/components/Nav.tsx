@@ -24,7 +24,6 @@ const Nav = () => {
             { label: "Features", href: "/#features" },
             { label: "How It Works", href: "/learn-drift" },
             { label: "Quantr Terminal", href: "https://quantr.vercel.app/" },
-            { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
           ].map(({ label, href }) => (
             href.startsWith("/") ? (
@@ -87,7 +86,6 @@ const Nav = () => {
             { label: "Features", href: "/#features" },
             { label: "How It Works", href: "/learn-drift" },
             { label: "Quantr Terminal", href: "https://quantr.vercel.app/" },
-            { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
           ].map(({ label, href }) => (
             href.startsWith("/") ? (

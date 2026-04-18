@@ -2,16 +2,16 @@ import { useScrollReveal } from "./useScrollReveal";
 
 const retail = [
   "Managing mutual fund arrays and direct equity privately",
-  "Tired of manual allocation tracing via spreadsheets",
-  "Requires strict rule-based thresholds without advisor oversight",
-  "Executing via standard HTTP/CSV broker bridges",
+  "Tired of manually tracking allocation via spreadsheets",
+  "Wants strict rule-based thresholds for self-directed tracking",
+  "Importing portfolio data via standard CSV broker exports",
 ];
 
 const hni = [
-  "Overseeing multi-asset parameters across segmented books",
-  "Requires immutable audit trails for rebalancing compliance",
-  "Executing unique logic constraints per client mandate",
-  "High-volume, multi-folio deployment parameters",
+  "Tracking multi-asset parameters across segmented books",
+  "Wants immutable audit trails for portfolio analysis",
+  "Tracking unique allocation constraints per portfolio",
+  "High-volume, multi-folio analysis parameters",
 ];
 
 const WhoIsItFor = () => {
@@ -70,7 +70,7 @@ const WhoIsItFor = () => {
               <span className="font-mono text-xs text-foreground bg-amber/10 border border-amber/30 text-amber px-2 py-1">ENTERPRISE</span>
             </div>
 
-            <h3 className="font-display text-2xl tracking-tight text-foreground mb-8">Institutional Override</h3>
+            <h3 className="font-display text-2xl tracking-tight text-foreground mb-8">Advanced Analysis</h3>
             
             <ul className="space-y-4">
               {hni.map((item, idx) => (

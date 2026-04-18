@@ -33,7 +33,7 @@ const EarlyAccess = () => {
           >
             <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0"></div>
             <span className="relative z-10 group-hover:text-background flex items-center justify-center gap-3">
-              {user ? "Access Dashboard" : "Initialize Free Trial"}
+              {user ? "Access Dashboard" : "Start Tracking Free"}
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" className="transform group-hover:translate-x-1 transition-transform">
                 <path d="M6 12l4-4-4-4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

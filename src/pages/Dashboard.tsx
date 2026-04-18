@@ -13,7 +13,8 @@ import ImportCSVModal from "@/components/ImportCSVModal";
 import RebalanceModal from "@/components/RebalanceModal";
 import SharePortfolioModal from "@/components/SharePortfolioModal";
 import { format } from "date-fns";
-import { Share2 } from "lucide-react";
+import { Share2, Lock } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 
 const statusColor = { healthy: "text-drift-green", drifting: "text-amber", critical: "text-drift-red" };
 const statusBg = { healthy: "bg-drift-green", drifting: "bg-amber", critical: "bg-drift-red" };
@@ -190,6 +191,13 @@ const Dashboard = () => {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="font-display text-xl font-bold text-amber hover:brightness-110 transition-all">Ratio x</Link>
           <div className="flex items-center gap-6">
+            <Link 
+              to="/dashboard/tax-harvesting" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+            >
+              <Lock className="w-3 h-3" />
+              Tax Harvesting
+            </Link>
             <span className="text-xs text-muted-foreground font-body hidden sm:block">{user?.email}</span>
             <button
               onClick={() => { signOut(); navigate("/"); }}
@@ -308,7 +316,7 @@ const Dashboard = () => {
                   <button
                     onClick={() => setRebalanceModalOpen(true)}
                     className="text-[10px] uppercase tracking-wider font-mono bg-amber text-background font-medium px-3 py-1.5 rounded-[2px] hover:brightness-110 transition-all">
-                    Execute Rebalance
+                    View Rebalance Plan
                   </button>
                 </div>
                 <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-4 py-2 bg-surface/30 border-b border-surface-border">
@@ -452,7 +460,7 @@ const Dashboard = () => {
                         onClick={() => handleDeleteHolding(h.id)}
                         disabled={deletingId === h.id}
                         className="text-muted-foreground/30 hover:text-drift-red/80 hover:bg-drift-red/10 rounded p-1 transition-all disabled:opacity-40"
-                        title="Liquidate position tracking"
+                        title="Remove from tracking"
                       >
                         {deletingId === h.id ? (
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" className="animate-spin">
@@ -487,7 +495,7 @@ const Dashboard = () => {
                         </span>
                       </div>
                       <p className="text-[11px] text-muted-foreground/70 font-mono tracking-tight">
-                        <span className="text-amber/80 font-medium">{log.orders?.length || 0}</span> EXECUTION INSTRUCTIONS GENERATED
+                        <span className="text-amber/80 font-medium">{log.orders?.length || 0}</span> ANALYSIS ENTRIES GENERATED
                       </p>
                     </div>
                     <div className="text-right">
@@ -507,6 +515,9 @@ const Dashboard = () => {
           </>
         )}
       </div>
+
+      {/* Legal Disclaimer */}
+      <Disclaimer />
 
       {/* Modals */}
       {portfolio && (

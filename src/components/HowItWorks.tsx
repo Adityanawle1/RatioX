@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const steps = [
   { num: "01", title: "Connect Portfolio", desc: "Link your broker account or enter holdings manually. We support major brokers via CSV." },
   { num: "02", title: "Define Target Matrix", desc: "Set ideal allocation parameters. Define absolute drift tolerance thresholds per asset vector." },
-  { num: "03", title: "Quantitative Rebalance", desc: "Monitor deviation in real-time. Execute algorithmic rebalancing to restore baseline weights." },
+  { num: "03", title: "Analyze & Track", desc: "Monitor deviation in real-time. View scenario-based rebalancing analysis to understand target adjustments needed." },
 ];
 
 const HowItWorks = () => {
@@ -167,7 +167,7 @@ const HowItWorks = () => {
                       <span className="font-mono text-sm text-foreground">Detected</span>
                     </div>
                     <div className="px-3 py-1 bg-foreground text-background font-mono text-[10px] uppercase tracking-widest rounded-sm">
-                      Execute
+                      Analyze
                     </div>
                   </div>
                 </div>

@@ -147,7 +147,7 @@ export function calculateDrift(
     // Exact normalized match only — no partial/substring matching
     const currentValue = valueByNormClass[normTarget] || 0;
     
-    console.log(`Asset class from DB: "${Object.keys(valueByNormClass).find(k => k === normTarget) || 'NO MATCH'}" | Grouped by: "${normTarget}" | Match: ${currentValue > 0}`);
+
     
     const currentPct = (currentValue / totalValue) * 100;
     const drift = currentPct - target.targetPct;
@@ -250,13 +250,13 @@ function generateTaxWarning(assetClass: string, holdings: HoldingWithValue[]): s
   const hasUnknown = classHoldings.some(h => h.taxStatus === 'unknown');
   
   if (hasSTCG && hasLTCG) {
-    return '⚠️ Mixed tax implications - some STCG (20% tax), some LTCG (12.5% above ₹1.25L)';
+    return 'Note: Mixed tax implications — some STCG (20% tax), some LTCG (12.5% above ₹1.25L exemption)';
   } else if (hasSTCG) {
-    return '⚠️ Short term gain — 20% tax applies';
+    return 'Note: Short term holding — 20% tax may apply if realized';
   } else if (hasLTCG) {
-    return '✅ Long term — 12.5% tax above ₹1.25L exemption';
+    return 'Note: Long term holding — 12.5% tax above ₹1.25L exemption if realized';
   } else if (hasUnknown) {
-    return 'ℹ️ Tax status unknown — add purchase date for clarity';
+    return 'Note: Tax status unknown — add purchase date for visibility';
   }
   
   return '';

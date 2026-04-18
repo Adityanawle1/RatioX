@@ -1,12 +1,12 @@
 import { useScrollReveal } from "./useScrollReveal";
 
 const features = [
-  { id: "01", title: "Real-Time Drift Detection", copy: "Monitor allocation vs target dynamically. Triggered flags upon breaching absolute or relative variance thresholds." },
-  { id: "02", title: "Custom Threshold Bands", copy: "Dictate strict tolerance per asset class (e.g., 2% Debt, 5% Equity). Your logic matrix, your absolute precision." },
-  { id: "03", title: "Algorithmic Rebalancing", copy: "One-click execution path. The engine calculates fractional trade orders needed to restore root baseline. No spreadsheets." },
-  { id: "04", title: "Tax-Aware Routing", copy: "High-latency analysis flags capital gains implications before execution, surfacing tax-efficient alternatives natively." },
-  { id: "05", title: "Automated Triggers", copy: "Set calendar or variance-based cron jobs. The platform handles realignment autonomously within strict user-parameter bounds." },
-  { id: "06", title: "Audit & Telemetry Logs", copy: "Immutable history. Every rebalance action is logged with variance deltas, timestamps, and order justification." },
+  { id: "01", title: "Real-Time Drift Detection", copy: "Monitor allocation vs target dynamically. Flags trigger upon breaching absolute or relative variance thresholds you define." },
+  { id: "02", title: "Custom Threshold Bands", copy: "Set strict tolerance per asset class (e.g., 2% Debt, 5% Equity). Your logic matrix, your precision parameters." },
+  { id: "03", title: "Rebalance Analysis", copy: "View the adjustments needed to restore your target baseline. Scenario-based insights — no spreadsheets required." },
+  { id: "04", title: "Tax Impact Visibility", copy: "View potential capital gains implications across your holdings. Surface tax-status awareness alongside your drift data." },
+  { id: "05", title: "Drift Alerts", copy: "Set calendar or variance-based alert thresholds. Get notified when your portfolio deviates beyond your defined tolerance." },
+  { id: "06", title: "Audit & Telemetry Logs", copy: "Immutable history. Every analysis is logged with variance deltas, timestamps, and scenario justification." },
 ];
 
 const Features = () => {
@@ -28,7 +28,7 @@ const Features = () => {
           className={`font-display text-4xl lg:text-5xl font-light text-foreground mb-16 transition-all duration-700 leading-tight tracking-tight max-w-2xl ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           style={{ transitionDelay: "100ms" }}
         >
-          Everything you need to <br/> maintain system balance.
+          Everything you need to <br/> monitor system balance.
         </h2>
 
         {/* Industrial Grid */}

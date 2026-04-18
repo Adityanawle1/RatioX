@@ -123,17 +123,17 @@ const LearnDrift: React.FC = () => {
 
               <div className="p-8">
                 <span className="font-mono text-xs text-amber block mb-4">STEP 02</span>
-                <h4 className="font-display text-lg text-foreground mb-2">Trim Overweight</h4>
+                <h4 className="font-display text-lg text-foreground mb-2">Identify Overweight</h4>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                  Execute sell orders on the asset classes that have exceeded their target thresholds. Mechanically lock in profits.
+                  Identify the asset classes that have exceeded their target thresholds. Understand where your allocation has shifted.
                 </p>
               </div>
 
               <div className="p-8">
                 <span className="font-mono text-xs text-drift-green block mb-4">STEP 03</span>
-                <h4 className="font-display text-lg text-foreground mb-2">Fund Underweight</h4>
+                <h4 className="font-display text-lg text-foreground mb-2">Identify Underweight</h4>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                  Deploy the generated capital into the lagging asset classes, buying them at a relative discount.
+                  Identify the lagging asset classes that may benefit from additional allocation to restore your target balance.
                 </p>
               </div>
 

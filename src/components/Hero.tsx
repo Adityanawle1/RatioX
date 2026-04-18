@@ -71,7 +71,7 @@ const Hero = () => {
             {/* Description */}
             <div className={`transition-all duration-700 delay-200 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <p className="font-body text-sm text-muted-foreground max-w-lg leading-relaxed mb-12 border-l-2 border-surface-border pl-4">
-                Real-time drift detection, threshold alerts, and one-click rebalancing. Built for investors who view asset allocation as a strict mechanical discipline.
+                Real-time drift detection, threshold alerts, and rebalance analysis. Built for investors who view asset allocation as a strict mechanical discipline.
               </p>
             </div>
 

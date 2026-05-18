@@ -121,7 +121,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
           <div className="space-y-0 max-h-60 overflow-y-auto">
             {result.trades.length === 0 ? (
               <p className="text-sm text-muted-foreground font-body text-center py-6">
-                Portfolio is balanced. No trades needed.
+               Portfolio appears aligned with targets. No adjustments to display.
               </p>
             ) : (
               result.trades.map((trade, i) => (
@@ -177,7 +177,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
             disabled={loading || (!confirming && result.trades.length === 0)}
             className="flex-1 bg-amber text-background font-body text-sm font-medium py-2.5 rounded-sm hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Saving..." : confirming ? "Save Analysis" : "Generate Plan"}
+            {loading ? "Saving..." : confirming ? "Save Analysis" : "View Analysis"}
           </button>
         </div>
       </DialogContent>

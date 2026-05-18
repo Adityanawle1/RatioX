@@ -1,32 +1,36 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import Logo from "./Logo";
 
 const Nav = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-surface-border">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex flex-col leading-tight group">
-          <span className="font-display text-xl font-bold text-foreground tracking-tight group-hover:text-amber transition-colors duration-200">
-            Ratio x
-          </span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground/80 transition-colors">
-            By Quantr
-          </span>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 h-20 flex items-center justify-between">
+        <Link to="/" className="group">
+          <Logo size={28} className="group-hover:opacity-80 transition-opacity duration-300" />
         </Link>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           {[
+            { label: "Fee Audit", href: "/#fee-calculator" },
             { label: "Features", href: "/#features" },
-            { label: "How It Works", href: "/learn-drift" },
-            { label: "Quantr Terminal", href: "https://quantr.vercel.app/" },
+            { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
           ].map(({ label, href }) => (
-            href.startsWith("/") ? (
+            href.startsWith("/#") ? (
+              <a
+                key={label}
+                href={href}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body"
+              >
+                {label}
+              </a>
+            ) : href.startsWith("/") ? (
               <Link
                 key={label}
                 to={href}
@@ -40,23 +44,23 @@ const Nav = () => {
                 href={href}
                 target={href.startsWith("http") ? "_blank" : undefined}
                 rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body flex items-center gap-1"
               >
-                {label} <span className="opacity-50 text-[10px] ml-0.5">↗</span>
+                {label} <span className="opacity-50 text-[10px]">↗</span>
               </a>
             )
           ))}
           {user ? (
             <Link
-              to="/dashboard"
-              className="text-sm border border-amber text-amber px-4 py-1.5 rounded-sm hover:bg-amber hover:text-background transition-colors duration-200 active:scale-[0.97] font-body"
+              to="/dashboard/fee-audit"
+              className="text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-2.5 rounded-sm hover:bg-amber hover:text-background transition-all duration-300 active:scale-[0.98]"
             >
-              Dashboard →
+              Fee Audit →
             </Link>
           ) : (
             <Link
               to="/auth"
-              className="text-sm border border-amber text-amber px-4 py-1.5 rounded-sm hover:bg-amber hover:text-background transition-colors duration-200 active:scale-[0.97] font-body"
+              className="text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-2.5 rounded-sm hover:bg-amber hover:text-background transition-all duration-300 active:scale-[0.98]"
             >
               Sign In
             </Link>
@@ -81,18 +85,27 @@ const Nav = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-surface-border bg-background px-6 py-4 flex flex-col gap-4">
+        <div className="md:hidden border-t border-surface-border bg-background/95 backdrop-blur-xl px-6 py-6 flex flex-col gap-6">
           {[
+            { label: "Fee Audit", href: "/#fee-calculator" },
             { label: "Features", href: "/#features" },
-            { label: "How It Works", href: "/learn-drift" },
-            { label: "Quantr Terminal", href: "https://quantr.vercel.app/" },
+            { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
           ].map(({ label, href }) => (
-            href.startsWith("/") ? (
+            href.startsWith("/#") ? (
+              <a
+                key={label}
+                href={href}
+                className="text-base text-muted-foreground hover:text-foreground transition-colors font-body"
+                onClick={() => setMobileOpen(false)}
+              >
+                {label}
+              </a>
+            ) : href.startsWith("/") ? (
               <Link
                 key={label}
                 to={href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
+                className="text-base text-muted-foreground hover:text-foreground transition-colors font-body"
                 onClick={() => setMobileOpen(false)}
               >
                 {label}
@@ -101,30 +114,32 @@ const Nav = () => {
               <a
                 key={label}
                 href={href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
+                className="text-base text-muted-foreground hover:text-foreground transition-colors font-body flex items-center gap-1"
                 onClick={() => setMobileOpen(false)}
               >
-                {label}
+                {label} <span className="opacity-50 text-[10px]">↗</span>
               </a>
             )
           ))}
-          {user ? (
-            <Link
-              to="/dashboard"
-              className="text-sm border border-amber text-amber px-4 py-2 rounded-sm text-center font-body"
-              onClick={() => setMobileOpen(false)}
-            >
-              Dashboard →
-            </Link>
-          ) : (
-            <Link
-              to="/auth"
-              className="text-sm border border-amber text-amber px-4 py-2 rounded-sm text-center font-body"
-              onClick={() => setMobileOpen(false)}
-            >
-              Sign In
-            </Link>
-          )}
+          <div className="pt-4 border-t border-surface-border">
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="block w-full text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-3 rounded-sm text-center hover:bg-amber hover:text-background transition-all duration-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Dashboard →
+              </Link>
+            ) : (
+              <Link
+                to="/auth"
+                className="block w-full text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-3 rounded-sm text-center hover:bg-amber hover:text-background transition-all duration-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>

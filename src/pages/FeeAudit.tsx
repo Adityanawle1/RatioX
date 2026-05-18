@@ -1,0 +1,203 @@
+import { useEffect, useState, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { getUserPortfolios, getHoldings } from "@/api/portfolio";
+import { refreshPrices } from "@/lib/market-data";
+import { enrichHoldingsWithMarketData, HoldingWithValue } from "@/lib/drift-engine";
+import { supabase } from "@/lib/supabase";
+import { Lock } from "lucide-react";
+import { toast } from "sonner";
+import Disclaimer from "@/components/Disclaimer";
+import PortfolioFeeOverview from "@/components/fee-audit/PortfolioFeeOverview";
+import RegularVsDirectTab from "@/components/fee-audit/RegularVsDirectTab";
+import CostProjectorTab from "@/components/fee-audit/CostProjectorTab";
+import ExitLoadMonitor from "@/components/fee-audit/ExitLoadMonitor";
+import HiddenChargesTab from "@/components/fee-audit/HiddenChargesTab";
+import AddHoldingModal from "@/components/AddHoldingModal";
+
+type Tab = "OVERVIEW" | "REGULAR_VS_DIRECT" | "COST_PROJECTOR" | "EXIT_LOAD" | "HIDDEN_CHARGES";
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: "OVERVIEW", label: "Fee Overview" },
+  { key: "REGULAR_VS_DIRECT", label: "Regular vs Direct" },
+  { key: "COST_PROJECTOR", label: "Cost Projector" },
+  { key: "EXIT_LOAD", label: "Exit Load" },
+  { key: "HIDDEN_CHARGES", label: "Hidden Charges" },
+];
+
+const FeeAudit = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [isPro] = useState(false);
+  const [activeTab, setActiveTab] = useState<Tab>("OVERVIEW");
+  const [loading, setLoading] = useState(true);
+  const [holdings, setHoldings] = useState<HoldingWithValue[]>([]);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [portfolioId, setPortfolioId] = useState<string | null>(null);
+
+  // Per-holding metadata (stored client-side for now, would persist to DB columns)
+  const [terMap, setTerMap] = useState<Record<string, number>>({});
+  const [planTypeMap, setPlanTypeMap] = useState<Record<string, string>>({});
+  const [sipMap, setSipMap] = useState<Record<string, number>>({});
+
+  const loadData = useCallback(async () => {
+    if (!user) return;
+    try {
+      setLoading(true);
+      const { data: portfolios } = await getUserPortfolios(user.id);
+      if (portfolios && portfolios.length > 0) {
+        setPortfolioId(portfolios[0].id);
+        const { data: rawHoldings } = await getHoldings(portfolios[0].id);
+        if (rawHoldings) {
+          const { prices } = await refreshPrices(rawHoldings);
+          const enriched = enrichHoldingsWithMarketData(rawHoldings, prices);
+          setHoldings(enriched || []);
+
+          // Load TER, plan_type, monthly_sip from holdings data if columns exist
+          const newTerMap: Record<string, number> = {};
+          const newPlanMap: Record<string, string> = {};
+          const newSipMap: Record<string, number> = {};
+          for (const h of rawHoldings) {
+            const hAny = h as any;
+            if (hAny.ter && hAny.ter > 0) newTerMap[h.id] = hAny.ter;
+            if (hAny.plan_type) newPlanMap[h.id] = hAny.plan_type;
+            if (hAny.monthly_sip && hAny.monthly_sip > 0) newSipMap[h.id] = hAny.monthly_sip;
+          }
+          setTerMap(prev => ({ ...prev, ...newTerMap }));
+          setPlanTypeMap(prev => ({ ...prev, ...newPlanMap }));
+          setSipMap(prev => ({ ...prev, ...newSipMap }));
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load fee audit data", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  const handleUpgradeIntent = async () => {
+    toast.info("Pro launching soon. You're on the early access list.");
+    if (user) {
+      // @ts-ignore
+      await supabase.from("upgrade_intents").insert({
+        user_id: user.id,
+        feature: "fee_audit",
+      });
+    }
+  };
+
+  // Filter to MF-like holdings for fee audit
+  const mfHoldings = holdings.filter(h => {
+    const ac = h.assetClass.toLowerCase();
+    return ac.includes("fund") || ac.includes("etf") || ac.includes("mf") ||
+           ac.includes("debt") || ac.includes("elss") || ac.includes("index") ||
+           ac.includes("hybrid") || ac.includes("balanced");
+  });
+
+  return (
+    <div className="min-h-screen bg-background text-foreground pb-20">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-surface-border">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link to="/" className="font-display text-xl font-bold text-amber hover:brightness-110 transition-all">Ratio x</Link>
+          <div className="flex items-center gap-6">
+            <Link 
+              to="/dashboard/fee-audit" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-background hover:brightness-110 transition-colors border border-amber/20 bg-amber px-3 py-1.5 rounded-[2px] font-semibold shadow-glow-amber"
+            >
+              Fee Audit
+            </Link>
+            <Link 
+              to="/dashboard" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+            >
+              Drift Engine
+            </Link>
+            <Link 
+              to="/dashboard/tax-harvesting" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+            >
+              <Lock className="w-3 h-3" />
+              Tax Harvesting
+            </Link>
+            <span className="text-xs text-muted-foreground font-body hidden sm:block">{user?.email}</span>
+            <button onClick={() => { signOut(); navigate("/"); }} className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors">Sign out</button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="pt-24 max-w-4xl mx-auto px-6 relative">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="font-display text-3xl font-semibold mb-2 flex items-center gap-3">
+              Fee Audit
+            </h1>
+            <p className="text-muted-foreground font-body text-sm max-w-2xl">
+              See every rupee you are paying — visible and hidden. Across your entire portfolio.
+            </p>
+          </div>
+          <button 
+            onClick={() => setAddModalOpen(true)}
+            className="text-[10px] uppercase tracking-wider border border-amber/20 bg-amber text-background font-mono px-4 py-2.5 rounded-[2px] font-semibold hover:brightness-110 transition-colors shadow-glow-amber shrink-0"
+          >
+            Add Mutual Fund
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex items-center gap-1 border-b border-surface-border mb-8 overflow-x-auto">
+          {TABS.map(tab => (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+              className={`px-3 py-3 font-mono text-[10px] uppercase tracking-wider transition-colors relative whitespace-nowrap ${activeTab === tab.key ? "text-amber" : "text-muted-foreground hover:text-foreground"}`}>
+              {tab.label}
+              {activeTab === tab.key && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-amber" />}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="relative">
+          <div>
+            {loading ? (
+              <div className="h-64 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-amber border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : (
+              <>
+                {activeTab === "OVERVIEW" && <PortfolioFeeOverview holdings={mfHoldings} terMap={terMap} />}
+                {activeTab === "REGULAR_VS_DIRECT" && <RegularVsDirectTab holdings={mfHoldings} terMap={terMap} planTypeMap={planTypeMap} />}
+                {activeTab === "COST_PROJECTOR" && <CostProjectorTab holdings={mfHoldings} terMap={terMap} />}
+                {activeTab === "EXIT_LOAD" && <ExitLoadMonitor holdings={mfHoldings} />}
+                {activeTab === "HIDDEN_CHARGES" && <HiddenChargesTab holdings={mfHoldings} terMap={terMap} planTypeMap={planTypeMap} sipMap={sipMap} />}
+              </>
+            )}
+
+            {/* Per-tab disclaimer */}
+            <div className="mt-12 text-[10px] font-body text-muted-foreground/60 leading-relaxed max-w-3xl p-4 border border-surface-border/30 bg-surface/10 rounded-[2px]">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/80 block mb-2">Disclaimer</span>
+              Ratio x uses publicly available fee structures and your entered data to estimate costs. Actual charges may vary.
+              Stamp duty, STT, and exit load rules may change. This is not financial advice. Always verify with your fund house or AMFI.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Disclaimer />
+
+      {portfolioId && (
+        <AddHoldingModal
+          open={addModalOpen}
+          onOpenChange={setAddModalOpen}
+          portfolioId={portfolioId}
+          userId={user!.id}
+          assetClasses={["Large Cap Equity", "Mid Cap Equity", "Small Cap Equity", "Debt", "Gold", "Hybrid", "Index", "Liquid"]}
+          onSuccess={loadData}
+        />
+      )}
+    </div>
+  );
+};
+
+export default FeeAudit;

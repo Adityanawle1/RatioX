@@ -125,11 +125,24 @@ const TaxHarvesting = () => {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="font-display text-xl font-bold text-amber hover:brightness-110 transition-all">Ratio x</Link>
           <div className="flex items-center gap-6">
-            <Link
-              to="/dashboard"
-              className="text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+            <Link 
+              to="/dashboard/fee-audit" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
             >
-              Dashboard
+              Fee Audit
+            </Link>
+            <Link 
+              to="/dashboard" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+            >
+              Drift Engine
+            </Link>
+            <Link 
+              to="/dashboard/tax-harvesting" 
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-background hover:brightness-110 transition-colors border border-amber/20 bg-amber px-3 py-1.5 rounded-[2px] font-semibold shadow-glow-amber"
+            >
+              <Lock className="w-3 h-3" />
+              Tax Harvesting
             </Link>
             <span className="text-xs text-muted-foreground font-body hidden sm:block">{user?.email}</span>
             <button

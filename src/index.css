@@ -205,6 +205,11 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 64px; /* Account for the fixed nav height */
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Outfit', system-ui, sans-serif;
@@ -314,4 +319,46 @@
     border-color: rgba(232, 147, 16, 0.6);
     box-shadow: 0 0 20px rgba(232, 147, 16, 0.15);
   }
+
+  /* Micro-interaction: card hover glow */
+  .card-hover-glow {
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover-glow:hover {
+    box-shadow: 0 0 40px rgba(232, 147, 16, 0.08);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Micro-interaction: click feedback */
+  .click-feedback {
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .click-feedback:active {
+    transform: scale(0.97);
+  }
+
+  /* Slow spin for loader icons */
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Staggered fade-in for lists */
+  .stagger-fade-in > * {
+    opacity: 0;
+    animation: fade-in-up 0.5s ease-out forwards;
+  }
+
+  .stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-fade-in > *:nth-child(2) { animation-delay: 80ms; }
+  .stagger-fade-in > *:nth-child(3) { animation-delay: 160ms; }
+  .stagger-fade-in > *:nth-child(4) { animation-delay: 240ms; }
+  .stagger-fade-in > *:nth-child(5) { animation-delay: 320ms; }
+  .stagger-fade-in > *:nth-child(6) { animation-delay: 400ms; }
 }

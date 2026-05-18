@@ -49,7 +49,7 @@ const LearnDrift: React.FC = () => {
               <div className="bg-background border border-surface-border p-4 mt-6">
                 <p className="font-mono text-xs text-drift-red uppercase tracking-wide">System Warning</p>
                 <p className="font-body text-sm text-muted-foreground mt-2">
-                  You are now over-allocated to equities. A sudden market drawdown will result in steeper losses than your original 60/40 design could sustain. Your risk profile has shifted without your explicit consent.
+                   In this example, the portfolio is now over-allocated to equities. A sudden market drawdown would result in steeper losses than the original 60/40 design could sustain. The risk profile has shifted without explicit action.
                 </p>
               </div>
             </div>
@@ -133,7 +133,7 @@ const LearnDrift: React.FC = () => {
                 <span className="font-mono text-xs text-drift-green block mb-4">STEP 03</span>
                 <h4 className="font-display text-lg text-foreground mb-2">Identify Underweight</h4>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                  Identify the lagging asset classes that may benefit from additional allocation to restore your target balance.
+                  Identify the lagging asset classes that may need additional allocation to match your configured target balance.
                 </p>
               </div>
 

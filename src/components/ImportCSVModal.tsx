@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { addHolding } from "@/api/portfolio";
+import { addHolding, addHoldingsBatch } from "@/api/portfolio";
 import { useToast } from "@/hooks/use-toast";
 import Papa from "papaparse";
 import { Upload, X, Check, AlertTriangle } from "lucide-react";
@@ -145,30 +145,27 @@ const ImportCSVModal = ({ open, onOpenChange, portfolioId, userId, assetClasses,
     if (validRows.length === 0) return;
 
     setImporting(true);
-    let successCount = 0;
+    setProgress(50);
 
-    for (let i = 0; i < validRows.length; i++) {
-      const row = validRows[i];
-      const { error } = await addHolding({
-        portfolio_id: portfolioId,
-        user_id: userId,
-        symbol: row.symbol,
-        asset_class: row.assetClass,
-        instrument_type: "equity", // Defaulting since we can't reliably know from just a symbol
-        quantity: row.quantity,
-        avg_buy_price: row.avgPrice,
-      });
+    const formattedData = validRows.map(row => ({
+      symbol: row.symbol,
+      assetClass: row.assetClass,
+      quantity: row.quantity,
+      avgPrice: row.avgPrice,
+    }));
 
-      if (!error) {
-        successCount++;
-      }
-      setProgress(((i + 1) / validRows.length) * 100);
-    }
+    const { error, successCount } = await addHoldingsBatch(portfolioId, userId, formattedData);
 
+    setProgress(100);
     setImporting(false);
-    toast({ title: `Successfully imported ${successCount} holdings.` });
-    onSuccess();
-    onOpenChange(false);
+
+    if (error) {
+      toast({ title: "Import failed", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: `Successfully imported ${successCount} holdings.` });
+      onSuccess();
+      onOpenChange(false);
+    }
   };
 
   const validCount = parsedData.filter(r => r.isValid).length;

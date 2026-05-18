@@ -1,12 +1,17 @@
 import { useScrollReveal } from "./useScrollReveal";
 
-const features = [
-  { id: "01", title: "Real-Time Drift Detection", copy: "Monitor allocation vs target dynamically. Flags trigger upon breaching absolute or relative variance thresholds you define." },
-  { id: "02", title: "Custom Threshold Bands", copy: "Set strict tolerance per asset class (e.g., 2% Debt, 5% Equity). Your logic matrix, your precision parameters." },
-  { id: "03", title: "Rebalance Analysis", copy: "View the adjustments needed to restore your target baseline. Scenario-based insights — no spreadsheets required." },
-  { id: "04", title: "Tax Impact Visibility", copy: "View potential capital gains implications across your holdings. Surface tax-status awareness alongside your drift data." },
-  { id: "05", title: "Drift Alerts", copy: "Set calendar or variance-based alert thresholds. Get notified when your portfolio deviates beyond your defined tolerance." },
-  { id: "06", title: "Audit & Telemetry Logs", copy: "Immutable history. Every analysis is logged with variance deltas, timestamps, and scenario justification." },
+const feeTransparency = [
+  { id: "01", title: "Hidden Charge Detector", copy: "See beyond the stated TER. GST on management fees, stamp duty, STT, and transaction charges — the full picture of what your mutual fund actually costs.", icon: "⊘" },
+  { id: "02", title: "Regular vs Direct Savings", copy: "Quantify how much the regular-to-direct TER gap compounds over time. Per fund and across your entire portfolio — this is where the real money leaks.", icon: "⊿" },
+  { id: "03", title: "10-Year Cost Projector", copy: "Visualize fee drag compounding over your investment horizon. See when cumulative fees exceed your total invested amount.", icon: "◉" },
+  { id: "04", title: "Exit Load Timing", copy: "Track exit load windows per holding. Know exactly when each fund becomes free to redeem without penalty.", icon: "⏱" },
+];
+
+const portfolioIntelligence = [
+  { id: "05", title: "Real-Time Drift Detection", copy: "Monitor allocation vs target dynamically. Flags trigger upon breaching absolute or relative variance thresholds you define.", icon: "◎" },
+  { id: "06", title: "Health Score 0–100", copy: "A single composite metric quantifying your portfolio's alignment with target allocations. Updated with every price tick.", icon: "◈" },
+  { id: "07", title: "Rebalance Engine", copy: "View the SELL + BUY adjustments needed to restore your target baseline. Scenario-based insights — no spreadsheets required.", icon: "⇋" },
+  { id: "08", title: "Tax Harvesting", copy: "Surface hypothetical tax-loss harvesting and LTCG exemption scenarios across your holdings. Educational analysis only.", icon: "◇" },
 ];
 
 const Features = () => {
@@ -17,10 +22,10 @@ const Features = () => {
       <div className="max-w-6xl mx-auto px-6">
         
         {/* Header Label */}
-        <div className={`flex items-center gap-3 mb-16 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+        <div className={`flex items-center gap-3 mb-6 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
           <div className="w-8 h-[1px] bg-muted-foreground/30"></div>
           <span className="font-body text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            System Capabilities
+            What you get
           </span>
         </div>
 
@@ -28,27 +33,52 @@ const Features = () => {
           className={`font-display text-4xl lg:text-5xl font-light text-foreground mb-16 transition-all duration-700 leading-tight tracking-tight max-w-2xl ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           style={{ transitionDelay: "100ms" }}
         >
-          Everything you need to <br/> monitor system balance.
+          Expose every hidden cost. <br/> Keep your portfolio sharp.
         </h2>
 
-        {/* Industrial Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-surface-border">
-          {features.map((f, i) => (
+        {/* Category 1: Fee Transparency — NOW FIRST */}
+        <div className={`mb-4 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`} style={{ transitionDelay: "150ms" }}>
+          <span className="inline-flex items-center gap-2 text-xs font-body font-semibold text-amber/80 bg-amber/5 border border-amber/10 px-3 py-1.5 rounded-sm">
+            <div className="w-1.5 h-1.5 bg-amber rounded-full" />
+            Mutual Fund Fee Transparency
+          </span>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-surface-border mb-12">
+          {feeTransparency.map((f, i) => (
             <div
               key={f.id}
-              className={`bg-background p-8 lg:p-10 transition-all duration-700 hover:bg-surface/30 group`}
-              style={{ 
-                transitionDelay: `${i * 100 + 200}ms`, 
-                opacity: visible ? 1 : 0, 
-              }}
+              className={`bg-background p-8 lg:p-10 transition-all duration-700 hover:bg-surface/30 group cursor-default`}
+              style={{ transitionDelay: `${i * 100 + 200}ms`, opacity: visible ? 1 : 0 }}
             >
-              <div className="flex justify-between items-start mb-12">
-                <span className="font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">
-                  [SYS.{f.id}]
-                </span>
-                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber transition-colors"></div>
+              <div className="flex justify-between items-start mb-8">
+                <span className="text-2xl opacity-30 group-hover:opacity-60 group-hover:text-amber transition-all duration-300">{f.icon}</span>
+                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber transition-colors duration-300"></div>
               </div>
-              <h3 className="font-display text-xl tracking-tight text-foreground mb-3">{f.title}</h3>
+              <h3 className="font-display text-xl tracking-tight text-foreground mb-3 group-hover:text-white transition-colors">{f.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-body group-hover:text-gray-300 transition-colors">{f.copy}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Category 2: Portfolio Intelligence — NOW SECOND */}
+        <div className={`mb-4 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`} style={{ transitionDelay: "600ms" }}>
+          <span className="inline-flex items-center gap-2 text-xs font-body font-semibold text-muted-foreground bg-surface/30 border border-surface-border px-3 py-1.5 rounded-sm">
+            <div className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full" />
+            Portfolio Intelligence
+          </span>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-surface-border">
+          {portfolioIntelligence.map((f, i) => (
+            <div
+              key={f.id}
+              className={`bg-background p-8 lg:p-10 transition-all duration-700 hover:bg-surface/30 group cursor-default`}
+              style={{ transitionDelay: `${i * 100 + 700}ms`, opacity: visible ? 1 : 0 }}
+            >
+              <div className="flex justify-between items-start mb-8">
+                <span className="text-2xl opacity-30 group-hover:opacity-60 group-hover:text-amber transition-all duration-300">{f.icon}</span>
+                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber transition-colors duration-300"></div>
+              </div>
+              <h3 className="font-display text-xl tracking-tight text-foreground mb-3 group-hover:text-white transition-colors">{f.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed font-body group-hover:text-gray-300 transition-colors">{f.copy}</p>
             </div>
           ))}

@@ -37,8 +37,14 @@ const AddHoldingModal = ({ open, onOpenChange, portfolioId, userId, assetClasses
   const [quantity, setQuantity] = useState("");
   const [avgBuyPrice, setAvgBuyPrice] = useState("");
   const [purchaseDate, setPurchaseDate] = useState("");
+  const [ter, setTer] = useState("");
+  const [monthlySIPAmount, setMonthlySIPAmount] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [planType, setPlanType] = useState("unknown");
+
+  // Auto-fill TER data from search
+  const [autoFillTERs, setAutoFillTERs] = useState<{regular?: number, direct?: number} | null>(null);
 
   const searchRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -65,7 +71,17 @@ const AddHoldingModal = ({ open, onOpenChange, portfolioId, userId, assetClasses
     setSuggestions([]);
 
     // Automatically set instrument type if known
-    if (result.type === 'mf') setInstrumentType('mf');
+    if (result.type === 'mf') {
+      setInstrumentType('mf');
+      if (result.regular_ter !== undefined || result.direct_ter !== undefined) {
+        setAutoFillTERs({ regular: result.regular_ter, direct: result.direct_ter });
+        // By default, assume regular plan and fill it, user can change it
+        if (result.regular_ter !== undefined) {
+          setPlanType('regular');
+          setTer(result.regular_ter.toString());
+        }
+      }
+    }
     else if (result.type === 'etf') setInstrumentType('etf');
     else if (result.type === 'equity') setInstrumentType('equity');
 
@@ -96,6 +112,8 @@ const AddHoldingModal = ({ open, onOpenChange, portfolioId, userId, assetClasses
     setQuery(""); setSymbol(""); setName(""); setLivePrice(null);
     setAssetClass(assetClasses[0] || ""); setInstrumentType("equity");
     setQuantity(""); setAvgBuyPrice(""); setPurchaseDate(""); setError("");
+    setTer(""); setPlanType("unknown"); setMonthlySIPAmount("");
+    setAutoFillTERs(null);
     setSuggestions([]); setShowDropdown(false);
   };
 
@@ -119,6 +137,9 @@ const AddHoldingModal = ({ open, onOpenChange, portfolioId, userId, assetClasses
       quantity: qty,
       avg_buy_price: price,
       purchase_date: purchaseDate || null,
+      ter: instrumentType === "mf" && ter ? parseFloat(ter) : undefined,
+      plan_type: instrumentType === "mf" ? planType : undefined,
+      monthly_sip: instrumentType === "mf" && monthlySIPAmount ? parseFloat(monthlySIPAmount) : undefined,
     });
 
     if (holdingErr) { setError(holdingErr.message); setLoading(false); return; }
@@ -263,6 +284,55 @@ const AddHoldingModal = ({ open, onOpenChange, portfolioId, userId, assetClasses
               className={inputClass}
             />
           </div>
+
+          {/* MF-specific optional fields — only shown when instrument type is Mutual Fund */}
+          {instrumentType === "mf" && (
+            <div className="space-y-3 p-3 border border-surface-border/50 rounded-sm bg-surface/10">
+              <p className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground/80 mb-1">Mutual Fund Details (optional)</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-muted-foreground font-body mb-1">Expense Ratio / TER (%)</label>
+                  <input
+                    type="number" min="0" max="5" step="0.01"
+                    value={ter} onChange={e => setTer(e.target.value)}
+                    placeholder="e.g. 1.5" className={inputClass}
+                  />
+                  <p className="text-[9px] text-muted-foreground/50 font-body mt-0.5">Find on AMFI website or fund factsheet</p>
+                </div>
+                <div>
+                  <label className="block text-xs text-muted-foreground font-body mb-1">Plan Type</label>
+                  <select 
+                    value={planType} 
+                    onChange={e => {
+                      const newType = e.target.value;
+                      setPlanType(newType);
+                      // Auto-update TER based on plan selection if we have the data
+                      if (autoFillTERs) {
+                        if (newType === 'regular' && autoFillTERs.regular !== undefined) {
+                          setTer(autoFillTERs.regular.toString());
+                        } else if (newType === 'direct' && autoFillTERs.direct !== undefined) {
+                          setTer(autoFillTERs.direct.toString());
+                        }
+                      }
+                    }} 
+                    className={selectClass}
+                  >
+                    <option value="unknown">Unknown</option>
+                    <option value="regular">Regular</option>
+                    <option value="direct">Direct</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-muted-foreground font-body mb-1">Monthly SIP (₹) — if applicable</label>
+                <input
+                  type="number" min="0" step="500"
+                  value={monthlySIPAmount} onChange={e => setMonthlySIPAmount(e.target.value)}
+                  placeholder="For transaction charge calculation" className={inputClass}
+                />
+              </div>
+            </div>
+          )}
 
           {error && <p className="text-xs text-drift-red font-body">{error}</p>}
 

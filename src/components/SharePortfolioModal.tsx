@@ -302,7 +302,7 @@ export default function SharePortfolioModal({ open, onOpenChange, data }: ShareP
                     </p>
                   </div>
                   <div>
-                    <p style={{ fontSize: "12px", color: "rgba(244, 241, 237, 0.4)", marginBottom: "8px", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>Last Optimization</p>
+                    <p style={{ fontSize: "12px", color: "rgba(244, 241, 237, 0.4)", marginBottom: "8px", fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>Last Analysis</p>
                     <p style={{ fontSize: "24px", color: "#f4f1ed", fontWeight: "400", fontFamily: "'JetBrains Mono', monospace" }}>
                       {data.lastRebalanced 
                         ? format(new Date(data.lastRebalanced), "MMM d, yyyy") 

@@ -289,6 +289,41 @@ export interface Database {
           created_at?: string
         }
       }
+      mutual_funds: {
+        Row: {
+          id: string
+          scheme_code: string
+          name: string
+          amc_name: string | null
+          category: string | null
+          regular_ter: number | null
+          direct_ter: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          scheme_code: string
+          name: string
+          amc_name?: string | null
+          category?: string | null
+          regular_ter?: number | null
+          direct_ter?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          scheme_code?: string
+          name?: string
+          amc_name?: string | null
+          category?: string | null
+          regular_ter?: number | null
+          direct_ter?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

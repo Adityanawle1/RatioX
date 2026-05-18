@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Logo from "./Logo";
 
 const Footer = () => (
   <footer className="border-t border-surface-border">
@@ -6,23 +7,22 @@ const Footer = () => (
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
         {/* Left */}
         <div>
-          <div className="flex flex-col leading-tight">
-            <span className="font-display text-lg font-bold text-foreground">Ratio x</span>
-            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">By Quantr</span>
-          </div>
-          <p className="text-xs text-muted-foreground font-body mt-1">Portfolio tracking & drift analysis.</p>
+          <Logo size={24} />
+          <p className="text-xs text-muted-foreground font-body mt-2">Mutual fund fee audit & portfolio intelligence.</p>
         </div>
 
         {/* Links grid */}
         <div className="flex flex-col sm:flex-row gap-12 sm:gap-24 text-xs font-body">
           <div className="flex flex-col gap-4">
-            <span className="text-foreground font-semibold uppercase tracking-widest text-[10px]">Product</span>
+            <span className="text-foreground font-semibold uppercase tracking-wider text-[10px]">Product</span>
+            <a href="#fee-calculator" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Fee Audit</a>
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Features</a>
-            <a href="/learn-drift" className="text-muted-foreground hover:text-foreground transition-colors duration-200">How It Works</a>
+            <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Pricing</a>
           </div>
 
           <div className="flex flex-col gap-4">
-            <span className="text-foreground font-semibold uppercase tracking-widest text-[10px]">Ecosystem</span>
+            <span className="text-foreground font-semibold uppercase tracking-wider text-[10px]">Resources</span>
+            <a href="/learn-drift" className="text-muted-foreground hover:text-foreground transition-colors duration-200">How It Works</a>
             <a href="https://quantr.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1.5">
               <span>Quantr Terminal</span>
               <span className="text-[10px] opacity-50">↗</span>
@@ -30,7 +30,7 @@ const Footer = () => (
           </div>
 
           <div className="flex flex-col gap-4">
-            <span className="text-foreground font-semibold uppercase tracking-widest text-[10px]">Legal</span>
+            <span className="text-foreground font-semibold uppercase tracking-wider text-[10px]">Legal</span>
             <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Privacy Policy</Link>
             <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors duration-200">Terms of Service</Link>
           </div>
@@ -51,10 +51,10 @@ const Footer = () => (
       <div className="border-t border-surface-border mt-8 pt-6 space-y-3">
         <p className="text-[10px] text-muted-foreground/50 font-body leading-relaxed max-w-4xl">
           Ratio x is not a SEBI-registered Investment Adviser (IA), Research Analyst (RA), or Portfolio Manager. 
-          The platform is an educational portfolio tracking tool and does not provide investment, trading, or tax advice. 
-          All information is for informational purposes only. Users should consult qualified professionals before making financial decisions.
+          The platform is an educational portfolio tracking and fee analysis tool and does not provide investment, trading, or tax advice. 
+          All information including fee calculations, TER comparisons, and savings projections are for informational purposes only. Users should consult qualified professionals before making financial decisions.
         </p>
-        <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} Ratio x. An educational portfolio tracking tool.</p>
+        <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} Ratio x. Mutual fund fee audit & portfolio intelligence.</p>
       </div>
     </div>
   </footer>

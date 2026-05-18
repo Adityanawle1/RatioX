@@ -27,7 +27,7 @@ const Onboarding = () => {
       setTimeout(() => {
         setLoading(false);
         // Force navigation with replace to prevent back button issues
-        navigate("/dashboard", { replace: true });
+        navigate("/dashboard/fee-audit", { replace: true });
       }, 1000);
       
     } catch (err) {
@@ -35,7 +35,7 @@ const Onboarding = () => {
       setError("Setup complete! Redirecting to dashboard...");
       setTimeout(() => {
         setLoading(false);
-        navigate("/dashboard", { replace: true });
+        navigate("/dashboard/fee-audit", { replace: true });
       }, 1000);
     }
   };
@@ -67,7 +67,7 @@ const Onboarding = () => {
               >
                 {key === 'moderate' && (
                   <span className="absolute top-4 right-4 text-[10px] font-body font-semibold bg-amber text-background px-2 py-0.5 rounded-sm">
-                    Recommended
+                    Most Common
                   </span>
                 )}
                 <div className="flex items-start justify-between">
@@ -114,7 +114,7 @@ const Onboarding = () => {
 
           {/* Emergency bypass button */}
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/dashboard/fee-audit")}
             className="mt-2 w-full text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             Skip setup and go to dashboard →

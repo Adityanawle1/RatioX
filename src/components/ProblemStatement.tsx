@@ -2,9 +2,9 @@ import { useScrollReveal } from "./useScrollReveal";
 import { useEffect, useState } from "react";
 
 const stats = [
-  { prefix: "₹", target: 1, suffix: " in 3", label: "Portfolios drift significantly over a 6‑month period." },
-  { prefix: "", target: 8, suffix: "%", label: "Studies suggest unmanaged drift can erode returns by this much annually." },
-  { prefix: "", target: 0, suffix: " Action", label: "Most investors never track drift without a systematic tool in place." },
+  { prefix: "₹", target: 3, suffix: ".2L+", label: "Average hidden fees paid by an Indian MF investor over 10 years on a ₹10K SIP." },
+  { prefix: "", target: 92, suffix: "%", label: "Of regular plan investors don't know they're paying 0.5–1.5% more than direct plans." },
+  { prefix: "", target: 20, suffix: "%+", label: "Average portfolio drift over 3 years if left un-rebalanced, exposing you to hidden risks." },
 ];
 
 const ProblemStatement = () => {
@@ -45,7 +45,7 @@ const ProblemStatement = () => {
   }, [visible]);
 
   return (
-    <section className="py-24 md:py-32 border-t border-surface-border bg-background relative overflow-hidden" ref={ref}>
+    <section className="py-24 md:py-32 border-t border-surface-border bg-[#060606] relative overflow-hidden" ref={ref}>
       
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         
@@ -68,9 +68,9 @@ const ProblemStatement = () => {
               {/* Header Label */}
               <div className="flex justify-between items-center mb-6">
                 <span className="font-body text-xs font-semibold uppercase tracking-wider text-muted-foreground group-hover:text-amber transition-colors">
-                  Metric // 0{i + 1}
+                  {["Hidden Cost", "Awareness Gap", "Portfolio Drift"][i]}
                 </span>
-                <div className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-drift-red' : 'bg-surface-border'}`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-drift-red' : 'bg-surface-border'}`}></div>
               </div>
 
               {/* Huge Data Value */}
@@ -92,12 +92,12 @@ const ProblemStatement = () => {
         {/* Bottom dividing line with glowing dot */}
         <div className="flex items-center justify-center mt-16 relative">
           <div className={`h-px bg-surface-border transition-all duration-1000 ease-out delay-500 absolute w-full ${visible ? "scale-x-100" : "scale-x-0"}`}></div>
-          <div className={`px-6 py-2 bg-background border border-surface-border z-10 transition-all duration-1000 delay-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-foreground flex items-center gap-3">
+          <div className={`px-6 py-2 bg-[#060606] border border-surface-border z-10 transition-all duration-1000 delay-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            <p className="font-body text-xs text-foreground flex items-center gap-3 font-medium">
               <span className="w-2 h-2 rounded-full border border-drift-red flex items-center justify-center animate-pulse">
                 <span className="w-1 h-1 bg-drift-red rounded-full"></span>
               </span>
-              Drift is silent. It compounds.
+              Fees are silent. Drift is invisible. We fix both.
             </p>
           </div>
         </div>

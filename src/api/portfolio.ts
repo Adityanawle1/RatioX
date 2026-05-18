@@ -8,7 +8,7 @@ const supabase = typedSupabase as any;
 export const RISK_PROFILES = {
   conservative: {
     name: 'Conservative',
-    description: 'Lower risk, stable returns',
+    description: 'Lower volatility profile',
     allocations: [
       { asset_class: 'Large Cap Equity', target_pct: 40, drift_threshold: 5 },
       { asset_class: 'Debt', target_pct: 35, drift_threshold: 5 },
@@ -19,7 +19,7 @@ export const RISK_PROFILES = {
   },
   moderate: {
     name: 'Moderate',
-    description: 'Balanced risk and returns',
+    description: 'Balanced allocation profile',
     allocations: [
       { asset_class: 'Large Cap Equity', target_pct: 30, drift_threshold: 5 },
       { asset_class: 'Mid Cap Equity', target_pct: 25, drift_threshold: 5 },
@@ -30,7 +30,7 @@ export const RISK_PROFILES = {
   },
   aggressive: {
     name: 'Aggressive',
-    description: 'Higher risk, higher potential returns',
+    description: 'Higher equity allocation profile',
     allocations: [
       { asset_class: 'Mid Cap Equity', target_pct: 30, drift_threshold: 5 },
       { asset_class: 'Small Cap Equity', target_pct: 25, drift_threshold: 5 },
@@ -154,6 +154,9 @@ export const addHolding = async (data: {
   quantity: number;
   avg_buy_price: number;
   purchase_date?: string | null;
+  ter?: number;
+  plan_type?: string;
+  monthly_sip?: number;
 }) => {
   // Validation
   if (data.quantity <= 0) {
@@ -196,6 +199,10 @@ export const addHolding = async (data: {
              ? existing.purchase_date 
              : data.purchase_date)
           : existing.purchase_date || data.purchase_date,
+        // Update TER/SIP/Plan Type if provided, else keep existing
+        ter: data.ter !== undefined ? data.ter : existing.ter,
+        plan_type: data.plan_type !== undefined ? data.plan_type : existing.plan_type,
+        monthly_sip: data.monthly_sip !== undefined ? data.monthly_sip : existing.monthly_sip,
         updated_at: new Date().toISOString(),
       })
       .eq('id', existing.id)
@@ -208,6 +215,89 @@ export const addHolding = async (data: {
     ...data,
     symbol: data.symbol.toUpperCase(),
   }).select().single();
+};
+
+export const addHoldingsBatch = async (
+  portfolioId: string,
+  userId: string,
+  holdingsData: {
+    symbol: string;
+    assetClass: string;
+    quantity: number;
+    avgPrice: number;
+  }[]
+) => {
+  // 1. Fetch current holdings
+  const { data: existingHoldings, error: fetchError } = await supabase
+    .from('holdings')
+    .select('*')
+    .eq('portfolio_id', portfolioId);
+
+  if (fetchError) return { error: fetchError, successCount: 0 };
+
+  // 2. Combine duplicate symbols from the CSV itself
+  const consolidatedIncoming: Record<string, typeof holdingsData[0]> = {};
+  for (const item of holdingsData) {
+    const key = `${item.symbol.toUpperCase()}_${item.assetClass}`;
+    if (consolidatedIncoming[key]) {
+      const existing = consolidatedIncoming[key];
+      const totalQty = existing.quantity + item.quantity;
+      existing.avgPrice = (existing.quantity * existing.avgPrice + item.quantity * item.avgPrice) / totalQty;
+      existing.quantity = totalQty;
+    } else {
+      consolidatedIncoming[key] = { ...item };
+    }
+  }
+
+  const inserts = [];
+  const updates = [];
+
+  // 3. Distribute into INSERTS or UPDATES based on DB
+  for (const item of Object.values(consolidatedIncoming)) {
+    const existing = existingHoldings?.find((h: any) => h.symbol === item.symbol.toUpperCase() && h.asset_class === item.assetClass);
+    
+    if (existing) {
+      const totalQuantity = existing.quantity + item.quantity;
+      const blendedAvgPrice = 
+        (existing.quantity * existing.avg_buy_price + item.quantity * item.avgPrice) / totalQuantity;
+      
+      updates.push(
+        supabase.from('holdings').update({
+          quantity: totalQuantity,
+          avg_buy_price: blendedAvgPrice,
+          updated_at: new Date().toISOString(),
+        }).eq('id', existing.id)
+      );
+    } else {
+      inserts.push({
+        portfolio_id: portfolioId,
+        user_id: userId,
+        symbol: item.symbol.toUpperCase(),
+        asset_class: item.assetClass,
+        instrument_type: "equity",
+        quantity: item.quantity,
+        avg_buy_price: item.avgPrice,
+      });
+    }
+  }
+
+  let successCount = 0;
+
+  // 4. Execute inserts in ONE query
+  if (inserts.length > 0) {
+    const { error: insertError } = await supabase.from('holdings').insert(inserts);
+    if (!insertError) successCount += inserts.length;
+  }
+
+  // 5. Execute updates concurrently in chunks
+  const chunkSize = 5;
+  for (let i = 0; i < updates.length; i += chunkSize) {
+    const chunk = updates.slice(i, i + chunkSize);
+    const results = await Promise.all(chunk);
+    successCount += results.filter(r => !r.error).length;
+  }
+
+  return { error: null, successCount };
 };
 
 export const updateHoldingPrice = (id: string, price: number) =>

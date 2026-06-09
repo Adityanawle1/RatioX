@@ -9,6 +9,7 @@ export type HoldingWithValue = {
   symbol: string;
   name: string;
   assetClass: string;
+  instrumentType: string;
   quantity: number;
   avgBuyPrice: number;
   currentPrice: number;
@@ -21,6 +22,9 @@ export type HoldingWithValue = {
   taxStatus?: 'LTCG' | 'STCG' | 'unknown';
   cagr?: number;
   livePriceAvailable: boolean;
+  ter?: number | null;
+  planType?: string | null;
+  monthlySip?: number | null;
 };
 
 export type DriftResult = {
@@ -108,6 +112,7 @@ export function enrichHoldingsWithMarketData(
       symbol: h.symbol,
       name: h.name || h.symbol,
       assetClass: h.asset_class,
+      instrumentType: h.instrument_type || 'equity',
       quantity: h.quantity,
       avgBuyPrice: h.avg_buy_price,
       currentPrice,
@@ -120,6 +125,9 @@ export function enrichHoldingsWithMarketData(
       taxStatus,
       cagr,
       livePriceAvailable,
+      ter: h.ter,
+      planType: h.plan_type,
+      monthlySip: h.monthly_sip,
     };
   });
 }

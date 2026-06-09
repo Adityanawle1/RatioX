@@ -8,11 +8,8 @@ interface Props {
 }
 
 const PortfolioFeeOverview = ({ holdings, terMap }: Props) => {
-  const mfHoldings = holdings.filter(
-    h => h.assetClass.toLowerCase().includes("fund") ||
-         h.assetClass.toLowerCase().includes("etf") ||
-         h.symbol.toLowerCase().includes("mf")
-  );
+  const mfHoldings = holdings; // Already pre-filtered to MF holdings by FeeAudit parent
+
 
   const summary = useMemo(() => {
     let totalMfValue = 0;

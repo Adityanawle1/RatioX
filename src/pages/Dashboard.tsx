@@ -3,18 +3,20 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getHoldings, getAssetTargets, getUserPortfolios, createPortfolio, deleteHolding, getUserProfile, getRebalanceLogs } from "@/api/portfolio";
 import { calculateDrift, calculateHealthScore, HoldingWithValue, AssetClass, enrichHoldingsWithMarketData, DriftResult } from "@/lib/drift-engine";
-import { refreshPrices } from "@/lib/market-data";
+import { refreshPrices, clearPriceCache } from "@/lib/market-data";
 import { supabase, type Database } from "@/lib/supabase";
 
 type PortfolioRow = Database['public']['Tables']['portfolios']['Row'];
 type HoldingRow = Database['public']['Tables']['holdings']['Row'];
 import AddHoldingModal from "@/components/AddHoldingModal";
+import EditHoldingModal from "@/components/EditHoldingModal";
 import ImportCSVModal from "@/components/ImportCSVModal";
 import RebalanceModal from "@/components/RebalanceModal";
 import SharePortfolioModal from "@/components/SharePortfolioModal";
 import { format } from "date-fns";
-import { Share2, Lock } from "lucide-react";
+import { Share2, Lock, Pencil, Trash2 } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
+import { toast } from "sonner";
 
 const statusColor = { healthy: "text-drift-green", drifting: "text-amber", critical: "text-drift-red" };
 const statusBg = { healthy: "bg-drift-green", drifting: "bg-amber", critical: "bg-drift-red" };
@@ -41,6 +43,7 @@ const Dashboard = () => {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [minsAgo, setMinsAgo] = useState(0);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingHolding, setEditingHolding] = useState<HoldingRow | null>(null);
   const [failedPriceSymbols, setFailedPriceSymbols] = useState<string[]>([]);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [rebalanceLogs, setRebalanceLogs] = useState<any[]>([]);
@@ -283,11 +286,28 @@ const Dashboard = () => {
                   <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="hsl(37 90% 55%)" strokeWidth="4" strokeLinecap="round"
                     strokeDasharray="157" strokeDashoffset={157 - 157 * (healthScore / 100)} />
                 </svg>
-                {lastUpdated && (
-                  <p className="text-[10px] text-muted-foreground font-body mt-1">
-                    {minsAgo === 0 ? "Updated just now" : `Updated ${minsAgo}m ago`}
-                  </p>
-                )}
+                <div className="flex items-center justify-end gap-2 mt-1">
+                  {lastUpdated && (
+                    <p className="text-[10px] text-muted-foreground font-body">
+                      {minsAgo === 0 ? "Updated just now" : `Updated ${minsAgo}m ago`}
+                    </p>
+                  )}
+                  <button 
+                    onClick={async () => {
+                      clearPriceCache();
+                      toast.loading("Refreshing prices...", { id: "refresh-toast" });
+                      await refreshDriftData();
+                      toast.success("Prices updated successfully", { id: "refresh-toast" });
+                    }}
+                    className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded hover:bg-white/5"
+                    title="Force refresh live prices"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                      <path d="M3 3v5h5" />
+                    </svg>
+                  </button>
+                </div>
                 {failedPriceSymbols.length > 0 && (
                   <p className="text-[10px] text-drift-red font-body mt-1">
                     {failedPriceSymbols.length} price(s) unavailable
@@ -320,7 +340,7 @@ const Dashboard = () => {
                     <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Drift Analysis Engine</span>
                     <Link 
                       to="/learn-drift" 
-                      className="text-[9px] uppercase tracking-wider font-mono border border-surface-border/60 bg-background/50 hover:bg-surface-border text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded-[2px] transition-colors"
+                      className="text-[9px] uppercase tracking-wider font-mono border border-surface-border/60 bg-background/50 hover:bg-surface-border text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded-[2px] transition-colors hidden sm:block"
                     >
                       Algorithm
                     </Link>
@@ -328,35 +348,39 @@ const Dashboard = () => {
                   <button
                     onClick={() => setRebalanceModalOpen(true)}
                     className="text-[10px] uppercase tracking-wider font-mono bg-amber text-background font-medium px-3 py-1.5 rounded-[2px] hover:brightness-110 transition-all">
-                    View Rebalance Analysis
+                    View Analysis
                   </button>
                 </div>
-                <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-4 py-2 bg-surface/30 border-b border-surface-border">
-                  <span>Asset Class</span>
-                  <span className="text-right">Target</span>
-                  <span className="text-right">Actual</span>
-                  <span className="text-right">Variance</span>
-                  <span className="pl-4">State</span>
-                </div>
-                {driftResults.map((row) => (
-                  <div key={row.assetClass} className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-sm font-body px-4 py-3 border-b border-surface-border last:border-b-0">
-                    <span className="text-foreground">{row.assetClass}</span>
-                    <span className="text-right font-mono text-muted-foreground text-xs">{row.targetPct.toFixed(1)}%</span>
-                    <span className="text-right font-mono text-foreground text-xs">{row.currentPct.toFixed(1)}%</span>
-                    <span className={`text-right font-mono text-xs ${statusColor[row.status]}`}>
-                      {row.drift > 0 ? "+" : ""}{row.drift.toFixed(1)}%
-                    </span>
-                    <div className="pl-4 flex items-center gap-2">
-                      <div className="w-full max-w-[80px] h-1 bg-secondary rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${statusBg[row.status]}`}
-                          style={{ width: `${Math.min(Math.abs(row.drift) / row.driftThreshold * 100, 100)}%` }} />
-                      </div>
-                      <span className={`text-xs whitespace-nowrap ${statusColor[row.status]}`}>
-                        {statusLabel[row.status]}
-                      </span>
+                <div className="overflow-x-auto">
+                  <div className="min-w-[600px]">
+                    <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-4 py-2 bg-surface/30 border-b border-surface-border">
+                      <span>Asset Class</span>
+                      <span className="text-right">Target</span>
+                      <span className="text-right">Actual</span>
+                      <span className="text-right">Variance</span>
+                      <span className="pl-4">State</span>
                     </div>
+                    {driftResults.map((row) => (
+                      <div key={row.assetClass} className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-sm font-body px-4 py-3 border-b border-surface-border last:border-b-0">
+                        <span className="text-foreground">{row.assetClass}</span>
+                        <span className="text-right font-mono text-muted-foreground text-xs">{row.targetPct.toFixed(1)}%</span>
+                        <span className="text-right font-mono text-foreground text-xs">{row.currentPct.toFixed(1)}%</span>
+                        <span className={`text-right font-mono text-xs ${statusColor[row.status]}`}>
+                          {row.drift > 0 ? "+" : ""}{row.drift.toFixed(1)}%
+                        </span>
+                        <div className="pl-4 flex items-center gap-2">
+                          <div className="w-full max-w-[80px] h-1 bg-secondary rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${statusBg[row.status]}`}
+                              style={{ width: `${Math.min(Math.abs(row.drift) / row.driftThreshold * 100, 100)}%` }} />
+                          </div>
+                          <span className={`text-xs whitespace-nowrap ${statusColor[row.status]}`}>
+                            {statusLabel[row.status]}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             ) : (
               <div className="border border-surface-border rounded-[2px] bg-card p-12 text-center mb-8 relative overflow-hidden border-dashed">
@@ -423,6 +447,21 @@ const Dashboard = () => {
                           {h.assetClass}
                         </span>
                         
+                        {(h.instrumentType === 'mf' || h.instrumentType === 'mutual_fund') && (
+                          <>
+                            {h.planType?.toLowerCase() === 'regular' && (
+                              <span className="text-[9px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-[2px] font-mono border border-drift-red/20">
+                                Regular Plan
+                              </span>
+                            )}
+                            {h.ter && h.ter >= 1.0 && (
+                              <span className="text-[9px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-[2px] font-mono border border-drift-red/20" title={`High TER: ${h.ter}%`}>
+                                High Cost ({h.ter}%)
+                              </span>
+                            )}
+                          </>
+                        )}
+                        
                         <div className="w-px h-3 bg-surface-border/60" />
                         
                         <span className="text-[11px] font-mono text-muted-foreground">
@@ -469,9 +508,19 @@ const Dashboard = () => {
                         </p>
                       </div>
                       <button
+                        onClick={() => {
+                          const originalHolding = holdings.find(hRow => hRow.id === h.id);
+                          if (originalHolding) setEditingHolding(originalHolding);
+                        }}
+                        className="text-muted-foreground/30 hover:text-amber/80 hover:bg-amber/10 rounded p-1.5 transition-all"
+                        title="Edit position"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
                         onClick={() => handleDeleteHolding(h.id)}
                         disabled={deletingId === h.id}
-                        className="text-muted-foreground/30 hover:text-drift-red/80 hover:bg-drift-red/10 rounded p-1 transition-all disabled:opacity-40"
+                        className="text-muted-foreground/30 hover:text-drift-red/80 hover:bg-drift-red/10 rounded p-1.5 transition-all disabled:opacity-40"
                         title="Remove from tracking"
                       >
                         {deletingId === h.id ? (
@@ -479,9 +528,7 @@ const Dashboard = () => {
                             <circle cx="7" cy="7" r="5" strokeDasharray="20" strokeDashoffset="10" />
                           </svg>
                         ) : (
-                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2">
-                            <path d="M2.5 3.5h9M5.5 3.5v-1l3 0v1m-3 0l.5 8M8.5 3.5l-.5 8" strokeLinecap="round" />
-                          </svg>
+                          <Trash2 className="w-3.5 h-3.5" />
                         )}
                       </button>
                     </div>
@@ -541,6 +588,15 @@ const Dashboard = () => {
             userId={user!.id}
             assetClasses={assetTargets.map(t => t.name)}
             onSuccess={initDashboard}
+          />
+          <EditHoldingModal
+            open={!!editingHolding}
+            onOpenChange={(open) => !open && setEditingHolding(null)}
+            holding={editingHolding}
+            onSuccess={() => {
+              setEditingHolding(null);
+              initDashboard();
+            }}
           />
           <ImportCSVModal
             open={importCSVModalOpen}

@@ -1,8 +1,4 @@
-import { supabase as typedSupabase } from '@/lib/supabase';
-
-// Bypass type inference issues resolving to 'never' in the current schema
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const supabase = typedSupabase as any;
+import { supabase } from '@/lib/supabase';
 
 // Risk Profile Templates
 export const RISK_PROFILES = {
@@ -300,6 +296,22 @@ export const addHoldingsBatch = async (
   return { error: null, successCount };
 };
 
+export const updateHoldingData = (
+  id: string,
+  data: {
+    quantity?: number;
+    avg_buy_price?: number;
+    purchase_date?: string | null;
+    ter?: number | null;
+    plan_type?: string | null;
+    monthly_sip?: number | null;
+  }
+) =>
+  supabase.from('holdings').update({
+    ...data,
+    updated_at: new Date().toISOString(),
+  }).eq('id', id).select().single();
+
 export const updateHoldingPrice = (id: string, price: number) =>
   supabase.from('holdings').update({
     current_price: price,
@@ -337,7 +349,7 @@ export const saveRebalanceEvent = (data: {
   trades: any;
   health_score_before: number;
   health_score_after: number;
-  status?: string;
+  status?: 'suggested' | 'executed' | 'dismissed';
 }) => supabase.from('rebalance_events').insert(data).select().single();
 
 export const getRebalanceHistory = (portfolioId: string) =>
@@ -365,7 +377,7 @@ export const saveRebalanceLog = (data: {
 }) => 
   supabase.from('rebalance_logs').insert({
     ...data,
-    date: new Date().toISOString().split('T')[0],
+    created_at: new Date().toISOString(),
   }).select().single();
 
 export const getRebalanceLogs = (portfolioId: string) =>

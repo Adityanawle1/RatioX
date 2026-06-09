@@ -20,9 +20,11 @@ const Onboarding = () => {
       
       if (profileError) { 
         console.error('Profile update error:', profileError);
+        setError("Failed to set profile. Please try again.");
+        setLoading(false);
+        return;
       }
 
-      // Always show success and navigate regardless of errors
       setError("Setup complete! Redirecting to dashboard...");
       setTimeout(() => {
         setLoading(false);
@@ -32,11 +34,8 @@ const Onboarding = () => {
       
     } catch (err) {
       console.error('Unexpected error:', err);
-      setError("Setup complete! Redirecting to dashboard...");
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/dashboard/fee-audit", { replace: true });
-      }, 1000);
+      setError("An unexpected error occurred. Please try again.");
+      setLoading(false);
     }
   };
 

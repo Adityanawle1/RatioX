@@ -34,6 +34,10 @@ function setCachedPrice(symbol: string, price: number): void {
   priceCache.set(symbol, { price, timestamp: Date.now() });
 }
 
+export function clearPriceCache(): void {
+  priceCache.clear();
+}
+
 // ──────────────────────────────────────────────────────────
 // Search Cache — 2 minute TTL for search results
 // ──────────────────────────────────────────────────────────

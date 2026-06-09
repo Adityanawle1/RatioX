@@ -38,14 +38,14 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
         amount: t.amountINR
       }));
 
-      // Save to rebalance_logs as requested
+      // Save to rebalance_logs
       await saveRebalanceLog({
         user_id: userId,
         portfolio_id: portfolioId,
         orders,
         new_inflow: newInflowINR,
-        before_score: 44, // Hardcoded as requested
-        after_score: 100, // Hardcoded as requested
+        before_score: result.healthScoreBefore,
+        after_score: result.healthScoreAfter,
         status: "pending"
       });
 

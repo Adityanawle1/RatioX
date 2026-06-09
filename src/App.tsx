@@ -19,6 +19,8 @@ import TaxHarvesting from "./pages/TaxHarvesting.tsx";
 import FeeAudit from "./pages/FeeAudit.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +56,8 @@ const App = () => (
               <Route path="/dashboard/fee-audit" element={<ProtectedRoute><FeeAudit /></ProtectedRoute>} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

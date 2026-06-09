@@ -61,7 +61,10 @@ const Login = () => {
                   <input id="login-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-body text-muted-foreground mb-1.5" htmlFor="login-password">Password</label>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="block text-xs font-body text-muted-foreground" htmlFor="login-password">Password</label>
+                    <Link to="/forgot-password" className="text-xs text-amber hover:text-amber/80 transition-colors">Forgot password?</Link>
+                  </div>
                   <input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className={inputCls} />
                 </div>
                 {error && (

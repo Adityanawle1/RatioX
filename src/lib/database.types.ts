@@ -28,6 +28,7 @@ export interface Database {
           source?: string | null
           created_at?: string
         }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -57,6 +58,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       portfolios: {
         Row: {
@@ -83,6 +85,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       asset_targets: {
         Row: {
@@ -109,6 +112,7 @@ export interface Database {
           drift_threshold?: number | null
           created_at?: string
         }
+        Relationships: []
       }
       holdings: {
         Row: {
@@ -124,6 +128,9 @@ export interface Database {
           current_price: number | null
           last_price_updated: string | null
           purchase_date: string | null
+          ter: number | null
+          plan_type: string | null
+          monthly_sip: number | null
           created_at: string
           updated_at: string
         }
@@ -159,6 +166,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       transactions: {
         Row: {
@@ -198,6 +206,7 @@ export interface Database {
           notes?: string | null
           transacted_at?: string
         }
+        Relationships: []
       }
       rebalance_events: {
         Row: {
@@ -233,6 +242,43 @@ export interface Database {
           health_score_after?: number | null
           created_at?: string
         }
+        Relationships: []
+      }
+      rebalance_logs: {
+        Row: {
+          id: string
+          user_id: string
+          portfolio_id: string
+          orders: Json
+          new_inflow: number | null
+          before_score: number | null
+          after_score: number | null
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          portfolio_id: string
+          orders: Json
+          new_inflow?: number | null
+          before_score?: number | null
+          after_score?: number | null
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          portfolio_id?: string
+          orders?: Json
+          new_inflow?: number | null
+          before_score?: number | null
+          after_score?: number | null
+          status?: string
+          created_at?: string
+        }
+        Relationships: []
       }
       alerts: {
         Row: {
@@ -268,6 +314,7 @@ export interface Database {
           read?: boolean | null
           created_at?: string
         }
+        Relationships: []
       }
       upgrade_intents: {
         Row: {
@@ -288,6 +335,7 @@ export interface Database {
           feature?: string
           created_at?: string
         }
+        Relationships: []
       }
       mutual_funds: {
         Row: {
@@ -323,6 +371,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
     }
     Views: {
@@ -332,6 +381,9 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }

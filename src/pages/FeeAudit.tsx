@@ -53,15 +53,14 @@ const FeeAudit = () => {
           const enriched = enrichHoldingsWithMarketData(rawHoldings, prices);
           setHoldings(enriched || []);
 
-          // Load TER, plan_type, monthly_sip from holdings data if columns exist
+          // Load TER, plan_type, monthly_sip from enriched holdings (typed fields)
           const newTerMap: Record<string, number> = {};
           const newPlanMap: Record<string, string> = {};
           const newSipMap: Record<string, number> = {};
-          for (const h of rawHoldings) {
-            const hAny = h as any;
-            if (hAny.ter && hAny.ter > 0) newTerMap[h.id] = hAny.ter;
-            if (hAny.plan_type) newPlanMap[h.id] = hAny.plan_type;
-            if (hAny.monthly_sip && hAny.monthly_sip > 0) newSipMap[h.id] = hAny.monthly_sip;
+          for (const h of enriched) {
+            if (h.ter && h.ter > 0) newTerMap[h.id] = h.ter;
+            if (h.planType) newPlanMap[h.id] = h.planType;
+            if (h.monthlySip && h.monthlySip > 0) newSipMap[h.id] = h.monthlySip;
           }
           setTerMap(prev => ({ ...prev, ...newTerMap }));
           setPlanTypeMap(prev => ({ ...prev, ...newPlanMap }));
@@ -90,6 +89,11 @@ const FeeAudit = () => {
 
   // Filter to MF-like holdings for fee audit
   const mfHoldings = holdings.filter(h => {
+    if (h.instrumentType) {
+      const type = h.instrumentType.toLowerCase();
+      return type === 'mf' || type === 'mutual_fund' || type === 'etf';
+    }
+    // Fallback for older data without instrument_type
     const ac = h.assetClass.toLowerCase();
     return ac.includes("fund") || ac.includes("etf") || ac.includes("mf") ||
            ac.includes("debt") || ac.includes("elss") || ac.includes("index") ||

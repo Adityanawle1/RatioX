@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const steps = [
   { num: "01", title: "Add Your Funds", desc: "Enter your mutual fund holdings manually or import via CSV from Zerodha, Groww, Angel One. We pull TER data automatically." },
   { num: "02", title: "See the Real Cost", desc: "Instantly see hidden charges — TER breakdown, GST, stamp duty, regular vs direct gap, and 10-year compounded fee drag." },
-  { num: "03", title: "Rebalance & Optimize", desc: "Get actionable insights: smart rebalance scenarios, portfolio drift alerts, and switch recommendations to keep your allocation perfectly aligned." },
+  { num: "03", title: "Rebalance & Analyze", desc: "Explore educational insights: hypothetical rebalance scenarios, portfolio drift alerts, and regular vs direct comparisons to understand your allocation better." },
 ];
 
 const HowItWorks = () => {

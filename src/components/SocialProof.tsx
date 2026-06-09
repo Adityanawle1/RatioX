@@ -24,7 +24,7 @@ const SocialProof = () => {
           ))}
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-body text-foreground font-medium">500+ investors</span>
+          <span className="text-sm font-body text-foreground font-medium">Early access users</span>
           <span className="text-xs text-muted-foreground font-body">auditing their MF fees on Ratio x</span>
         </div>
       </div>

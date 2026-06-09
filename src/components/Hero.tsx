@@ -75,7 +75,7 @@ const Hero = () => {
                 {/* Subheading */}
                 <div className="mb-10 mt-6">
                   <h2 className="font-body text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                    India's first platform that exposes the <span className="text-white border-b border-white/20 pb-0.5">real cost</span> of your mutual funds, while keeping your portfolio <span className="text-white border-b border-white/20 pb-0.5">perfectly rebalanced</span>.
+                    India's first platform that exposes the <span className="text-white border-b border-white/20 pb-0.5">real cost</span> of your mutual funds, while helping you <span className="text-white border-b border-white/20 pb-0.5">understand your portfolio drift</span>.
                   </h2>
                 </div>
               </div>
@@ -83,7 +83,7 @@ const Hero = () => {
               {/* Description */}
               <div className={`transition-all duration-700 delay-200 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <p className="font-body text-sm text-muted-foreground/80 max-w-lg leading-relaxed mb-10 border-l-[2px] border-amber/40 pl-4">
-                  Ratio x audits every rupee your mutual fund charges—revealing hidden TERs and regular vs direct gaps. Beyond fee transparency, our intelligent engine tracks portfolio drift and provides one-click rebalance scenarios to keep your asset allocation on target.
+                  Ratio x audits every rupee your mutual fund charges—revealing hidden TERs and regular vs direct gaps. Beyond fee transparency, our educational engine tracks portfolio drift and provides hypothetical rebalance scenarios to help you understand your asset allocation.
                 </p>
               </div>
 
@@ -189,7 +189,7 @@ const Hero = () => {
                     <div className="border-t border-surface-border pt-5">
                       <div className="flex items-center justify-between bg-amber/5 border border-amber/15 px-4 py-3 rounded-sm">
                         <div>
-                          <span className="text-[10px] text-muted-foreground font-body block">Switch to Direct & Save</span>
+                          <span className="text-[10px] text-muted-foreground font-body block">Estimated Savings (Direct Switch)</span>
                           <span className="font-mono text-lg text-amber font-semibold">₹1,67,000</span>
                         </div>
                         <span className="text-[10px] text-muted-foreground font-body">over 10 years</span>

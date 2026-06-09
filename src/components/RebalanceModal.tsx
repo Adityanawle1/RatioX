@@ -132,7 +132,7 @@ const RebalanceModal = ({ open, onOpenChange, portfolioId, userId, holdings, tar
                         ? "bg-drift-green/10 text-drift-green"
                         : "bg-drift-red/10 text-drift-red"
                     }`}>
-                      {trade.action === "buy" ? "INCREASE" : "DECREASE"}
+                      {trade.action === "buy" ? "UNDERWEIGHT" : "OVERWEIGHT"}
                     </span>
                     <div className="flex-1">
                       <p className="text-sm font-body text-foreground">{trade.assetClass}</p>

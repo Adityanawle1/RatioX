@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { getUserPortfolios, getHoldings } from "@/api/portfolio";
+import { getUserPortfolios, getHoldings, getAssetTargets } from "@/api/portfolio";
 import { refreshPrices } from "@/lib/market-data";
-import { enrichHoldingsWithMarketData, HoldingWithValue } from "@/lib/drift-engine";
+import { enrichHoldingsWithMarketData, HoldingWithValue, AssetClass } from "@/lib/drift-engine";
 import { supabase } from "@/lib/supabase";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ const FeeAudit = () => {
   const [holdings, setHoldings] = useState<HoldingWithValue[]>([]);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [portfolioId, setPortfolioId] = useState<string | null>(null);
+  const [assetTargets, setAssetTargets] = useState<AssetClass[]>([]);
 
   // Per-holding metadata (stored client-side for now, would persist to DB columns)
   const [terMap, setTerMap] = useState<Record<string, number>>({});
@@ -46,12 +47,23 @@ const FeeAudit = () => {
       setLoading(true);
       const { data: portfolios } = await getUserPortfolios(user.id);
       if (portfolios && portfolios.length > 0) {
-        setPortfolioId(portfolios[0].id);
-        const { data: rawHoldings } = await getHoldings(portfolios[0].id);
+        const pid = portfolios[0].id;
+        setPortfolioId(pid);
+        const [{ data: rawHoldings }, { data: targets }] = await Promise.all([
+          getHoldings(pid),
+          getAssetTargets(pid),
+        ]);
         if (rawHoldings) {
           const { prices } = await refreshPrices(rawHoldings);
           const enriched = enrichHoldingsWithMarketData(rawHoldings, prices);
           setHoldings(enriched || []);
+
+          const mappedTargets: AssetClass[] = (targets || []).map((t: any) => ({
+            name: t.asset_class,
+            targetPct: Number(t.target_pct),
+            driftThreshold: Number(t.drift_threshold || 5.0),
+          }));
+          setAssetTargets(mappedTargets);
 
           // Load TER, plan_type, monthly_sip from enriched holdings (typed fields)
           const newTerMap: Record<string, number> = {};
@@ -142,12 +154,14 @@ const FeeAudit = () => {
               See every rupee you are paying — visible and hidden. Across your entire portfolio.
             </p>
           </div>
-          <button 
-            onClick={() => setAddModalOpen(true)}
-            className="text-[10px] uppercase tracking-wider border border-amber/20 bg-amber text-background font-mono px-4 py-2.5 rounded-[2px] font-semibold hover:brightness-110 transition-colors shadow-glow-amber shrink-0"
-          >
-            Add Mutual Fund
-          </button>
+          <div>
+            <button 
+              onClick={() => setAddModalOpen(true)}
+              className="text-[10px] uppercase tracking-wider border border-amber/20 bg-amber text-background font-mono px-4 py-2.5 rounded-[2px] font-semibold hover:brightness-110 transition-colors shadow-glow-amber shrink-0"
+            >
+              Add Mutual Fund
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -196,7 +210,7 @@ const FeeAudit = () => {
           onOpenChange={setAddModalOpen}
           portfolioId={portfolioId}
           userId={user!.id}
-          assetClasses={["Large Cap Equity", "Mid Cap Equity", "Small Cap Equity", "Debt", "Gold", "Hybrid", "Index", "Liquid"]}
+          assetClasses={assetTargets.length > 0 ? assetTargets.map(t => t.name) : ["Large Cap Equity", "Mid Cap Equity", "Small Cap Equity", "Debt", "Gold", "Hybrid", "Index", "Liquid"]}
           onSuccess={loadData}
         />
       )}

@@ -38,7 +38,7 @@ const EditHoldingModal = ({ open, onOpenChange, holding, onSuccess }: EditHoldin
       setPurchaseDate(holding.purchase_date ? holding.purchase_date.split('T')[0] : "");
       
       // We have to use as any since these fields were just added to types
-      const h = holding as any;
+      const h = holding as typeof holding & { ter?: number | null; monthly_sip?: number | null; plan_type?: string | null };
       setTer(h.ter ? h.ter.toString() : "");
       setMonthlySIPAmount(h.monthly_sip ? h.monthly_sip.toString() : "");
       setPlanType(h.plan_type || "unknown");

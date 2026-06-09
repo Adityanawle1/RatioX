@@ -1,7 +1,10 @@
 import { useScrollReveal } from "./useScrollReveal";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const DashboardPreview = () => {
+  const { user } = useAuth();
   const { ref, visible } = useScrollReveal(0.15);
   const [feeSaved, setFeeSaved] = useState(0);
 
@@ -84,10 +87,13 @@ const DashboardPreview = () => {
                 </div>
 
                 <div className={`pt-2 transition-all duration-700 delay-[1200ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
-                  <button className="w-full relative group/btn overflow-hidden bg-surface border border-surface-border text-foreground font-body text-xs py-4 transition-all duration-300 hover:border-amber/50 font-medium">
+                  <Link 
+                    to={user ? "/dashboard/fee-audit" : "/signup"}
+                    className="w-full relative block group/btn overflow-hidden bg-surface border border-surface-border text-foreground font-body text-xs py-4 text-center transition-all duration-300 hover:border-amber/50 font-medium cursor-pointer"
+                  >
                     <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500 ease-out z-0"></div>
-                    <span className="relative z-10 group-hover/btn:text-background transition-colors">Run Full Fee Audit</span>
-                  </button>
+                    <span className="relative z-10 group-hover/btn:text-background transition-colors block">Run Full Fee Audit</span>
+                  </Link>
                 </div>
               </div>
             </div>

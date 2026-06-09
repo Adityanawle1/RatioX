@@ -65,7 +65,7 @@ const ImportCSVModal = ({ open, onOpenChange, portfolioId, userId, assetClasses,
       complete: (results) => {
         const rows: ParsedRow[] = [];
         
-        results.data.forEach((row: any, index) => {
+        results.data.forEach((row: Record<string, string>, index) => {
           let symbol = "";
           let quantity = 0;
           let avgPrice = 0;

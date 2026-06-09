@@ -51,7 +51,6 @@ const TaxHarvesting = () => {
   const handleUpgradeIntent = async () => {
     toast.info("Coming soon — you'll be notified");
     if (user) {
-      // @ts-ignore - bypass strict Supabase generic typing for this newly added table
       await supabase.from("upgrade_intents").insert({
         user_id: user.id,
         feature: "tax_harvesting",
@@ -74,7 +73,7 @@ const TaxHarvesting = () => {
   }, [lossPositions]);
 
   // Compute days left in FY (Indian FY ends March 31)
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
   const currentYear = today.getFullYear();
   let fyEndYear = currentYear;
   if (today.getMonth() >= 3) {

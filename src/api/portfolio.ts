@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase, type Json } from '@/lib/supabase';
 
 // Risk Profile Templates
 export const RISK_PROFILES = {
@@ -50,8 +50,7 @@ export const getUserProfile = async (userId: string) => {
   return { data, error };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const updateUserProfile = (userId: string, updates: any) =>
+export const updateUserProfile = (userId: string, updates: Record<string, unknown>) =>
   supabase.from('profiles').update(updates).eq('id', userId);
 
 export const setUserRiskProfile = async (userId: string, riskProfile: keyof typeof RISK_PROFILES) => {
@@ -250,7 +249,7 @@ export const addHoldingsBatch = async (
 
   // 3. Distribute into INSERTS or UPDATES based on DB
   for (const item of Object.values(consolidatedIncoming)) {
-    const existing = existingHoldings?.find((h: any) => h.symbol === item.symbol.toUpperCase() && h.asset_class === item.assetClass);
+    const existing = existingHoldings?.find((h: { symbol: string; asset_class: string; quantity: number; avg_buy_price: number; id: string }) => h.symbol === item.symbol.toUpperCase() && h.asset_class === item.assetClass);
     
     if (existing) {
       const totalQuantity = existing.quantity + item.quantity;
@@ -343,10 +342,8 @@ export const getTransactions = (portfolioId: string) =>
 export const saveRebalanceEvent = (data: {
   portfolio_id: string;
   user_id: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  snapshot: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  trades: any;
+  snapshot: Json;
+  trades: Json;
   health_score_before: number;
   health_score_after: number;
   status?: 'suggested' | 'executed' | 'dismissed';
@@ -369,7 +366,7 @@ export const updateRebalanceStatus = (
 export const saveRebalanceLog = (data: {
   user_id: string;
   portfolio_id: string;
-  orders: any[];
+  orders: Json;
   new_inflow: number;
   before_score: number;
   after_score: number;

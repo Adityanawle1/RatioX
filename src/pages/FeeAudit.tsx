@@ -58,8 +58,9 @@ const FeeAudit = () => {
           const enriched = enrichHoldingsWithMarketData(rawHoldings, prices);
           setHoldings(enriched || []);
 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedTargets: AssetClass[] = (targets || []).map((t: any) => ({
-            name: t.asset_class,
+            name: String(t.asset_class),
             targetPct: Number(t.target_pct),
             driftThreshold: Number(t.drift_threshold || 5.0),
           }));
@@ -91,7 +92,6 @@ const FeeAudit = () => {
   const handleUpgradeIntent = async () => {
     toast.info("Pro launching soon. You're on the early access list.");
     if (user) {
-      // @ts-ignore
       await supabase.from("upgrade_intents").insert({
         user_id: user.id,
         feature: "fee_audit",

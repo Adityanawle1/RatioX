@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getHoldings, getAssetTargets, getUserPortfolios, createPortfolio, deleteHolding, getUserProfile, getRebalanceLogs } from "@/api/portfolio";
 import { calculateDrift, calculateHealthScore, HoldingWithValue, AssetClass, enrichHoldingsWithMarketData, DriftResult } from "@/lib/drift-engine";
@@ -25,6 +25,7 @@ const statusLabel = { healthy: "On Target", drifting: "Drifting", critical: "Cri
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [portfolio, setPortfolio] = useState<PortfolioRow | null>(null);
   const [holdings, setHoldings] = useState<HoldingRow[]>([]);
   const [holdingsWithValues, setHoldingsWithValues] = useState<HoldingWithValue[]>([]);
@@ -46,6 +47,7 @@ const Dashboard = () => {
   const [editingHolding, setEditingHolding] = useState<HoldingRow | null>(null);
   const [failedPriceSymbols, setFailedPriceSymbols] = useState<string[]>([]);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [rebalanceLogs, setRebalanceLogs] = useState<any[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -101,7 +103,7 @@ const Dashboard = () => {
       const { data: profile } = await getUserProfile(user.id);
       
       // Only redirect to onboarding if explicitly not onboarded (ignore missing risk_profile for now)
-      if (profile && (profile as any).onboarded === false) { 
+      if (profile && (profile as { onboarded?: boolean }).onboarded === false) { 
         navigate("/onboarding"); 
         return; 
       }
@@ -136,6 +138,7 @@ const Dashboard = () => {
         const loadedTargets = t || [];
         setHoldings(loadedHoldings);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const targets: AssetClass[] = loadedTargets.map((t: any) => ({
           name: t.asset_class, 
           targetPct: Number(t.target_pct), 
@@ -147,9 +150,9 @@ const Dashboard = () => {
           await calculatePortfolioMetrics(loadedHoldings, targets);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Dashboard initialization failed:", err);
-      setFetchError(err.message || "Failed to load portfolio data. Please try again.");
+      setFetchError(err instanceof Error ? err.message : "Failed to load portfolio data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -178,7 +181,17 @@ const Dashboard = () => {
       clearInterval(tickInterval);
     };
     // Only re-run when user ID changes to prevent loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, initDashboard]); // refreshDriftData removed from deps to prevent infinite loop
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get("rebalance") === "true") {
+      setRebalanceModalOpen(true);
+      // Clean up search query parameter
+      navigate("/dashboard", { replace: true });
+    }
+  }, [location.search, navigate]);
 
   const handleDeleteHolding = async (id: string) => {
     setDeletingId(id);

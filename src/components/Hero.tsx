@@ -198,12 +198,18 @@ const Hero = () => {
 
                     {/* Bottom action */}
                     <div className="flex gap-3">
-                      <div className="flex-1 bg-amber text-background font-body text-xs font-semibold text-center py-2.5 rounded-sm">
+                      <Link 
+                        to={user ? "/dashboard/fee-audit" : "/signup"}
+                        className="flex-1 bg-amber text-background font-body text-xs font-semibold text-center py-2.5 rounded-sm hover:brightness-110 transition-all cursor-pointer"
+                      >
                         Full Fee Audit
-                      </div>
-                      <div className="flex-1 bg-surface border border-surface-border text-foreground font-body text-xs text-center py-2.5 rounded-sm hover:border-white/10 transition-colors cursor-pointer">
+                      </Link>
+                      <Link 
+                        to={user ? "/dashboard?rebalance=true" : "/signup"}
+                        className="flex-1 bg-surface border border-surface-border text-foreground font-body text-xs text-center py-2.5 rounded-sm hover:border-white/10 transition-colors cursor-pointer"
+                      >
                         Rebalance
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>

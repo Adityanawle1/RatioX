@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ExitLoadMonitor = ({ holdings }: Props) => {
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
 
   const exitLoadData = useMemo(() => {
     return holdings.map(h => {

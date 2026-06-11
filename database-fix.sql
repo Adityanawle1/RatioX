@@ -1,6 +1,6 @@
--- Add missing risk_profile column to profiles table
+so -- Add missing risk_profile column to profiles table
 -- Run this SQL command in your Supabase SQL Editor
-
+but 
 ALTER TABLE profiles 
 ADD COLUMN IF NOT EXISTS risk_profile TEXT;
 

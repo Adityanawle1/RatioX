@@ -1,3 +1,7 @@
+/**
+ * Represents fetched market price data from an external source.
+ * Supports Yahoo Finance (equities) and AMFI (mutual funds).
+ */
 export type PriceData = {
   symbol: string;
   price: number;

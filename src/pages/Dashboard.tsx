@@ -22,6 +22,11 @@ const statusColor = { healthy: "text-drift-green", drifting: "text-amber", criti
 const statusBg = { healthy: "bg-drift-green", drifting: "bg-amber", critical: "bg-drift-red" };
 const statusLabel = { healthy: "On Target", drifting: "Drifting", critical: "Critical" };
 
+/**
+ * Dashboard Component
+ * The main application interface for authenticated users.
+ * Handles portfolio visualization, live market data polling, and drift calculations.
+ */
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();

@@ -2,6 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from "@/components/Nav";
 
+/**
+ * LearnDrift Component
+ * An educational page detailing the mechanics of Asset Allocation Drift
+ * and Compounding Fee Drift (TER), designed to convert users to the dashboard.
+ */
 const LearnDrift: React.FC = () => {
   const navigate = useNavigate();
 

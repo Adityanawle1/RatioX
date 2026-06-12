@@ -1,0 +1,13 @@
+[1mdiff --git a/database-fix.sql b/database-fix.sql[m
+[1mindex 6b9c900..57c3764 100644[m
+[1m--- a/database-fix.sql[m
+[1m+++ b/database-fix.sql[m
+[36m@@ -1,6 +1,6 @@[m
+[31m--- Add missing risk_profile column to profiles table[m
+[32m+[m[32mso -- Add missing risk_profile column to profiles table[m
+ -- Run this SQL command in your Supabase SQL Editor[m
+[31m-[m
+[32m+[m[32mbut[m[41m [m
+ ALTER TABLE profiles [m
+ ADD COLUMN IF NOT EXISTS risk_profile TEXT;[m
+ [m

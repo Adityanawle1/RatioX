@@ -89,25 +89,36 @@ const Hero = () => {
 
               {/* CTA Section */}
               <div className={`transition-all duration-700 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                  <Link
-                    to={ctaHref}
-                    className="group relative overflow-hidden bg-foreground text-background font-body text-sm font-semibold px-8 py-4 hover:shadow-[0_0_30px_rgba(232,147,16,0.2)] transition-all duration-300 flex items-center gap-3"
-                  >
-                    <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
-                    <span className="relative z-10 group-hover:text-background transition-colors">
-                      {user ? "Go to Dashboard" : "Audit My Funds Free"}
-                    </span>
-                    <svg className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 12l4-4-4-4" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </Link>
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                    <Link
+                      to={ctaHref}
+                      className="group relative overflow-hidden bg-foreground text-background font-body text-sm font-semibold px-8 py-4 hover:shadow-[0_0_30px_rgba(232,147,16,0.2)] transition-all duration-300 flex items-center gap-3"
+                    >
+                      <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
+                      <span className="relative z-10 group-hover:text-background transition-colors">
+                        {user ? "Go to Dashboard" : "Audit My Funds Free"}
+                      </span>
+                      <svg className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M6 12l4-4-4-4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </Link>
 
-                  <div className="flex flex-col gap-1.5 border-l border-surface-border pl-5">
-                    <div className="flex items-center gap-2 text-muted-foreground text-xs font-body">
-                      <div className="w-1.5 h-1.5 bg-drift-green rounded-full"></div>
-                      <span>Free forever · No credit card</span>
-                    </div>
+                    <Link
+                      to="/learn-drift"
+                      className="group flex items-center gap-3 font-body text-sm font-semibold text-muted-foreground hover:text-foreground transition-all duration-300 px-6 py-4 border border-surface-border hover:border-amber/40 hover:bg-amber/5 rounded-sm bg-surface/30 backdrop-blur-sm"
+                    >
+                      <svg className="w-4 h-4 text-amber group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      See How It Works
+                    </Link>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-muted-foreground text-xs font-body pl-2">
+                    <div className="w-1.5 h-1.5 bg-drift-green rounded-full animate-pulse"></div>
+                    <span>Free forever · No credit card required</span>
                   </div>
                 </div>
 

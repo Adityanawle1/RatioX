@@ -21,6 +21,7 @@ const Nav = () => {
             { label: "Features", href: "/#features" },
             { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
+            { label: "Learn", href: "/learn-drift" },
           ].map(({ label, href }) => (
             href.startsWith("/#") ? (
               <a
@@ -91,6 +92,7 @@ const Nav = () => {
             { label: "Features", href: "/#features" },
             { label: "Pricing", href: "/#pricing" },
             { label: "FAQ", href: "/#faq" },
+            { label: "Learn", href: "/learn-drift" },
           ].map(({ label, href }) => (
             href.startsWith("/#") ? (
               <a

@@ -208,6 +208,12 @@ const Dashboard = () => {
           <Link to="/" className="font-display text-xl font-bold text-amber hover:brightness-110 transition-all">Ratio x</Link>
           <div className="flex items-center gap-6">
             <Link 
+              to="/learn-drift" 
+              className="hidden md:flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-muted-foreground hover:text-amber transition-colors"
+            >
+              How It Works
+            </Link>
+            <Link 
               to="/dashboard/fee-audit" 
               className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
             >
@@ -353,9 +359,12 @@ const Dashboard = () => {
                     <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Drift Analysis Engine</span>
                     <Link 
                       to="/learn-drift" 
-                      className="text-[9px] uppercase tracking-wider font-mono border border-surface-border/60 bg-background/50 hover:bg-surface-border text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded-[2px] transition-colors hidden sm:block"
+                      className="text-[10px] uppercase tracking-wider font-mono border border-amber/30 bg-amber/10 hover:bg-amber/20 text-amber px-2 py-1 rounded-[2px] transition-colors flex items-center gap-1.5"
                     >
-                      Algorithm
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      How It Works
                     </Link>
                   </div>
                   <button

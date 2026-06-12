@@ -13,6 +13,7 @@ import EditHoldingModal from "@/components/EditHoldingModal";
 import ImportCSVModal from "@/components/ImportCSVModal";
 import RebalanceModal from "@/components/RebalanceModal";
 import SharePortfolioModal from "@/components/SharePortfolioModal";
+import DriftTable from "@/components/DriftTable";
 import { format } from "date-fns";
 import { Share2, Lock, Pencil, Trash2 } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
@@ -357,83 +358,12 @@ const Dashboard = () => {
             </div>
 
             {/* Drift Table */}
-            {driftResults.length > 0 ? (
-              <div className="border border-surface-border rounded-[2px] overflow-hidden bg-card mb-8">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-surface-border bg-surface-hover/20">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Drift Analysis Engine</span>
-                    <Link 
-                      to="/learn-drift" 
-                      className="text-[10px] uppercase tracking-wider font-mono border border-amber/30 bg-amber/10 hover:bg-amber/20 text-amber px-2 py-1 rounded-[2px] transition-colors flex items-center gap-1.5"
-                    >
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      How It Works
-                    </Link>
-                  </div>
-                  <button
-                    onClick={() => setRebalanceModalOpen(true)}
-                    className="text-[10px] uppercase tracking-wider font-mono bg-amber text-background font-medium px-3 py-1.5 rounded-[2px] hover:brightness-110 transition-all">
-                    View Analysis
-                  </button>
-                </div>
-                <div className="overflow-x-auto">
-                  <div className="min-w-[600px]">
-                    <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-4 py-2 bg-surface/30 border-b border-surface-border">
-                      <span>Asset Class</span>
-                      <span className="text-right">Target</span>
-                      <span className="text-right">Actual</span>
-                      <span className="text-right">Variance</span>
-                      <span className="pl-4">State</span>
-                    </div>
-                    {driftResults.map((row) => (
-                      <div key={row.assetClass} className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-sm font-body px-4 py-3 border-b border-surface-border last:border-b-0">
-                        <span className="text-foreground">{row.assetClass}</span>
-                        <span className="text-right font-mono text-muted-foreground text-xs">{row.targetPct.toFixed(1)}%</span>
-                        <span className="text-right font-mono text-foreground text-xs">{row.currentPct.toFixed(1)}%</span>
-                        <span className={`text-right font-mono text-xs ${statusColor[row.status]}`}>
-                          {row.drift > 0 ? "+" : ""}{row.drift.toFixed(1)}%
-                        </span>
-                        <div className="pl-4 flex items-center gap-2">
-                          <div className="w-full max-w-[80px] h-1 bg-secondary rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full ${statusBg[row.status]}`}
-                              style={{ width: `${Math.min(Math.abs(row.drift) / row.driftThreshold * 100, 100)}%` }} />
-                          </div>
-                          <span className={`text-xs whitespace-nowrap ${statusColor[row.status]}`}>
-                            {statusLabel[row.status]}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="border border-surface-border rounded-[2px] bg-card p-12 text-center mb-8 relative overflow-hidden border-dashed">
-                <div className="absolute inset-0 bg-background/40 z-0 flex items-center justify-center opacity-10 pointer-events-none">
-                   <div className="w-full h-px bg-amber rotate-45 transform origin-center translate-y-[200px]" />
-                   <div className="w-full h-px bg-amber -rotate-45 transform origin-center -translate-y-[200px]" />
-                </div>
-                <div className="relative z-10">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground font-mono mb-5 opacity-80">
-                    System empty. Awaiting data ingestion.
-                  </p>
-                  <div className="flex justify-center items-center gap-4">
-                    <button
-                      onClick={() => setAddModalOpen(true)}
-                      className="text-[11px] uppercase tracking-widest font-mono bg-amber text-background font-medium px-6 py-2.5 rounded-[2px] hover:brightness-110 transition-all shadow-glow-amber">
-                      Manual Entry
-                    </button>
-                    <button
-                      onClick={() => setImportCSVModalOpen(true)}
-                      className="text-[11px] uppercase tracking-widest font-mono border border-surface-border bg-transparent text-foreground font-medium px-6 py-2.5 rounded-[2px] hover:bg-surface transition-all">
-                      Bulk Import
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            <DriftTable 
+              driftResults={driftResults} 
+              setRebalanceModalOpen={setRebalanceModalOpen}
+              setAddModalOpen={setAddModalOpen}
+              setImportCSVModalOpen={setImportCSVModalOpen}
+            />
 
             {/* Holdings list */}
             {holdingsWithValues.length > 0 && (

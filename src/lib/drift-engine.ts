@@ -1,3 +1,7 @@
+/**
+ * Represents a target asset class allocation in a user's portfolio.
+ * Defines the target baseline and the maximum allowable drift threshold.
+ */
 export type AssetClass = {
   name: string;
   targetPct: number;

@@ -3,6 +3,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 import SocialProof from "./SocialProof";
 
+/**
+ * Hero Component
+ * Renders the primary landing page hero section including animated copy,
+ * dynamic call-to-action buttons, and the interactive dashboard mockup.
+ */
 const Hero = () => {
   const { user } = useAuth();
   const ctaHref = user ? "/dashboard/fee-audit" : "/signup";

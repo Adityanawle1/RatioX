@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { MAIN_NAVIGATION } from "@/config/navigation";
 import Logo from "./Logo";
 
 const Nav = () => {
@@ -16,13 +17,7 @@ const Nav = () => {
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          {[
-            { label: "Fee Audit", href: "/#fee-calculator" },
-            { label: "Features", href: "/#features" },
-            { label: "Pricing", href: "/#pricing" },
-            { label: "FAQ", href: "/#faq" },
-            { label: "Learn", href: "/learn-drift" },
-          ].map(({ label, href }) => (
+          {MAIN_NAVIGATION.map(({ label, href }) => (
             href.startsWith("/#") ? (
               <a
                 key={label}
@@ -87,13 +82,7 @@ const Nav = () => {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-surface-border bg-background/95 backdrop-blur-xl px-6 py-6 flex flex-col gap-6">
-          {[
-            { label: "Fee Audit", href: "/#fee-calculator" },
-            { label: "Features", href: "/#features" },
-            { label: "Pricing", href: "/#pricing" },
-            { label: "FAQ", href: "/#faq" },
-            { label: "Learn", href: "/learn-drift" },
-          ].map(({ label, href }) => (
+          {MAIN_NAVIGATION.map(({ label, href }) => (
             href.startsWith("/#") ? (
               <a
                 key={label}

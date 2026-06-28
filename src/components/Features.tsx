@@ -18,8 +18,8 @@ const Features = () => {
   const { ref, visible } = useScrollReveal(0.1);
 
   return (
-    <section id="features" className="py-24 md:py-32 border-t border-surface-border bg-background" ref={ref}>
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="features" className="py-16 md:py-32 border-t border-surface-border bg-background" ref={ref}>
+      <div className="max-w-6xl mx-auto px-5 md:px-6">
         
         {/* Header Label */}
         <div className={`flex items-center gap-3 mb-6 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
@@ -30,7 +30,7 @@ const Features = () => {
         </div>
 
         <h2
-          className={`font-display text-4xl lg:text-5xl font-light text-foreground mb-16 transition-all duration-700 leading-tight tracking-tight max-w-2xl ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          className={`font-display text-3xl sm:text-4xl lg:text-5xl font-light text-foreground mb-12 md:mb-16 transition-all duration-700 leading-tight tracking-tight max-w-2xl ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           style={{ transitionDelay: "100ms" }}
         >
           Expose every hidden cost. <br/> Keep your portfolio sharp.
@@ -47,7 +47,7 @@ const Features = () => {
           {feeTransparency.map((f, i) => (
             <div
               key={f.id}
-              className={`relative bg-background p-8 lg:p-10 transition-all duration-500 hover:bg-surface/40 hover:-translate-y-1 hover:shadow-2xl hover:z-10 group cursor-default`}
+              className={`relative bg-background p-6 md:p-8 lg:p-10 transition-all duration-500 hover:bg-surface/40 hover:-translate-y-1 hover:shadow-2xl hover:z-10 group cursor-default`}
               style={{ transitionDelay: `${i * 100 + 200}ms`, opacity: visible ? 1 : 0 }}
             >
               <div className="flex justify-between items-start mb-8">
@@ -74,7 +74,7 @@ const Features = () => {
           {portfolioIntelligence.map((f, i) => (
             <div
               key={f.id}
-              className={`relative bg-background p-8 lg:p-10 transition-all duration-500 hover:bg-surface/40 hover:-translate-y-1 hover:shadow-2xl hover:z-10 group cursor-default`}
+              className={`relative bg-background p-6 md:p-8 lg:p-10 transition-all duration-500 hover:bg-surface/40 hover:-translate-y-1 hover:shadow-2xl hover:z-10 group cursor-default`}
               style={{ transitionDelay: `${i * 100 + 700}ms`, opacity: visible ? 1 : 0 }}
             >
               <div className="flex justify-between items-start mb-8">

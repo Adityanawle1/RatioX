@@ -51,10 +51,10 @@ const FeeCalculator = () => {
   return (
     <section
       id="fee-calculator"
-      className="py-24 md:py-32 border-t border-surface-border bg-background relative overflow-hidden"
+      className="py-16 md:py-32 border-t border-surface-border bg-background relative overflow-hidden"
       ref={ref}
     >
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-5 md:px-6 relative z-10">
 
         {/* Header */}
         <div className={`mb-16 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
@@ -71,11 +71,11 @@ const FeeCalculator = () => {
               <span className="w-2 h-2 rounded-full bg-drift-red animate-pulse" />
               <span className="text-[10px] font-mono font-medium tracking-widest uppercase">Avg investor loses ₹3.2L in 10 years</span>
             </div>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] tracking-tight max-w-3xl mb-6 mx-auto lg:mx-0">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] tracking-tight max-w-3xl mb-6 mx-auto lg:mx-0">
               How much is your fund <br className="hidden lg:block" />
               <span className="text-amber">actually</span> costing you?
             </h2>
-            <p className="text-base text-muted-foreground font-body max-w-xl leading-relaxed mx-auto lg:mx-0">
+            <p className="text-sm md:text-base text-muted-foreground font-body max-w-xl leading-relaxed mx-auto lg:mx-0">
               Most investors see the expense ratio. Nobody shows them what it compounds to. Calculate your exact loss below.
             </p>
           </div>
@@ -157,10 +157,10 @@ const FeeCalculator = () => {
           <div className="space-y-4">
 
             {/* Card 1 — Total Fees Paid */}
-            <div className="bg-card/80 backdrop-blur-sm border border-drift-red/30 shadow-[0_0_40px_rgba(239,68,68,0.08)] rounded-[2px] p-6 relative overflow-hidden group">
+            <div className="bg-card/80 backdrop-blur-sm border border-drift-red/30 shadow-[0_0_40px_rgba(239,68,68,0.08)] rounded-[2px] p-5 sm:p-6 relative overflow-hidden group">
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-drift-red to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <p className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground mb-3">Total Fees Paid Over {horizon} Years</p>
-              <p className={`font-mono text-3xl md:text-4xl font-semibold ${calculations.feesExceedInvested ? "text-drift-red" : "text-amber"}`}>
+              <p className={`font-mono text-2xl sm:text-3xl md:text-4xl font-semibold ${calculations.feesExceedInvested ? "text-drift-red" : "text-amber"}`}>
                 ₹{formatINR(calculations.totalFees)}
               </p>
               <p className="text-xs text-muted-foreground font-body mt-2">paid in fees</p>
@@ -193,13 +193,13 @@ const FeeCalculator = () => {
             </div>
 
             {/* Card 3 — Regular vs Direct */}
-            <div className="bg-card border border-surface-border rounded-[2px] p-6 relative overflow-hidden">
+            <div className="bg-card border border-surface-border rounded-[2px] p-5 sm:p-6 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber/40 to-transparent"></div>
               <p className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground mb-3">Regular vs Direct Plan</p>
               <p className="font-body text-sm text-foreground mb-1">Switching to Direct plan saves you:</p>
-              <p className="font-mono text-2xl md:text-3xl text-amber font-semibold">
+              <p className="font-mono text-xl sm:text-2xl md:text-3xl text-amber font-semibold">
                 ₹{formatINR(calculations.switchSavings)}
-                <span className="text-sm text-muted-foreground font-body ml-2">over {horizon} years</span>
+                <span className="text-xs sm:text-sm text-muted-foreground font-body ml-1 sm:ml-2">over {horizon} years</span>
               </p>
               <p className="text-xs text-muted-foreground/80 font-body mt-3 border-l-2 border-amber/30 pl-3">
                 That is <span className="text-amber font-mono font-semibold">{calculations.monthsOfSIP} months</span> of your SIP — for free.

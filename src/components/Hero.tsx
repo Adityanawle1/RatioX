@@ -49,9 +49,9 @@ const Hero = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-20 min-h-screen flex items-center pb-16 pt-24">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 w-full">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <div className="relative z-20 min-h-screen flex items-center pb-12 pt-20 md:pb-16 md:pt-24">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 w-full">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
             
             {/* Left: Copy */}
             <div className="w-full">
@@ -68,7 +68,7 @@ const Hero = () => {
 
               {/* Main Heading */}
               <div className={`transition-all duration-700 delay-100 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-medium text-white leading-[1.15] mb-6 tracking-tight">
+                <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-white leading-[1.15] mb-6 tracking-tight">
                   <span className="block opacity-95 mb-1">Your mutual fund is</span>
                   <span 
                     key={currentWord}
@@ -79,8 +79,8 @@ const Hero = () => {
                 </h1>
 
                 {/* Subheading */}
-                <div className="mb-10 mt-6">
-                  <h2 className="font-body text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
+                <div className="mb-8 md:mb-10 mt-6">
+                  <h2 className="font-body text-base md:text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
                     Discover the <span className="text-white border-b border-white/20 pb-0.5">real cost</span> of your mutual funds and optimize your asset allocation in minutes.
                   </h2>
                 </div>
@@ -110,17 +110,17 @@ const Hero = () => {
                 </ul>
               </div>
 
-              {/* CTA Section */}
+                {/* CTA Section */}
               <div className={`transition-all duration-700 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <div className="flex flex-col gap-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-5 w-full sm:w-auto">
                     <Magnetic strength={20}>
                       <Link
                         to={ctaHref}
-                        className="group relative overflow-hidden bg-foreground text-background font-body text-sm font-semibold px-8 py-4 hover:shadow-[0_0_30px_rgba(232,147,16,0.2)] transition-all duration-300 flex items-center gap-3"
+                        className="group relative overflow-hidden bg-foreground text-background font-body text-sm font-semibold px-8 py-4 hover:shadow-[0_0_30px_rgba(232,147,16,0.2)] transition-all duration-300 flex items-center justify-center gap-3 w-full sm:w-auto"
                       >
                         <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
-                        <span className="relative z-10 group-hover:text-background transition-colors">
+                        <span className="relative z-10 group-hover:text-background transition-colors whitespace-nowrap">
                           {user ? "Go to Dashboard" : "Audit My Portfolio"}
                         </span>
                         <svg className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -131,13 +131,13 @@ const Hero = () => {
 
                     <Link
                       to="/learn-drift"
-                      className="group flex items-center gap-3 font-body text-sm font-semibold text-muted-foreground hover:text-foreground transition-all duration-300 px-6 py-4 border border-surface-border hover:border-amber/40 hover:bg-amber/5 rounded-sm bg-surface/30 backdrop-blur-sm"
+                      className="group flex items-center justify-center gap-3 font-body text-sm font-semibold text-muted-foreground hover:text-foreground transition-all duration-300 px-6 py-4 border border-surface-border hover:border-amber/40 hover:bg-amber/5 rounded-sm bg-surface/30 backdrop-blur-sm w-full sm:w-auto"
                     >
-                      <svg className="w-4 h-4 text-amber group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-4 h-4 text-amber group-hover:scale-110 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      See How It Works
+                      <span className="whitespace-nowrap">See How It Works</span>
                     </Link>
                   </div>
 
@@ -231,19 +231,19 @@ const Hero = () => {
                     <div className="border-t border-surface-border pt-5 space-y-3">
                       <span className="text-[10px] font-body uppercase tracking-wider text-muted-foreground">Fund Expense Analysis</span>
                       {[
-                        { name: "HDFC Mid-Cap Opp (Regular)", ter: "1.74%", directTer: "0.81%", saving: "₹48K", status: "drift-red" },
-                        { name: "SBI Blue Chip (Regular)", ter: "1.52%", directTer: "0.72%", saving: "₹36K", status: "drift-red" },
-                        { name: "Parag Parikh Flexi (Direct)", ter: "0.63%", directTer: "0.63%", saving: "—", status: "drift-green" },
-                        { name: "ICICI Pru Equity & Debt", ter: "1.81%", directTer: "1.05%", saving: "₹31K", status: "amber" },
-                        { name: "Nippon India Small Cap", ter: "1.62%", directTer: "0.68%", saving: "₹52K", status: "drift-red" },
+                        { name: "HDFC Mid-Cap Opp", ter: "1.74%", directTer: "0.81%", saving: "₹48K", status: "drift-red" },
+                        { name: "SBI Blue Chip", ter: "1.52%", directTer: "0.72%", saving: "₹36K", status: "drift-red" },
+                        { name: "Parag Parikh Flexi", ter: "0.63%", directTer: "0.63%", saving: "—", status: "drift-green" },
+                        { name: "ICICI Pru Equity", ter: "1.81%", directTer: "1.05%", saving: "₹31K", status: "amber" },
+                        { name: "Nippon Small Cap", ter: "1.62%", directTer: "0.68%", saving: "₹52K", status: "drift-red" },
                       ].map((fund, i) => (
-                        <div key={i} className="flex items-center gap-3">
+                        <div key={i} className="flex items-center gap-2 sm:gap-3">
                           <div className={`w-1.5 h-1.5 rounded-full bg-${fund.status} shrink-0`} />
-                          <span className="text-xs font-body text-foreground truncate flex-1">{fund.name}</span>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[10px] text-muted-foreground">{fund.ter}</span>
+                          <span className="text-[10px] sm:text-xs font-body text-foreground truncate flex-1">{fund.name}</span>
+                          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                            <span className="font-mono text-[9px] sm:text-[10px] text-muted-foreground">{fund.ter}</span>
                             <span className="text-[8px] text-muted-foreground">→</span>
-                            <span className="font-mono text-[10px] text-drift-green">{fund.directTer}</span>
+                            <span className="font-mono text-[9px] sm:text-[10px] text-drift-green">{fund.directTer}</span>
                           </div>
                         </div>
                       ))}

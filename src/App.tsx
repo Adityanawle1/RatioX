@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ScrollToHash from "@/components/ScrollToHash";
+import SmoothScroll from "@/components/SmoothScroll";
 import Index from "./pages/Index.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import Login from "./pages/Login.tsx";
@@ -39,9 +40,12 @@ const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        {/* Global Cinematic Noise Overlay */}
+        <div className="fixed inset-0 z-[9998] pointer-events-none opacity-[0.03] bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20256%20256%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20baseFrequency%3D%220.9%22/%3E%3C/filter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23n)%22/%3E%3C/svg%3E')]"></div>
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <SmoothScroll />
           <ScrollToHash />
           <AuthProvider>
             <Routes>

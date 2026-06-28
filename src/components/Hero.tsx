@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 import SocialProof from "./SocialProof";
+import Magnetic from "./Magnetic";
 
 /**
  * Hero Component
@@ -113,18 +114,20 @@ const Hero = () => {
               <div className={`transition-all duration-700 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                    <Link
-                      to={ctaHref}
-                      className="group relative overflow-hidden bg-foreground text-background font-body text-sm font-semibold px-8 py-4 hover:shadow-[0_0_30px_rgba(232,147,16,0.2)] transition-all duration-300 flex items-center gap-3"
-                    >
-                      <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
-                      <span className="relative z-10 group-hover:text-background transition-colors">
-                        {user ? "Go to Dashboard" : "Audit My Portfolio"}
-                      </span>
-                      <svg className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M6 12l4-4-4-4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </Link>
+                    <Magnetic strength={20}>
+                      <Link
+                        to={ctaHref}
+                        className="group relative overflow-hidden bg-foreground text-background font-body text-sm font-semibold px-8 py-4 hover:shadow-[0_0_30px_rgba(232,147,16,0.2)] transition-all duration-300 flex items-center gap-3"
+                      >
+                        <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
+                        <span className="relative z-10 group-hover:text-background transition-colors">
+                          {user ? "Go to Dashboard" : "Audit My Portfolio"}
+                        </span>
+                        <svg className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M6 12l4-4-4-4" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </Link>
+                    </Magnetic>
 
                     <Link
                       to="/learn-drift"

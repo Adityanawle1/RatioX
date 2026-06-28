@@ -1,5 +1,6 @@
 import { useScrollReveal } from "./useScrollReveal";
 import { Link } from "react-router-dom";
+import Magnetic from "./Magnetic";
 
 const Pricing = () => {
   const { ref, visible } = useScrollReveal(0.15);
@@ -52,12 +53,14 @@ const Pricing = () => {
                 </li>
               ))}
             </ul>
-            <Link
-              to="/signup"
-              className="block w-full text-center bg-amber text-background font-body text-sm font-semibold px-6 py-3.5 rounded-sm hover:brightness-110 transition-all duration-300 shadow-[0_0_20px_rgba(232,147,16,0.3)] hover:shadow-[0_0_30px_rgba(232,147,16,0.5)]"
-            >
-              Audit my funds free
-            </Link>
+            <Magnetic strength={20}>
+              <Link
+                to="/signup"
+                className="block w-full text-center bg-amber text-background font-body text-sm font-semibold px-6 py-3.5 rounded-sm hover:brightness-110 transition-all duration-300 shadow-[0_0_20px_rgba(232,147,16,0.3)] hover:shadow-[0_0_30px_rgba(232,147,16,0.5)]"
+              >
+                Audit my funds free
+              </Link>
+            </Magnetic>
           </div>
 
           {/* Pro Tier */}

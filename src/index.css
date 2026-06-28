@@ -151,6 +151,15 @@
     }
   }
 
+  @keyframes dash {
+    from {
+      stroke-dashoffset: 200;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
   :root {
     --background: 0 0% 4%;
     --foreground: 30 20% 93%;

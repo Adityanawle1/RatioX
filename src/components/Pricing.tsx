@@ -54,7 +54,7 @@ const Pricing = () => {
             </ul>
             <Link
               to="/signup"
-              className="block w-full text-center border border-surface-border text-foreground font-body text-sm font-medium px-6 py-3.5 rounded-sm hover:bg-surface/30 hover:border-white/15 transition-all duration-300"
+              className="block w-full text-center bg-amber text-background font-body text-sm font-semibold px-6 py-3.5 rounded-sm hover:brightness-110 transition-all duration-300 shadow-[0_0_20px_rgba(232,147,16,0.3)] hover:shadow-[0_0_30px_rgba(232,147,16,0.5)]"
             >
               Audit my funds free
             </Link>
@@ -62,7 +62,7 @@ const Pricing = () => {
 
           {/* Pro Tier */}
           <div
-            className={`border border-amber/30 bg-card/50 p-8 md:p-10 relative overflow-hidden transition-all duration-700 group ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`border border-amber/20 bg-card/20 backdrop-blur-md p-8 md:p-10 relative overflow-hidden transition-all duration-700 group hover:border-amber/40 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             style={{ transitionDelay: "200ms" }}
           >
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber to-transparent" />
@@ -93,7 +93,7 @@ const Pricing = () => {
               ))}
             </ul>
             <button
-              className="block w-full text-center bg-amber text-background font-body text-sm font-semibold px-6 py-3.5 rounded-sm hover:brightness-110 transition-all duration-300 cursor-not-allowed opacity-80"
+              className="block w-full text-center border border-amber/30 text-amber font-body text-sm font-semibold px-6 py-3.5 rounded-sm hover:bg-amber/10 transition-all duration-300 cursor-not-allowed opacity-70"
               disabled
             >
               Notify me when available

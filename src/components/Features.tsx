@@ -47,15 +47,18 @@ const Features = () => {
           {feeTransparency.map((f, i) => (
             <div
               key={f.id}
-              className={`bg-background p-8 lg:p-10 transition-all duration-700 hover:bg-surface/30 group cursor-default`}
+              className={`relative bg-background p-8 lg:p-10 transition-all duration-500 hover:bg-surface/40 hover:-translate-y-1 hover:shadow-2xl hover:z-10 group cursor-default`}
               style={{ transitionDelay: `${i * 100 + 200}ms`, opacity: visible ? 1 : 0 }}
             >
               <div className="flex justify-between items-start mb-8">
-                <span className="text-2xl opacity-30 group-hover:opacity-60 group-hover:text-amber transition-all duration-300">{f.icon}</span>
-                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber transition-colors duration-300"></div>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-amber/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <span className="relative text-2xl opacity-30 group-hover:opacity-100 group-hover:text-amber transition-all duration-300">{f.icon}</span>
+                </div>
+                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber group-hover:shadow-[0_0_10px_rgba(232,147,16,0.5)] transition-all duration-300"></div>
               </div>
-              <h3 className="font-display text-xl tracking-tight text-foreground mb-3 group-hover:text-white transition-colors">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed font-body group-hover:text-gray-300 transition-colors">{f.copy}</p>
+              <h3 className="font-display text-xl tracking-tight text-foreground mb-3 group-hover:text-amber transition-colors duration-300">{f.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-body group-hover:text-muted-foreground/90 transition-colors">{f.copy}</p>
             </div>
           ))}
         </div>
@@ -71,15 +74,18 @@ const Features = () => {
           {portfolioIntelligence.map((f, i) => (
             <div
               key={f.id}
-              className={`bg-background p-8 lg:p-10 transition-all duration-700 hover:bg-surface/30 group cursor-default`}
+              className={`relative bg-background p-8 lg:p-10 transition-all duration-500 hover:bg-surface/40 hover:-translate-y-1 hover:shadow-2xl hover:z-10 group cursor-default`}
               style={{ transitionDelay: `${i * 100 + 700}ms`, opacity: visible ? 1 : 0 }}
             >
               <div className="flex justify-between items-start mb-8">
-                <span className="text-2xl opacity-30 group-hover:opacity-60 group-hover:text-amber transition-all duration-300">{f.icon}</span>
-                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber transition-colors duration-300"></div>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-amber/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <span className="relative text-2xl opacity-30 group-hover:opacity-100 group-hover:text-amber transition-all duration-300">{f.icon}</span>
+                </div>
+                <div className="w-2 h-2 border border-surface-border group-hover:border-amber group-hover:bg-amber group-hover:shadow-[0_0_10px_rgba(232,147,16,0.5)] transition-all duration-300"></div>
               </div>
-              <h3 className="font-display text-xl tracking-tight text-foreground mb-3 group-hover:text-white transition-colors">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed font-body group-hover:text-gray-300 transition-colors">{f.copy}</p>
+              <h3 className="font-display text-xl tracking-tight text-foreground mb-3 group-hover:text-amber transition-colors duration-300">{f.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-body group-hover:text-muted-foreground/90 transition-colors">{f.copy}</p>
             </div>
           ))}
         </div>

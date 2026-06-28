@@ -65,24 +65,20 @@ const FeeCalculator = () => {
             </span>
           </div>
 
-          {/* Banner Strip */}
-          <div className="w-full bg-card border border-surface-border rounded-[2px] py-8 px-6 mb-3 text-center">
-            <div className="text-4xl md:text-5xl font-bold text-white mb-2">₹3,20,000+</div>
-            <div className="font-body text-sm text-muted-foreground mb-4">
-              lost in mutual fund fees by the average Indian investor over 10 years
+          {/* Header & Shock Stat */}
+          <div className="mb-10 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-drift-red/10 border border-drift-red/20 text-drift-red mb-6">
+              <span className="w-2 h-2 rounded-full bg-drift-red animate-pulse" />
+              <span className="text-[10px] font-mono font-medium tracking-widest uppercase">Avg investor loses ₹3.2L in 10 years</span>
             </div>
-            <div className="font-body text-[10px] text-muted-foreground/60 italic">
-              Based on ₹10,000/month SIP at 1.5% TER over 10 years. Calculate your exact number below.
-            </div>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] tracking-tight max-w-3xl mb-6 mx-auto lg:mx-0">
+              How much is your fund <br className="hidden lg:block" />
+              <span className="text-amber">actually</span> costing you?
+            </h2>
+            <p className="text-base text-muted-foreground font-body max-w-xl leading-relaxed mx-auto lg:mx-0">
+              Most investors see the expense ratio. Nobody shows them what it compounds to. Calculate your exact loss below.
+            </p>
           </div>
-
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground leading-tight tracking-tight max-w-3xl mb-4">
-            How much is your mutual fund <br className="hidden md:block" />
-            <span className="text-amber">actually</span> costing you?
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground font-body max-w-xl leading-relaxed">
-            Most investors see the expense ratio. Nobody shows them what it compounds to.
-          </p>
         </div>
 
         {/* Calculator Grid */}
@@ -104,7 +100,7 @@ const FeeCalculator = () => {
                 step={500}
                 value={monthlySIP}
                 onChange={e => setMonthlySIP(Math.max(0, Number(e.target.value)))}
-                className="w-full bg-background border border-surface-border rounded-sm px-3 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber"
+                className="w-full bg-background/50 border border-surface-border rounded-sm px-3 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber focus:bg-background transition-colors"
               />
             </div>
 
@@ -118,7 +114,7 @@ const FeeCalculator = () => {
                 step={0.01}
                 value={expenseRatio}
                 onChange={e => setExpenseRatio(Math.max(0, Math.min(5, Number(e.target.value))))}
-                className="w-full bg-background border border-surface-border rounded-sm px-3 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber"
+                className="w-full bg-background/50 border border-surface-border rounded-sm px-3 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber focus:bg-background transition-colors"
               />
               <p className="text-[10px] text-muted-foreground/60 font-body mt-1">Find this on your fund's factsheet or AMFI website</p>
             </div>
@@ -151,7 +147,7 @@ const FeeCalculator = () => {
                 step={0.5}
                 value={expectedReturn}
                 onChange={e => setExpectedReturn(Math.max(1, Math.min(30, Number(e.target.value))))}
-                className="w-full bg-background border border-surface-border rounded-sm px-3 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber"
+                className="w-full bg-background/50 border border-surface-border rounded-sm px-3 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber focus:bg-background transition-colors"
               />
               <p className="text-[10px] text-muted-foreground/60 font-body mt-1">Gross return before expenses</p>
             </div>
@@ -161,8 +157,8 @@ const FeeCalculator = () => {
           <div className="space-y-4">
 
             {/* Card 1 — Total Fees Paid */}
-            <div className="bg-card border border-surface-border rounded-[2px] p-6 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-drift-red/60 to-transparent"></div>
+            <div className="bg-card/80 backdrop-blur-sm border border-drift-red/30 shadow-[0_0_40px_rgba(239,68,68,0.08)] rounded-[2px] p-6 relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-drift-red to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <p className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground mb-3">Total Fees Paid Over {horizon} Years</p>
               <p className={`font-mono text-3xl md:text-4xl font-semibold ${calculations.feesExceedInvested ? "text-drift-red" : "text-amber"}`}>
                 ₹{formatINR(calculations.totalFees)}

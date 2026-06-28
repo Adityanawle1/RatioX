@@ -80,16 +80,33 @@ const Hero = () => {
                 {/* Subheading */}
                 <div className="mb-10 mt-6">
                   <h2 className="font-body text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                    India's first platform that exposes the <span className="text-white border-b border-white/20 pb-0.5">real cost</span> of your mutual funds, while helping you <span className="text-white border-b border-white/20 pb-0.5">understand your portfolio drift</span>.
+                    Discover the <span className="text-white border-b border-white/20 pb-0.5">real cost</span> of your mutual funds and optimize your asset allocation in minutes.
                   </h2>
                 </div>
               </div>
 
-              {/* Description */}
+              {/* Description (Bullet Points) */}
               <div className={`transition-all duration-700 delay-200 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <p className="font-body text-sm text-muted-foreground/80 max-w-lg leading-relaxed mb-10 border-l-[2px] border-amber/40 pl-4">
-                  Ratio x audits every rupee your mutual fund charges—revealing hidden TERs and regular vs direct gaps. Beyond fee transparency, our educational engine tracks portfolio drift and provides hypothetical rebalance scenarios to help you understand your asset allocation.
-                </p>
+                <ul className="font-body text-sm text-muted-foreground/90 max-w-lg mb-10 space-y-3">
+                  <li className="flex items-start gap-2.5">
+                    <svg className="w-4 h-4 text-amber shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Uncover hidden TERs and Regular vs. Direct plan gaps.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <svg className="w-4 h-4 text-amber shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Track portfolio drift and asset allocation shifts over time.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <svg className="w-4 h-4 text-amber shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Visualize hypothetical rebalancing scenarios instantly.</span>
+                  </li>
+                </ul>
               </div>
 
               {/* CTA Section */}
@@ -102,7 +119,7 @@ const Hero = () => {
                     >
                       <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
                       <span className="relative z-10 group-hover:text-background transition-colors">
-                        {user ? "Go to Dashboard" : "Audit My Funds Free"}
+                        {user ? "Go to Dashboard" : "Audit My Portfolio"}
                       </span>
                       <svg className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M6 12l4-4-4-4" strokeLinecap="round" strokeLinejoin="round" />
@@ -146,7 +163,7 @@ const Hero = () => {
             <div className={`transition-all duration-1000 delay-500 ease-out ${isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
               <div className="relative">
                 {/* Glow behind mockup */}
-                <div className="absolute -inset-4 bg-[radial-gradient(ellipse_at_center,_rgba(232,137,12,0.08)_0%,_transparent_70%)] pointer-events-none" />
+                <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,_rgba(232,137,12,0.15)_0%,_transparent_60%)] pointer-events-none blur-xl" />
                 
                 {/* Dashboard Card */}
                 <div className="border border-surface-border bg-card/80 backdrop-blur-sm shadow-2xl relative overflow-hidden group">
@@ -177,6 +194,34 @@ const Hero = () => {
                         <span className="font-display text-4xl font-light text-drift-red">₹3.2L<span className="text-base text-muted-foreground/50"> lost</span></span>
                       </div>
                       <span className="font-mono text-xs text-drift-red bg-drift-red/10 border border-drift-red/20 px-2.5 py-1 rounded-sm">High Cost</span>
+                    </div>
+
+                    {/* Diverging Graph Animation */}
+                    <div className="border-t border-surface-border pt-5 pb-1 relative h-32 w-full overflow-hidden">
+                      <span className="text-[10px] font-body uppercase tracking-wider text-muted-foreground absolute top-4 left-0">Growth Trajectory</span>
+                      
+                      {/* X and Y axis subtle lines */}
+                      <div className="absolute bottom-2 left-0 w-full h-[1px] bg-surface-border"></div>
+                      <div className="absolute top-8 bottom-2 left-0 w-[1px] bg-surface-border"></div>
+                      
+                      {/* Returns WITHOUT fees (Green line going up) */}
+                      <svg className="absolute bottom-2 left-0 w-full h-24 overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                         {/* Path for ideal returns */}
+                         <path d="M 0 100 Q 40 80, 100 10" fill="none" stroke="#22c55e" strokeWidth="2" strokeDasharray="200" strokeDashoffset="200" style={{ animation: "dash 3s ease-out forwards" }} />
+                         {/* Path for actual returns (diverging lower) */}
+                         <path d="M 0 100 Q 50 85, 100 60" fill="none" stroke="#ef4444" strokeWidth="2" strokeDasharray="200" strokeDashoffset="200" style={{ animation: "dash 3s ease-out forwards 0.5s" }} />
+                         
+                         {/* Shaded area representing the loss */}
+                         <path d="M 0 100 Q 40 80, 100 10 L 100 60 Q 50 85, 0 100 Z" fill="rgba(239, 68, 68, 0.1)" className="opacity-0" style={{ animation: "fade-in-up 1s ease-out forwards 1.5s" }} />
+                      </svg>
+                      
+                      {/* Labels */}
+                      <div className="absolute top-8 right-2 text-[8px] font-mono text-drift-green flex items-center gap-1 opacity-0" style={{ animation: "fade-in-up 0.5s ease-out forwards 2s" }}>
+                        <div className="w-1.5 h-1.5 rounded-full bg-drift-green"></div> Ideal Return
+                      </div>
+                      <div className="absolute top-16 right-2 text-[8px] font-mono text-drift-red flex items-center gap-1 opacity-0" style={{ animation: "fade-in-up 0.5s ease-out forwards 2.5s" }}>
+                        <div className="w-1.5 h-1.5 rounded-full bg-drift-red"></div> After Fees
+                      </div>
                     </div>
 
                     {/* Fund Fee Breakdown */}

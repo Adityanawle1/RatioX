@@ -237,22 +237,36 @@ const AboutUs: React.FC = () => {
           </div>
         </section>
 
-        {/* Ethos */}
+        {/* Ethos & Free Statement */}
         <section className="mb-16 md:mb-32 flex flex-col items-center text-center py-20 relative">
-            <h2 className="font-display text-4xl md:text-7xl tracking-tighter text-white mb-8 hover:italic transition-all duration-300 cursor-default">Pure logic. <br />Zero friction.</h2>
-            <p className="text-xl md:text-2xl text-[#888] font-light max-w-3xl mx-auto leading-relaxed">
-               We don't build products. We build uncompromised protocols to defend capital against the decay of hidden fees and market drift. 
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent opacity-50 blur-xl"></div>
+            
+            <div className="inline-block mb-6 px-4 py-1.5 border border-amber/30 bg-amber/10 text-amber font-mono text-xs uppercase tracking-widest rounded-full relative z-10 glow-text">
+               100% Free Forever
+            </div>
+
+            <h2 className="font-display text-4xl md:text-7xl tracking-tighter text-white mb-8 hover:italic transition-all duration-300 cursor-default relative z-10">
+              Pure logic. <br />
+              <span className="gradient-text-amber glow-text">Zero cost.</span>
+            </h2>
+            
+            <p className="text-xl md:text-2xl text-[#888] font-light max-w-3xl mx-auto leading-relaxed mb-6 relative z-10">
+               We don't build walled gardens. We build uncompromised protocols to defend your capital against the decay of hidden fees and market drift. 
+            </p>
+            
+            <p className="text-lg md:text-xl text-[#aaa] font-body max-w-2xl mx-auto relative z-10">
+               Absolute financial clarity is a fundamental right. Our entire intelligence engine, analytics, and audits are now provided completely free for everyone. <strong className="text-white font-semibold">You will never pay a single penny.</strong>
             </p>
         </section>
 
         {/* CTA */}
-        <div className="flex justify-center border-t border-[#222] pt-16 md:pt-24 pb-8 md:pb-12">
+        <div className="flex justify-center border-t border-[#222] pt-16 md:pt-24 pb-8 md:pb-12 relative z-10">
           <Magnetic strength={30}>
             <button 
               onClick={() => navigate("/dashboard/fee-audit")}
-              className="bg-white text-black font-mono uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[9px] sm:text-[10px] font-bold px-8 sm:px-12 py-5 sm:py-6 hover:bg-[#e0e0e0] transition-all border border-transparent hover:border-black w-full sm:w-auto hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(255,255,255,0.2)]"
+              className="bg-amber text-background font-mono uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[11px] sm:text-[12px] font-bold px-8 sm:px-12 py-5 sm:py-6 hover:brightness-110 hover:shadow-glow-amber transition-all rounded-[4px] w-full sm:w-auto hover:-translate-y-1"
             >
-              [ Execute Portfolio Audit ]
+              [ Execute Free Audit ]
             </button>
           </Magnetic>
         </div>

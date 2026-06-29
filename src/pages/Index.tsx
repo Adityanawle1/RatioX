@@ -6,7 +6,7 @@ import Features from "@/components/Features";
 import ComparisonTable from "@/components/ComparisonTable";
 import HowItWorks from "@/components/HowItWorks";
 import DashboardPreview from "@/components/DashboardPreview";
-import Pricing from "@/components/Pricing";
+
 import EarlyAccess from "@/components/EarlyAccess";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
@@ -35,7 +35,7 @@ const Index = () => (
     <ComparisonTable />
     <HowItWorks />
     <DashboardPreview />
-    <Pricing />
+
     <EarlyAccess />
     <FAQ />
     <Footer />

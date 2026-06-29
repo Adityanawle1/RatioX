@@ -9,4 +9,5 @@ export const MAIN_NAVIGATION: NavLink[] = [
   { label: "FAQ", href: "/#faq" },
   { label: "Learn", href: "/learn-drift" },
   { label: "About", href: "/about" },
+  { label: "Manifesto", href: "/manifesto" },
 ];

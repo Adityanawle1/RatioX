@@ -54,6 +54,9 @@ const Footer = () => (
           The platform is an educational portfolio tracking and fee analysis tool and does not provide investment, trading, or tax advice. 
           All information including fee calculations, TER comparisons, and savings projections are for informational purposes only. Users should consult qualified professionals before making financial decisions.
         </p>
+        <p className="text-[10px] text-muted-foreground/40 font-body leading-relaxed max-w-4xl">
+          All product names, logos, and brands are property of their respective owners. Use of these names, logos, and brands does not imply endorsement or affiliation.
+        </p>
         <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} Ratio x. Mutual fund fee audit & portfolio intelligence.</p>
       </div>
     </div>

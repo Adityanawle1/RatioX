@@ -10,6 +10,7 @@ const Disclaimer = () => (
         Ratio x is not a SEBI-registered investment advisor (IA), research analyst (RA), or portfolio manager. 
         Consult a SEBI-registered investment advisor or qualified Chartered Accountant before making any financial decisions. 
         Past performance does not indicate future results. Users assume full responsibility for their financial decisions.
+        All product names, logos, and brands are property of their respective owners. Use of these names, logos, and brands does not imply endorsement or affiliation.
         {" "}
         <Link to="/terms" className="underline hover:text-foreground transition-colors">Terms</Link>
         {" · "}

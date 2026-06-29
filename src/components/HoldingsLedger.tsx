@@ -29,74 +29,74 @@ const HoldingsLedger: React.FC<HoldingsLedgerProps> = ({
   return (
     <div className="border border-surface-border/50 rounded-[12px] overflow-hidden glass shadow-premium bg-card/40 card-hover-glow">
       <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border/50 bg-background/40 backdrop-blur-sm">
-        <span className="text-xs uppercase tracking-widest font-mono font-bold text-foreground opacity-90 text-premium">Positions Ledger</span>
+        <span className="text-sm uppercase tracking-widest font-mono font-bold text-foreground opacity-90 text-premium">Positions Ledger</span>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setImportCSVModalOpen(true)}
-            className="text-[11px] uppercase tracking-wider border border-surface-border/50 text-muted-foreground bg-surface/50 font-mono px-4 py-2 rounded-[4px] hover:text-foreground hover:bg-surface hover:border-surface-border/80 transition-all hover-lift glass font-semibold"
+            className="text-[12px] uppercase tracking-wider border border-surface-border/50 text-muted-foreground bg-surface/50 font-mono px-5 py-2.5 rounded-[4px] hover:text-foreground hover:bg-surface hover:border-surface-border/80 transition-all hover-lift glass font-semibold"
           >
             Bulk Import
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="text-[11px] uppercase tracking-wider border border-surface-border/50 text-muted-foreground bg-surface/50 font-mono px-4 py-2 rounded-[4px] hover:text-foreground hover:bg-surface hover:border-surface-border/80 transition-all hover-lift glass font-semibold"
+            className="text-[12px] uppercase tracking-wider border border-surface-border/50 text-muted-foreground bg-surface/50 font-mono px-5 py-2.5 rounded-[4px] hover:text-foreground hover:bg-surface hover:border-surface-border/80 transition-all hover-lift glass font-semibold"
           >
             Add Position
           </button>
         </div>
       </div>
       {holdingsWithValues.map((h: HoldingWithValue) => (
-        <div key={h.id} className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 border-b border-surface-border/50 last:border-b-0 hover:bg-surface-hover/20 transition-colors gap-4">
+        <div key={h.id} className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-5 border-b border-surface-border/50 last:border-b-0 hover:bg-surface-hover/20 transition-colors gap-4">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-xs font-mono font-medium text-foreground">{h.symbol}</span>
-              <span className="text-xs text-muted-foreground/40">—</span>
-              <p className="text-xs font-body text-muted-foreground truncate max-w-[180px] sm:max-w-xs">{h.name}</p>
+            <div className="flex items-center gap-3 mb-1">
+              <span className="text-base font-mono font-semibold text-foreground text-premium">{h.symbol}</span>
+              <span className="text-sm text-muted-foreground/40">—</span>
+              <p className="text-sm font-body text-muted-foreground truncate max-w-[200px] sm:max-w-md text-premium">{h.name}</p>
               {!h.livePriceAvailable && (
-                <span className="text-[9px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-[2px] font-mono ml-1 border border-drift-red/20 opacity-90">
+                <span className="text-[10px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-2 py-1 rounded-[4px] font-mono ml-2 border border-drift-red/20 opacity-90 font-medium">
                   Stale Pricing
                 </span>
               )}
             </div>
             
-            <div className="flex items-center gap-3 mt-1.5">
-              <span className="text-[10px] uppercase tracking-wider text-amber/80 font-mono px-1.5 py-0.5 rounded-[2px] bg-amber/5 border border-amber/10 mix-blend-screen">
+            <div className="flex items-center gap-4 mt-2">
+              <span className="text-[11px] uppercase tracking-wider text-amber font-mono px-2 py-1 rounded-[4px] bg-amber/10 border border-amber/20 font-medium">
                 {h.assetClass}
               </span>
               
               {(h.instrumentType === 'mf' || h.instrumentType === 'mutual_fund') && (
                 <>
                   {h.planType?.toLowerCase() === 'regular' && (
-                    <span className="text-[9px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-[2px] font-mono border border-drift-red/20">
+                    <span className="text-[10px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-2 py-1 rounded-[4px] font-mono border border-drift-red/20 font-medium">
                       Regular Plan
                     </span>
                   )}
                   {h.ter && h.ter >= 1.0 && (
-                    <span className="text-[9px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-1.5 py-0.5 rounded-[2px] font-mono border border-drift-red/20" title={`High TER: ${h.ter}%`}>
+                    <span className="text-[10px] uppercase tracking-wider bg-drift-red/10 text-drift-red px-2 py-1 rounded-[4px] font-mono border border-drift-red/20 font-medium" title={`High TER: ${h.ter}%`}>
                       High Cost ({h.ter}%)
                     </span>
                   )}
                 </>
               )}
               
-              <div className="w-px h-3 bg-surface-border/60" />
+              <div className="w-px h-4 bg-surface-border/60" />
               
-              <span className="text-[11px] font-mono text-muted-foreground">
-                {h.quantity} <span className="opacity-40 ml-0.5">QTY</span>
+              <span className="text-[12px] font-mono text-muted-foreground font-medium">
+                {h.quantity} <span className="opacity-50 ml-1">QTY</span>
               </span>
 
-              <div className="w-px h-3 bg-surface-border/60" />
+              <div className="w-px h-4 bg-surface-border/60" />
 
               {h.cagr !== undefined ? (
-                <span className={`text-[11px] font-mono ${h.cagr > 0 ? 'text-drift-green' : h.cagr < 0 ? 'text-drift-red' : 'text-muted-foreground'}`}>
-                  <span className="opacity-50 mr-1.5 text-muted-foreground/70 tracking-widest text-[9px] uppercase">IRR</span>
+                <span className={`text-[12px] font-mono font-semibold ${h.cagr > 0 ? 'text-drift-green drop-shadow-sm' : h.cagr < 0 ? 'text-drift-red drop-shadow-sm' : 'text-muted-foreground'}`}>
+                  <span className="opacity-60 mr-2 text-muted-foreground/80 tracking-widest text-[10px] uppercase font-medium">IRR</span>
                   {h.cagr > 0 ? '+' : ''}{h.cagr.toFixed(1)}%
                 </span>
               ) : h.holdingPeriodDays !== undefined && h.holdingPeriodDays < 30 ? (
-                <span className="text-[9.5px] uppercase tracking-wider text-amber/60 font-mono flex items-center gap-1.5 border border-amber/10 bg-amber/5 px-1.5 py-0.5 rounded-[2px]">
-                  <span className="w-1 h-1 rounded-full bg-amber/50 animate-pulse" />
+                <span className="text-[10px] uppercase tracking-wider text-amber/80 font-mono flex items-center gap-2 border border-amber/20 bg-amber/10 px-2 py-1 rounded-[4px] font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse shadow-glow-amber" />
                   Incubating 
-                  <span className="opacity-60 lowercase">({30 - h.holdingPeriodDays}d left)</span>
+                  <span className="opacity-70 lowercase ml-1">({30 - h.holdingPeriodDays}d left)</span>
                 </span>
               ) : null}
 

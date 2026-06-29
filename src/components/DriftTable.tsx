@@ -70,7 +70,7 @@ const DriftTable: React.FC<DriftTableProps> = ({
       </div>
       <div className="overflow-x-auto">
         <div className="min-w-[600px]">
-          <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-6 py-3 bg-surface/30 border-b border-surface-border/50">
+          <div className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-[11px] uppercase tracking-wider text-muted-foreground font-mono px-6 py-4 bg-surface/30 border-b border-surface-border/50">
             <span>Asset Class</span>
             <span className="text-right">Target</span>
             <span className="text-right">Actual</span>
@@ -78,19 +78,19 @@ const DriftTable: React.FC<DriftTableProps> = ({
             <span className="pl-6">State</span>
           </div>
           {driftResults.map((row) => (
-            <div key={row.assetClass} className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-sm font-body px-6 py-4 border-b border-surface-border/50 last:border-b-0 hover:bg-surface/20 transition-colors">
-              <span className="text-foreground text-premium">{row.assetClass}</span>
-              <span className="text-right font-mono text-muted-foreground text-xs">{row.targetPct.toFixed(1)}%</span>
-              <span className="text-right font-mono text-foreground text-xs">{row.currentPct.toFixed(1)}%</span>
-              <span className={`text-right font-mono text-xs ${statusColor[row.status]}`}>
+            <div key={row.assetClass} className="grid grid-cols-[1.5fr_70px_70px_80px_1fr] text-sm font-body px-6 py-5 border-b border-surface-border/50 last:border-b-0 hover:bg-surface/20 transition-colors">
+              <span className="text-foreground text-premium font-medium">{row.assetClass}</span>
+              <span className="text-right font-mono text-muted-foreground text-sm">{row.targetPct.toFixed(1)}%</span>
+              <span className="text-right font-mono text-foreground text-sm font-medium">{row.currentPct.toFixed(1)}%</span>
+              <span className={`text-right font-mono text-sm font-medium ${statusColor[row.status]}`}>
                 {row.drift > 0 ? "+" : ""}{row.drift.toFixed(1)}%
               </span>
-              <div className="pl-4 flex items-center gap-2">
-                <div className="w-full max-w-[80px] h-1 bg-secondary rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${statusBg[row.status]}`}
+              <div className="pl-6 flex items-center gap-3">
+                <div className="w-full max-w-[80px] h-1.5 bg-secondary rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${statusBg[row.status]} shadow-premium-sm`}
                     style={{ width: `${Math.min(Math.abs(row.drift) / row.driftThreshold * 100, 100)}%` }} />
                 </div>
-                <span className={`text-xs whitespace-nowrap ${statusColor[row.status]}`}>
+                <span className={`text-xs uppercase tracking-wider font-semibold whitespace-nowrap ${statusColor[row.status]}`}>
                   {statusLabel[row.status]}
                 </span>
               </div>

@@ -36,7 +36,7 @@ const Hero = () => {
   }, [rotatingWords.length]);
 
   return (
-    <section className="relative min-h-screen bg-black border-b border-surface-border overflow-hidden">
+    <section className="relative min-h-[85vh] bg-black border-b border-surface-border overflow-hidden">
       
       {/* Abstract background — subtle gradient mesh */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -49,7 +49,7 @@ const Hero = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-20 min-h-screen flex items-center pb-12 pt-20 md:pb-16 md:pt-24">
+      <div className="relative z-20 min-h-[85vh] flex items-center pb-12 pt-20 md:pb-16 md:pt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
             

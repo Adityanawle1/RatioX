@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 import SocialProof from "./SocialProof";
 import Magnetic from "./Magnetic";
+import SupportedBrokers from "./SupportedBrokers";
 
 /**
  * Hero Component
@@ -51,7 +52,7 @@ const Hero = () => {
       {/* Main Content */}
       <div className="relative z-20 min-h-[85vh] flex items-center pb-12 pt-20 md:pb-16 md:pt-24">
         <div className="max-w-7xl mx-auto px-5 md:px-8 w-full">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center lg:items-start">
             
             {/* Left: Copy */}
             <div className="w-full">
@@ -70,11 +71,17 @@ const Hero = () => {
               <div className={`transition-all duration-700 delay-100 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-white leading-[1.15] mb-6 tracking-tight">
                   <span className="block opacity-95 mb-1">Your mutual fund is</span>
-                  <span 
-                    key={currentWord}
-                    className="block text-[#E8890C] animate-in fade-in slide-in-from-bottom-2 duration-500"
-                  >
-                    {rotatingWords[currentWord]}
+                  <span className="block relative text-[#E8890C]">
+                    {/* Ghost element to reserve exact height for the longest text and prevent layout shifting */}
+                    <span className="invisible block pointer-events-none" aria-hidden="true">
+                      losing ₹ lakhs silently.
+                    </span>
+                    <span 
+                      key={currentWord}
+                      className="absolute inset-0 animate-in fade-in slide-in-from-bottom-2 duration-500"
+                    >
+                      {rotatingWords[currentWord]}
+                    </span>
                   </span>
                 </h1>
 
@@ -158,12 +165,13 @@ const Hero = () => {
                 {/* Social Proof — below CTA */}
                 <div className="mt-10">
                   <SocialProof />
+                  <SupportedBrokers />
                 </div>
               </div>
             </div>
 
             {/* Right: Product Mockup — Fee Audit focused */}
-            <div className={`transition-all duration-1000 delay-500 ease-out ${isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
+            <div className={`transition-all duration-1000 delay-500 ease-out lg:mt-6 ${isLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
               <div className="relative">
                 {/* Glow behind mockup */}
                 <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,_rgba(232,137,12,0.15)_0%,_transparent_60%)] pointer-events-none blur-xl" />
@@ -282,7 +290,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
     </section>
   );
 };

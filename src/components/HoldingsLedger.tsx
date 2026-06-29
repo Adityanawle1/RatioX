@@ -27,26 +27,26 @@ const HoldingsLedger: React.FC<HoldingsLedgerProps> = ({
   if (holdingsWithValues.length === 0) return null;
 
   return (
-    <div className="border border-surface-border rounded-[2px] overflow-hidden bg-card">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-surface-border bg-surface-hover/20">
-        <span className="text-xs uppercase tracking-widest font-mono font-medium text-foreground opacity-90">Positions Ledger</span>
-        <div className="flex items-center gap-2">
+    <div className="border border-surface-border/50 rounded-[12px] overflow-hidden glass shadow-premium bg-card/40 card-hover-glow">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border/50 bg-background/40 backdrop-blur-sm">
+        <span className="text-xs uppercase tracking-widest font-mono font-bold text-foreground opacity-90 text-premium">Positions Ledger</span>
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setImportCSVModalOpen(true)}
-            className="text-[10px] uppercase tracking-wider border border-surface-border text-muted-foreground bg-background/50 font-mono px-3 py-1 rounded-[2px] hover:text-foreground hover:border-surface-border/80 transition-colors"
+            className="text-[11px] uppercase tracking-wider border border-surface-border/50 text-muted-foreground bg-surface/50 font-mono px-4 py-2 rounded-[4px] hover:text-foreground hover:bg-surface hover:border-surface-border/80 transition-all hover-lift glass font-semibold"
           >
             Bulk Import
           </button>
           <button
             onClick={() => setAddModalOpen(true)}
-            className="text-[10px] uppercase tracking-wider border border-surface-border text-muted-foreground bg-background/50 font-mono px-3 py-1 rounded-[2px] hover:text-foreground hover:border-surface-border/80 transition-colors"
+            className="text-[11px] uppercase tracking-wider border border-surface-border/50 text-muted-foreground bg-surface/50 font-mono px-4 py-2 rounded-[4px] hover:text-foreground hover:bg-surface hover:border-surface-border/80 transition-all hover-lift glass font-semibold"
           >
             Add Position
           </button>
         </div>
       </div>
       {holdingsWithValues.map((h: HoldingWithValue) => (
-        <div key={h.id} className="flex items-center justify-between px-4 py-3.5 border-b border-surface-border last:border-b-0 hover:bg-surface-hover/10 transition-colors">
+        <div key={h.id} className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 border-b border-surface-border/50 last:border-b-0 hover:bg-surface-hover/20 transition-colors gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-0.5">
               <span className="text-xs font-mono font-medium text-foreground">{h.symbol}</span>

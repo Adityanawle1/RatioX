@@ -211,9 +211,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-surface-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-premium border-b border-surface-border">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="font-display text-xl font-bold text-amber hover:brightness-110 transition-all">Ratio x</Link>
+          <Link to="/" className="font-display text-xl font-bold gradient-text-amber hover:brightness-125 transition-all text-premium">Ratio x</Link>
           <div className="flex items-center gap-6">
             <Link 
               to="/learn-drift" 
@@ -223,27 +223,27 @@ const Dashboard = () => {
             </Link>
             <Link 
               to="/dashboard/fee-audit" 
-              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-premium border border-amber/20 bg-amber/5 px-3 py-1.5 rounded-[4px] hover:bg-amber/10 hover:border-amber/40 hover:shadow-glow-amber"
             >
               Fee Audit
             </Link>
             <Link 
               to="/dashboard" 
-              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-background hover:brightness-110 transition-colors border border-amber/20 bg-amber px-3 py-1.5 rounded-[2px] font-semibold shadow-glow-amber"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-background hover:brightness-110 transition-premium border border-amber/20 bg-amber px-4 py-1.5 rounded-[4px] font-semibold shadow-glow-amber"
             >
               Drift Engine
             </Link>
             <Link 
               to="/dashboard/tax-harvesting" 
-              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-premium border border-amber/20 bg-amber/5 px-3 py-1.5 rounded-[4px] hover:bg-amber/10 hover:border-amber/40 hover:shadow-glow-amber"
             >
               <Lock className="w-3 h-3" />
               Tax Harvesting
             </Link>
-            <span className="text-xs text-muted-foreground font-body hidden sm:block">{user?.email}</span>
+            <span className="text-xs text-muted-foreground font-body hidden sm:block text-premium">{user?.email}</span>
             <button
               onClick={() => { signOut(); navigate("/"); }}
-              className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors text-premium"
             >
               Sign out
             </button>
@@ -271,29 +271,31 @@ const Dashboard = () => {
         ) : (
           <>
             {/* Header row */}
-            <div className="flex items-start justify-between mb-10">
-              <div>
-                <h1 className="font-display text-3xl font-semibold text-foreground">
+            <div className="flex flex-col md:flex-row items-start justify-between mb-12 p-8 rounded-[12px] bg-card/40 border border-surface-border/50 glass shadow-premium card-hover-glow relative overflow-hidden">
+              <div className="absolute -top-32 -left-32 w-64 h-64 bg-amber/5 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="relative z-10 w-full md:w-auto">
+                <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground heading-premium mb-2">
                   {portfolio?.name || "My Portfolio"}
                 </h1>
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3">
-                  <div>
-                    <p className="text-xs text-muted-foreground font-body">Total Value</p>
-                    <p className="font-mono text-xl text-foreground">
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mt-6">
+                  <div className="group">
+                    <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest mb-1.5">Total Value</p>
+                    <p className="font-mono text-2xl md:text-3xl text-foreground text-premium group-hover:text-amber transition-colors duration-300">
                       ₹{totalValue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground font-body">Total Invested</p>
-                    <p className="font-mono text-xl text-foreground">
+                  <div className="group">
+                    <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest mb-1.5">Total Invested</p>
+                    <p className="font-mono text-2xl md:text-3xl text-foreground text-premium transition-colors duration-300">
                       ₹{totalInvested.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground font-body">Overall P&L</p>
-                    <p className={`font-mono text-xl ${overallPnl >= 0 ? "text-drift-green" : "text-drift-red"}`}>
+                  <div className="group">
+                    <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest mb-1.5">Overall P&L</p>
+                    <p className={`font-mono text-2xl md:text-3xl text-premium ${overallPnl >= 0 ? "text-drift-green" : "text-drift-red"}`}>
                       {overallPnl >= 0 ? "+" : "-"}₹{Math.abs(overallPnl).toLocaleString("en-IN", { maximumFractionDigits: 0 })}
-                      <span className="text-sm ml-2 opacity-80">
+                      <span className="text-sm md:text-base ml-2 opacity-70 font-medium">
                         ({overallPnlPct >= 0 ? "+" : ""}{overallPnlPct.toFixed(2)}%)
                       </span>
                     </p>
@@ -302,18 +304,22 @@ const Dashboard = () => {
               </div>
 
               {/* Health Score */}
-              <div className="text-right">
-                <div className="font-mono text-4xl font-semibold text-amber">
+              <div className="text-right mt-8 md:mt-0 relative z-10 flex flex-col items-end shrink-0">
+                <div className="font-mono text-5xl font-bold gradient-text-amber glow-text">
                   {healthScore.toFixed(0)}
-                  <span className="text-sm text-muted-foreground">/100</span>
+                  <span className="text-lg text-amber/40 font-medium ml-1">/100</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-body mt-1">Health Score</p>
-                <svg width="100" height="56" viewBox="0 0 120 68" className="mt-1">
-                  <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="hsl(0 0% 13%)" strokeWidth="4" strokeLinecap="round" />
-                  <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="hsl(37 90% 55%)" strokeWidth="4" strokeLinecap="round"
-                    strokeDasharray="157" strokeDashoffset={157 - 157 * (healthScore / 100)} />
-                </svg>
-                <div className="flex items-center justify-end gap-2 mt-1">
+                <p className="text-[11px] text-muted-foreground font-mono uppercase tracking-widest mt-2">Health Score</p>
+                <div className="relative mt-3">
+                  <svg width="120" height="68" viewBox="0 0 120 68" className="drop-shadow-lg">
+                    <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="hsl(0 0% 13%)" strokeWidth="6" strokeLinecap="round" />
+                    <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="hsl(37 90% 55%)" strokeWidth="6" strokeLinecap="round"
+                      strokeDasharray="157" strokeDashoffset={157 - 157 * (healthScore / 100)} 
+                      className="transition-all duration-1000 ease-out" />
+                  </svg>
+                  <div className="absolute inset-0 bg-amber/20 blur-xl rounded-full opacity-40 mix-blend-screen pointer-events-none" />
+                </div>
+                <div className="flex items-center justify-end gap-3 mt-3">
                   {lastUpdated && (
                     <p className="text-[10px] text-muted-foreground font-body">
                       {minsAgo === 0 ? "Updated just now" : `Updated ${minsAgo}m ago`}

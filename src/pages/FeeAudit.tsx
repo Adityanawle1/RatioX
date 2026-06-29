@@ -115,49 +115,51 @@ const FeeAudit = () => {
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-surface-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-premium border-b border-surface-border">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="font-display text-xl font-bold text-amber hover:brightness-110 transition-all">Ratio x</Link>
+          <Link to="/" className="font-display text-xl font-bold gradient-text-amber hover:brightness-125 transition-all text-premium">Ratio x</Link>
           <div className="flex items-center gap-6">
             <Link 
               to="/dashboard/fee-audit" 
-              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-background hover:brightness-110 transition-colors border border-amber/20 bg-amber px-3 py-1.5 rounded-[2px] font-semibold shadow-glow-amber"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-background hover:brightness-110 transition-premium border border-amber/20 bg-amber px-4 py-1.5 rounded-[4px] font-semibold shadow-glow-amber"
             >
               Fee Audit
             </Link>
             <Link 
               to="/dashboard" 
-              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-premium border border-amber/20 bg-amber/5 px-3 py-1.5 rounded-[4px] hover:bg-amber/10 hover:border-amber/40 hover:shadow-glow-amber"
             >
               Drift Engine
             </Link>
             <Link 
               to="/dashboard/tax-harvesting" 
-              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-colors border border-amber/20 bg-amber/5 px-2.5 py-1 rounded-[2px]"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-amber/80 hover:text-amber transition-premium border border-amber/20 bg-amber/5 px-3 py-1.5 rounded-[4px] hover:bg-amber/10 hover:border-amber/40 hover:shadow-glow-amber"
             >
               <Lock className="w-3 h-3" />
               Tax Harvesting
             </Link>
-            <span className="text-xs text-muted-foreground font-body hidden sm:block">{user?.email}</span>
-            <button onClick={() => { signOut(); navigate("/"); }} className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors">Sign out</button>
+            <span className="text-xs text-muted-foreground font-body hidden sm:block text-premium">{user?.email}</span>
+            <button onClick={() => { signOut(); navigate("/"); }} className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors text-premium">Sign out</button>
           </div>
         </div>
       </nav>
 
-      <div className="pt-24 max-w-4xl mx-auto px-6 relative">
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="pt-32 max-w-4xl mx-auto px-6 relative">
+        <div className="absolute top-20 right-0 w-96 h-96 bg-amber/5 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
           <div>
-            <h1 className="font-display text-3xl font-semibold mb-2 flex items-center gap-3">
+            <h1 className="font-display text-4xl md:text-5xl font-semibold mb-3 flex items-center gap-3 heading-premium">
               Fee Audit
             </h1>
-            <p className="text-muted-foreground font-body text-sm max-w-2xl">
+            <p className="text-muted-foreground font-body text-base max-w-2xl text-premium subheading-premium">
               See every rupee you are paying — visible and hidden. Across your entire portfolio.
             </p>
           </div>
           <div>
             <button 
               onClick={() => setAddModalOpen(true)}
-              className="text-[10px] uppercase tracking-wider border border-amber/20 bg-amber text-background font-mono px-4 py-2.5 rounded-[2px] font-semibold hover:brightness-110 transition-colors shadow-glow-amber shrink-0"
+              className="text-[11px] uppercase tracking-wider border border-amber/30 bg-amber/90 text-background font-mono px-5 py-3 rounded-[4px] font-bold hover:brightness-110 hover:bg-amber hover-lift transition-all shadow-glow-amber shrink-0"
             >
               Add Mutual Fund
             </button>

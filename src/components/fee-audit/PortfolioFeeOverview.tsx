@@ -39,24 +39,28 @@ const PortfolioFeeOverview = ({ holdings, terMap }: Props) => {
   const verdictColor = { green: "text-drift-green", yellow: "text-amber", red: "text-drift-red" };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Summary Card */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-card border border-surface-border rounded-[2px]">
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider mb-1">Total MF Value</p>
-          <p className="font-mono text-lg text-foreground">₹{formatINR(summary.totalMfValue)}</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-8 bg-card/40 border border-surface-border/50 glass shadow-premium rounded-[12px] card-hover-glow relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-drift-red/5 rounded-full blur-[80px] pointer-events-none" />
+        
+        <div className="relative z-10">
+          <p className="text-[11px] text-muted-foreground uppercase font-mono tracking-widest mb-2">Total MF Value</p>
+          <p className="font-mono text-2xl text-foreground text-premium">₹{formatINR(summary.totalMfValue)}</p>
         </div>
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider mb-1">Weighted Avg TER</p>
-          <p className="font-mono text-lg text-foreground">{summary.weightedAvgTer.toFixed(2)}%</p>
+        <div className="relative z-10">
+          <p className="text-[11px] text-muted-foreground uppercase font-mono tracking-widest mb-2">Weighted Avg TER</p>
+          <p className="font-mono text-2xl text-foreground text-premium">{summary.weightedAvgTer.toFixed(2)}%</p>
         </div>
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider mb-1">Annual Fee Drag</p>
-          <p className="font-mono text-lg text-foreground">₹{formatINR(summary.totalAnnualFee)}/yr</p>
+        <div className="relative z-10">
+          <p className="text-[11px] text-muted-foreground uppercase font-mono tracking-widest mb-2">Annual Fee Drag</p>
+          <p className="font-mono text-2xl text-drift-red text-premium drop-shadow-sm">₹{formatINR(summary.totalAnnualFee)}<span className="text-sm opacity-60">/yr</span></p>
         </div>
-        <div className="border-l border-surface-border pl-4">
-          <p className="text-[10px] text-amber uppercase font-mono tracking-wider mb-1 font-semibold">10-Year Fee Cost</p>
-          <p className="font-mono text-2xl text-amber font-bold">₹{formatINR(summary.projected10yr)}</p>
+        <div className="border-l border-surface-border/50 pl-6 relative z-10">
+          <p className="text-[11px] text-drift-red uppercase font-mono tracking-widest mb-2 font-semibold">10-Year Projected Fee Cost</p>
+          <p className="font-mono text-4xl text-drift-red font-bold drop-shadow-md">
+            ₹{formatINR(summary.projected10yr)}
+          </p>
         </div>
       </div>
 

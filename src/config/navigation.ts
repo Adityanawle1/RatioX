@@ -1,13 +1,26 @@
 export interface NavLink {
   label: string;
-  href: string;
+  href?: string;
+  children?: { label: string; href: string }[];
 }
 
 export const MAIN_NAVIGATION: NavLink[] = [
-  { label: "Fee Audit", href: "/#fee-calculator" },
-  { label: "Features", href: "/#features" },
-  { label: "FAQ", href: "/#faq" },
-  { label: "Learn", href: "/learn-drift" },
+  {
+    label: "Product",
+    children: [
+      { label: "Features", href: "/#features" },
+      { label: "Learn Drift", href: "/learn-drift" },
+    ]
+  },
   { label: "About", href: "/about" },
   { label: "Manifesto", href: "/manifesto" },
+  {
+    label: "Resources",
+    children: [
+      { label: "Help Center", href: "/help" },
+      { label: "Security & Trust", href: "/security" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+    ]
+  }
 ];

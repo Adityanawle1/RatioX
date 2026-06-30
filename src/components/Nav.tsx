@@ -3,10 +3,112 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { MAIN_NAVIGATION } from "@/config/navigation";
 import Logo from "./Logo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 const Nav = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
+
+  const renderDesktopLink = (item: any) => {
+    if (item.children) {
+      return (
+        <DropdownMenu key={item.label}>
+          <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body outline-none data-[state=open]:text-foreground">
+            {item.label} <ChevronDown className="w-3 h-3 opacity-50" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-sm w-48 p-1 shadow-2xl">
+            {item.children.map((child: any) => (
+              <DropdownMenuItem key={child.label} asChild className="cursor-pointer focus:bg-white/10 focus:text-white rounded-sm data-[highlighted]:bg-white/10 data-[highlighted]:text-white">
+                {child.href.startsWith("/#") ? (
+                  <a href={child.href} className="w-full font-body text-sm text-muted-foreground">{child.label}</a>
+                ) : (
+                  <Link to={child.href} className="w-full font-body text-sm text-muted-foreground">{child.label}</Link>
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    // Fallback for flat links (if any are added later)
+    return item.href.startsWith("/#") ? (
+      <a
+        key={item.label}
+        href={item.href}
+        className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body"
+      >
+        {item.label}
+      </a>
+    ) : (
+      <Link
+        key={item.label}
+        to={item.href}
+        className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body"
+      >
+        {item.label}
+      </Link>
+    );
+  };
+
+  const renderMobileLink = (item: any) => {
+    if (item.children) {
+      return (
+        <div key={item.label} className="flex flex-col gap-3">
+          <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{item.label}</span>
+          <div className="flex flex-col gap-4 pl-4 border-l border-white/10">
+            {item.children.map((child: any) => (
+              child.href.startsWith("/#") ? (
+                <a
+                  key={child.label}
+                  href={child.href}
+                  className="text-base text-white hover:text-drift-green transition-colors font-body"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {child.label}
+                </a>
+              ) : (
+                <Link
+                  key={child.label}
+                  to={child.href}
+                  className="text-base text-white hover:text-drift-green transition-colors font-body"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {child.label}
+                </Link>
+              )
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return item.href.startsWith("/#") ? (
+      <a
+        key={item.label}
+        href={item.href}
+        className="text-base text-muted-foreground hover:text-foreground transition-colors font-body"
+        onClick={() => setMobileOpen(false)}
+      >
+        {item.label}
+      </a>
+    ) : (
+      <Link
+        key={item.label}
+        to={item.href}
+        className="text-base text-muted-foreground hover:text-foreground transition-colors font-body"
+        onClick={() => setMobileOpen(false)}
+      >
+        {item.label}
+      </Link>
+    );
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
@@ -17,35 +119,7 @@ const Nav = () => {
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          {MAIN_NAVIGATION.map(({ label, href }) => (
-            href.startsWith("/#") ? (
-              <a
-                key={label}
-                href={href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body"
-              >
-                {label}
-              </a>
-            ) : href.startsWith("/") ? (
-              <Link
-                key={label}
-                to={href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body"
-              >
-                {label}
-              </Link>
-            ) : (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 font-body flex items-center gap-1"
-              >
-                {label} <span className="opacity-50 text-[10px]">↗</span>
-              </a>
-            )
-          ))}
+          {MAIN_NAVIGATION.map(renderDesktopLink)}
           {user ? (
             <Link
               to="/dashboard/fee-audit"
@@ -81,42 +155,14 @@ const Nav = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-surface-border bg-background/95 backdrop-blur-xl px-6 py-6 flex flex-col gap-6">
-          {MAIN_NAVIGATION.map(({ label, href }) => (
-            href.startsWith("/#") ? (
-              <a
-                key={label}
-                href={href}
-                className="text-base text-muted-foreground hover:text-foreground transition-colors font-body"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label}
-              </a>
-            ) : href.startsWith("/") ? (
-              <Link
-                key={label}
-                to={href}
-                className="text-base text-muted-foreground hover:text-foreground transition-colors font-body"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label}
-              </Link>
-            ) : (
-              <a
-                key={label}
-                href={href}
-                className="text-base text-muted-foreground hover:text-foreground transition-colors font-body flex items-center gap-1"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label} <span className="opacity-50 text-[10px]">↗</span>
-              </a>
-            )
-          ))}
-          <div className="pt-4 border-t border-surface-border">
+        <div className="md:hidden border-t border-surface-border bg-black/95 backdrop-blur-xl px-6 py-6 flex flex-col gap-8 h-screen overflow-y-auto pb-32">
+          {MAIN_NAVIGATION.map(renderMobileLink)}
+          
+          <div className="pt-6 border-t border-surface-border">
             {user ? (
               <Link
                 to="/dashboard"
-                className="block w-full text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-3 rounded-sm text-center hover:bg-amber hover:text-background transition-all duration-300"
+                className="block w-full text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-4 rounded-sm text-center hover:bg-amber hover:text-background transition-all duration-300"
                 onClick={() => setMobileOpen(false)}
               >
                 Dashboard →
@@ -124,7 +170,7 @@ const Nav = () => {
             ) : (
               <Link
                 to="/auth"
-                className="block w-full text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-3 rounded-sm text-center hover:bg-amber hover:text-background transition-all duration-300"
+                className="block w-full text-sm font-body font-semibold border border-amber/50 text-amber px-5 py-4 rounded-sm text-center hover:bg-amber hover:text-background transition-all duration-300"
                 onClick={() => setMobileOpen(false)}
               >
                 Sign In

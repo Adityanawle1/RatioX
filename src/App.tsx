@@ -24,6 +24,8 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import AboutUs from "./pages/AboutUs.tsx";
 import Manifesto from "./pages/Manifesto.tsx";
+import Security from "./pages/Security.tsx";
+import HelpCenter from "./pages/HelpCenter.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +68,8 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/manifesto" element={<Manifesto />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/help" element={<HelpCenter />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

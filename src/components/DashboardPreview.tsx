@@ -49,9 +49,9 @@ const DashboardPreview = () => {
           <div className={`transition-all duration-1000 delay-300 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <div className="border border-surface-border bg-card shadow-2xl relative overflow-hidden group max-w-sm mx-auto hover:shadow-[0_0_40px_rgba(232,147,16,0.08)] transition-shadow duration-700">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-              <div className="border-b border-surface-border px-5 py-3 bg-surface/50 flex justify-between items-center">
-                <span className="font-body text-xs text-muted-foreground font-medium">Fee Audit Dashboard</span>
-                <div className="flex gap-1.5"><div className="w-2 h-2 rounded-full border border-surface-border"></div><div className="w-2 h-2 rounded-full border border-surface-border"></div></div>
+              <div className="border-b border-surface-border px-6 py-4 bg-surface/30 flex flex-col gap-1">
+                <h3 className="font-display text-base text-foreground tracking-tight">Fee Audit Summary</h3>
+                <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Generated Report</p>
               </div>
               <div className="p-6 space-y-8">
                 <div className="flex items-end justify-between">

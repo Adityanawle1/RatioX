@@ -182,19 +182,9 @@ const Hero = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                   
                   {/* Title bar */}
-                  <div className="border-b border-surface-border px-5 py-3 bg-surface/50 flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-drift-red/60" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-amber/60" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-drift-green/60" />
-                      </div>
-                      <span className="font-mono text-[10px] text-muted-foreground ml-2">Mutual Fund Fee Audit</span>
-                    </div>
-                    <div className="flex gap-1.5">
-                      <div className="w-2 h-2 rounded-full border border-surface-border" />
-                      <div className="w-2 h-2 rounded-full border border-surface-border" />
-                    </div>
+                  <div className="border-b border-surface-border px-6 py-4 bg-surface/30 flex flex-col gap-1">
+                    <h3 className="font-display text-lg text-foreground tracking-tight">Your Fee Audit</h3>
+                    <p className="text-xs text-muted-foreground font-body">Analysis of hidden charges in your portfolio</p>
                   </div>
 
                   <div className="p-6 space-y-6">

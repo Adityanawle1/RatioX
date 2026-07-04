@@ -1,277 +1,471 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from "@/components/Nav";
 import Magnetic from "@/components/Magnetic";
 
-const FounderCard = ({ number, name, surname, description, svgContent, linkUrl }: any) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-  const cardRef = React.useRef<HTMLDivElement>(null);
+/* ─── Floating Particle Canvas ─── */
+const ParticleField: React.FC<{ scrollProgress: number }> = ({ scrollProgress }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<Array<{
+    x: number; y: number; vx: number; vy: number;
+    size: number; opacity: number; hue: number;
+  }>>([]);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number>(0);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePosition({ x, y });
-  };
+  const initParticles = useCallback((w: number, h: number) => {
+    const count = Math.min(80, Math.floor((w * h) / 15000));
+    particlesRef.current = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      size: Math.random() * 2 + 0.5,
+      opacity: Math.random() * 0.4 + 0.1,
+      hue: Math.random() * 60 + 20, // gold-amber range
+    }));
+  }, []);
 
-  const Content = () => (
-    <h2 className="font-display text-5xl md:text-8xl tracking-tighter uppercase inline-flex items-center gap-3 text-white group-hover:text-black transition-all duration-500">
-      {name}
-      {svgContent.icon}
-      <span className="font-mono text-[10px] md:text-sm text-[#555] tracking-[0.3em] align-top transition-colors group-hover:text-[#333]">{surname}</span>
-    </h2>
-  );
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      if (particlesRef.current.length === 0) initParticles(canvas.width, canvas.height);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener("mousemove", onMouseMove);
+
+    const animate = () => {
+      if (!canvas || !ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+
+      particlesRef.current.forEach((p) => {
+        // Mouse repulsion
+        const dx = p.x - mx;
+        const dy = p.y - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          const force = (150 - dist) / 150;
+          p.vx += (dx / dist) * force * 0.3;
+          p.vy += (dy / dist) * force * 0.3;
+        }
+
+        // Drift based on scroll
+        p.vy += (scrollProgress - 0.5) * 0.01;
+
+        // Damping
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        // Draw
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, ${p.opacity})`;
+        ctx.fill();
+      });
+
+      // Draw connections
+      const particles = particlesRef.current;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `hsla(40, 50%, 50%, ${0.08 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMouseMove);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [scrollProgress, initParticles]);
 
   return (
-    <div 
-      ref={cardRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseMove={handleMouseMove}
-      className="border-b md:border-r border-[#222] p-6 sm:p-8 md:p-12 lg:p-16 hover:bg-white hover:text-black transition-colors duration-700 group flex flex-col justify-between min-h-[400px] relative overflow-hidden"
-    >
-      <div 
-        className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-all duration-700 pointer-events-none"
-        style={{
-           transform: isHovered ? `translate(${(mousePosition.x - 200) * 0.05}px, ${(mousePosition.y - 200) * 0.05}px)` : 'translate(0px, 0px)'
-        }}
-      >
-        {svgContent.watermark}
-      </div>
-      
-      {isHovered && (
-        <div 
-          className="absolute pointer-events-none rounded-full blur-[80px] w-[300px] h-[300px] opacity-[0.15] z-0 transition-opacity duration-500"
-          style={{
-            background: 'radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)',
-            left: mousePosition.x - 150,
-            top: mousePosition.y - 150,
-          }}
-        />
-      )}
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 z-0 pointer-events-none"
+    />
+  );
+};
 
-      <div className="flex justify-between items-start relative z-10">
-        <h3 className="font-mono text-[10px] uppercase tracking-widest text-[#666] group-hover:text-[#333] transition-colors">Team</h3>
-        <span className="font-display text-4xl text-[#333] group-hover:text-black transition-colors">{number}</span>
+/* ─── Section Component ─── */
+interface NarrativeSectionProps {
+  children: React.ReactNode;
+  index: number;
+  activeIndex: number;
+  label: string;
+}
+
+const NarrativeSection: React.FC<NarrativeSectionProps> = ({ children, index, activeIndex, label }) => {
+  const isActive = activeIndex === index;
+  const isPast = activeIndex > index;
+  const isFuture = activeIndex < index;
+
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+      style={{
+        opacity: isActive ? 1 : 0,
+        transform: isPast
+          ? "translateY(-15vh) scale(0.92)"
+          : isFuture
+          ? "translateY(15vh) scale(0.92)"
+          : "translateY(0) scale(1)",
+        pointerEvents: isActive ? "auto" : "none",
+        filter: isActive ? "blur(0px)" : "blur(6px)",
+      }}
+    >
+      {/* Section Label - Top Left */}
+      <div className="absolute top-28 left-8 md:left-16 flex items-center gap-3 z-30">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#555]">
+          {label}
+        </span>
+        <div className="w-8 h-px bg-[#333]" />
       </div>
-      
-      <div className="mt-16 relative z-10">
-         <Magnetic strength={20}>
-            {linkUrl ? (
-                <a href={linkUrl} target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity cursor-pointer">
-                   <Content />
-                </a>
-            ) : (
-               <div className="cursor-default">
-                  <Content />
-               </div>
-            )}
-         </Magnetic>
-         <div className="w-0 group-hover:w-full h-[1px] bg-black transition-all duration-700 mt-6"></div>
-         <p className="mt-8 font-light text-sm md:text-base text-[#888] group-hover:text-[#444] max-w-sm transition-colors duration-700 leading-relaxed font-body">
-           "{description}"
-         </p>
-      </div>
+      {children}
     </div>
   );
 };
 
+/* ─── Main Component ─── */
 const AboutUs: React.FC = () => {
   const navigate = useNavigate();
-  const [scrollY, setScrollY] = useState(0);
-  const [glitch, setGlitch] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const lastScrollTime = useRef(Date.now());
+  const accumulatedDelta = useRef(0);
 
+  const totalSections = 5;
+
+  // Wheel-based section snapping (like Active Theory's drag-to-scroll)
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    
-    // Random glitch effect interval
-    const glitchInterval = setInterval(() => {
-      setGlitch(true);
-      setTimeout(() => setGlitch(false), 150);
-    }, 4500);
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      const now = Date.now();
+      if (isTransitioning) return;
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      clearInterval(glitchInterval);
+      // Accumulate delta for trackpad support
+      accumulatedDelta.current += e.deltaY;
+
+      // Reset accumulator if direction changed or too much time passed
+      if (now - lastScrollTime.current > 300) {
+        accumulatedDelta.current = e.deltaY;
+      }
+      lastScrollTime.current = now;
+
+      const threshold = 80;
+
+      if (Math.abs(accumulatedDelta.current) > threshold) {
+        if (accumulatedDelta.current > 0 && activeSection < totalSections - 1) {
+          setIsTransitioning(true);
+          setActiveSection((prev) => prev + 1);
+          setTimeout(() => setIsTransitioning(false), 1200);
+        } else if (accumulatedDelta.current < 0 && activeSection > 0) {
+          setIsTransitioning(true);
+          setActiveSection((prev) => prev - 1);
+          setTimeout(() => setIsTransitioning(false), 1200);
+        }
+        accumulatedDelta.current = 0;
+      }
     };
-  }, []);
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [activeSection, isTransitioning]);
+
+  // Touch support for mobile
+  useEffect(() => {
+    let touchStartY = 0;
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isTransitioning) return;
+      const delta = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(delta) > 50) {
+        if (delta > 0 && activeSection < totalSections - 1) {
+          setIsTransitioning(true);
+          setActiveSection((prev) => prev + 1);
+          setTimeout(() => setIsTransitioning(false), 1200);
+        } else if (delta < 0 && activeSection > 0) {
+          setIsTransitioning(true);
+          setActiveSection((prev) => prev - 1);
+          setTimeout(() => setIsTransitioning(false), 1200);
+        }
+      }
+    };
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [activeSection, isTransitioning]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (isTransitioning) return;
+      if (e.key === "ArrowDown" || e.key === " ") {
+        e.preventDefault();
+        if (activeSection < totalSections - 1) {
+          setIsTransitioning(true);
+          setActiveSection((prev) => prev + 1);
+          setTimeout(() => setIsTransitioning(false), 1200);
+        }
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (activeSection > 0) {
+          setIsTransitioning(true);
+          setActiveSection((prev) => prev - 1);
+          setTimeout(() => setIsTransitioning(false), 1200);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [activeSection, isTransitioning]);
+
+  // Update scroll progress
+  useEffect(() => {
+    setScrollProgress(activeSection / (totalSections - 1));
+  }, [activeSection]);
+
+  const sectionLabels = [
+    "00 // Origin",
+    "01 // Problem",
+    "02 // Mission",
+    "03 // Promise",
+    "04 // Architects",
+  ];
 
   return (
-    <div className="min-h-screen bg-[#060606] text-[#e0e0e0] font-body selection:bg-white selection:text-black overflow-x-hidden">
+    <div className="bg-[#050508] text-[#e0e0e0] font-body selection:bg-amber selection:text-black overflow-hidden">
       <Nav />
-      
-      {/* Background Noise & Grain */}
-      <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.015]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 
-      {/* Abstract Background Element */}
-      <div 
-        className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-[0.03] z-0 flex items-center justify-center"
-        style={{ transform: `translateY(${scrollY * 0.15}px) rotate(${scrollY * 0.05}deg)` }}
-      >
-        <svg viewBox="0 0 100 100" className="w-[80vw] h-[80vw] max-w-[800px] max-h-[800px]" fill="none" stroke="currentColor" strokeWidth="0.5">
-          <circle cx="50" cy="50" r="45" />
-          <circle cx="50" cy="50" r="30" />
-          <path d="M5 50h90M50 5v90M15 15l70 70M85 15L15 85" />
-        </svg>
-      </div>
+      {/* Full viewport container */}
+      <div className="fixed inset-0 w-full h-screen overflow-hidden">
 
-      <main className="pt-24 md:pt-32 pb-16 md:pb-24 px-5 md:px-12 max-w-6xl mx-auto relative z-10">
-        
-        {/* Navigation Back */}
-        <div className="mb-12 md:mb-20">
-          <button 
-            onClick={() => navigate("/")}
-            className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#666] hover:text-white transition-colors"
-          >
-            [ ← Return to Index ]
-          </button>
-        </div>
+        {/* Particle Field */}
+        <ParticleField scrollProgress={scrollProgress} />
 
-        {/* Hero Section */}
-        <header className="mb-16 md:mb-32 border-b border-[#222] pb-12 md:pb-20 relative">
-          <h1 className="font-display text-6xl sm:text-7xl md:text-[10rem] tracking-tighter leading-[0.85] text-white mb-10 md:mb-16 lowercase relative inline-block">
-            <span className="relative z-10">we build</span> <br/> 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#888] to-[#333] relative z-10">clarity.</span>
-          </h1>
-          <div className="grid md:grid-cols-12 gap-8 md:gap-6 relative z-10">
-            <div className="md:col-span-3">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-[#666] mb-4 flex items-center gap-2">
-                <span className="w-4 h-[1px] bg-[#666]"></span> 01 // The Vision
-              </p>
-            </div>
-            <div className="md:col-span-9">
-              <p className="text-2xl md:text-4xl leading-tight font-light text-[#d0d0d0] tracking-tight hover:text-white transition-colors duration-500">
-                To strip away the engineered complexity of the financial industry. We exist to expose the silent forces that erode generational wealth and give individuals the ultimate architecture for portfolio sovereignty.
-              </p>
-            </div>
+        {/* Subtle radial gradient that shifts with sections */}
+        <div
+          className="absolute inset-0 pointer-events-none z-0 transition-all duration-[2000ms]"
+          style={{
+            background: `radial-gradient(ellipse at ${50 + activeSection * 5}% ${40 + activeSection * 8}%, hsla(${30 + activeSection * 20}, 60%, 15%, 0.15) 0%, transparent 60%)`,
+          }}
+        />
+
+        {/* Noise texture */}
+        <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.025]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+
+        {/* ─── SECTION 0: THE HOOK ─── */}
+        <NarrativeSection index={0} activeIndex={activeSection} label={sectionLabels[0]}>
+          <div className="text-center px-6 z-20 max-w-5xl">
+            <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] text-amber/60 mb-8">
+              → Scroll Down
+            </p>
+            <h1 className="font-display text-5xl sm:text-7xl md:text-[8rem] tracking-tighter leading-[0.85] text-white lowercase mb-10">
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-[#555]">
+                ratio x
+              </span>
+            </h1>
+            <p className="text-lg md:text-2xl text-[#777] font-light max-w-2xl mx-auto leading-relaxed">
+              An intelligence engine built to expose what the financial industry hides from you.
+            </p>
           </div>
-        </header>
+        </NarrativeSection>
 
-        {/* The Team - Typographic heavy, no roles */}
-        <section className="mb-16 md:mb-32">
-          <div className="border-b border-[#222] pb-6 mb-10 md:mb-16 flex flex-col md:flex-row md:justify-between md:items-end gap-4 relative">
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">The Architects.</h2>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[#666]">02 // Genesis</span>
-          </div>
-
-          <div className="grid md:grid-cols-2 border-t border-l border-[#222]">
-            
-            <FounderCard 
-              number="01"
-              name="Aditya"
-              surname="NAWLE ↗"
-              description="If the mutual fund industry thrives on opacity, we exist to dismantle it. True wealth creation demands absolute, uncompromising clarity."
-              linkUrl="https://portfolio-eight-umber-fian7abm8o.vercel.app/"
-              svgContent={{
-                icon: <svg width="24" height="24" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="6" className="text-[#666] group-hover:text-black transition-colors"><path d="M50 10 L60 40 L90 50 L60 60 L50 90 L40 60 L10 50 L40 40 Z" /><circle cx="50" cy="50" r="10" /></svg>,
-                watermark: <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2"><path d="M50 10 L60 40 L90 50 L60 60 L50 90 L40 60 L10 50 L40 40 Z" /><circle cx="50" cy="50" r="10" /></svg>
-              }}
-            />
-
-            <FounderCard 
-              number="02"
-              name="Sachin"
-              surname="JADHAV"
-              description="Complexity is a tax on the uninformed. We built this protocol because if mutual funds won't give you transparency, we will build it ourselves."
-              svgContent={{
-                icon: <svg width="28" height="28" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="6" className="text-[#666] group-hover:text-black transition-colors"><circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-20 50 50)"/></svg>,
-                watermark: <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-20 50 50)"/></svg>
-              }}
-            />
-
-          </div>
-        </section>
-
-        {/* Cool New Brutalist Element: Live Ticker / Matrix */}
-        <section className="mb-16 md:mb-32">
-          <div className="border border-[#222] p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 bg-black relative overflow-hidden group">
-            {/* SVG Grid Background */}
-            <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-1000" 
-                 style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "32px 32px" }}>
-            </div>
-            
-            {/* Animated Scanning Line */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#555] to-transparent opacity-50 animate-pulse" 
-                 style={{ animation: 'scan 4s linear infinite', top: 'var(--scan-top, 0%)' }}></div>
-                 
-            <style>
-              {`
-                @keyframes scan {
-                  0% { top: -10%; }
-                  100% { top: 110%; }
-                }
-                @keyframes subtle-glitch {
-                  0% { transform: translate(0) }
-                  20% { transform: translate(-2px, 1px) }
-                  40% { transform: translate(-1px, -1px) }
-                  60% { transform: translate(2px, 1px) }
-                  80% { transform: translate(1px, -1px) }
-                  100% { transform: translate(0) }
-                }
-              `}
-            </style>
-            
-            <div className="z-10 w-full">
-              <div className="flex items-center gap-4 mb-6">
-                <span className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ animation: glitch ? 'none' : 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#888]">System Status</span>
-              </div>
-              <h3 className={`font-display text-3xl md:text-5xl text-white tracking-tight mb-4 uppercase ${glitch ? 'text-red-500' : ''}`}
-                  style={{ animation: glitch ? 'subtle-glitch 0.15s ease-in-out' : 'none' }}>
-                Protocol Integrity: {glitch ? '99.9%' : '100%'}
-              </h3>
-              <p className="font-mono text-xs md:text-sm text-[#666] max-w-xl leading-relaxed">
-                We continuously monitor and neutralize hidden asset decay. No commissions, no biased recommendations, no compromises. Just raw mathematical truth.
-              </p>
-            </div>
-
-            <div className="z-10 shrink-0 font-mono text-[10px] md:text-xs text-[#555] text-right flex flex-col gap-3 uppercase tracking-[0.2em] w-full md:w-auto border-t md:border-t-0 md:border-l border-[#222] pt-6 md:pt-0 md:pl-12 mt-6 md:mt-0">
-              <p className="flex justify-between gap-12 group-hover:text-white transition-colors duration-300 delay-[0ms]"><span>Ping</span> <span>12ms</span></p>
-              <p className="flex justify-between gap-12 group-hover:text-white transition-colors duration-300 delay-[75ms]"><span>Drift Tolerance</span> <span>0.00%</span></p>
-              <p className="flex justify-between gap-12 group-hover:text-white transition-colors duration-300 delay-[150ms]"><span>Commission</span> <span>Zero</span></p>
-              <p className="flex justify-between gap-12 group-hover:text-white transition-colors duration-300 delay-[225ms]"><span>Clarity</span> <span>Absolute</span></p>
-            </div>
-          </div>
-        </section>
-
-        {/* Ethos & Free Statement */}
-        <section className="mb-16 md:mb-32 flex flex-col items-center text-center py-20 relative">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent opacity-50 blur-xl"></div>
-            
-            <div className="inline-block mb-6 px-4 py-1.5 border border-amber/30 bg-amber/10 text-amber font-mono text-xs uppercase tracking-widest rounded-full relative z-10 glow-text">
-               100% Free Forever
-            </div>
-
-            <h2 className="font-display text-4xl md:text-7xl tracking-tighter text-white mb-8 hover:italic transition-all duration-300 cursor-default relative z-10">
-              Pure logic. <br />
-              <span className="gradient-text-amber glow-text">Zero cost.</span>
+        {/* ─── SECTION 1: THE PROBLEM ─── */}
+        <NarrativeSection index={1} activeIndex={activeSection} label={sectionLabels[1]}>
+          <div className="text-center px-6 z-20 max-w-5xl">
+            <h2 className="font-display text-4xl md:text-7xl tracking-tighter text-white mb-8 leading-tight">
+              Hidden commissions.<br />
+              <span className="text-[#555]">Silent wealth drain.</span>
             </h2>
-            
-            <p className="text-xl md:text-2xl text-[#888] font-light max-w-3xl mx-auto leading-relaxed mb-6 relative z-10">
-               We don't build walled gardens. We build uncompromised protocols to defend your capital against the decay of hidden fees and market drift. 
+            <p className="text-lg md:text-2xl text-[#888] font-light max-w-3xl mx-auto leading-relaxed">
+              The mutual fund industry was engineered for opacity. Layers of TER, exit loads, and distributor commissions silently erode your returns — year after year, compounding against you.
             </p>
-            
-            <p className="text-lg md:text-xl text-[#aaa] font-body max-w-2xl mx-auto relative z-10">
-               Absolute financial clarity is a fundamental right. Our entire intelligence engine, analytics, and audits are now provided completely free for everyone. <strong className="text-white font-semibold">You will never pay a single penny.</strong>
-            </p>
-        </section>
+          </div>
+        </NarrativeSection>
 
-        {/* CTA */}
-        <div className="flex justify-center border-t border-[#222] pt-16 md:pt-24 pb-8 md:pb-12 relative z-10">
-          <Magnetic strength={30}>
-            <button 
-              onClick={() => navigate("/dashboard/fee-audit")}
-              className="bg-amber text-background font-mono uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[11px] sm:text-[12px] font-bold px-8 sm:px-12 py-5 sm:py-6 hover:brightness-110 hover:shadow-glow-amber transition-all rounded-[4px] w-full sm:w-auto hover:-translate-y-1"
+        {/* ─── SECTION 2: THE MISSION ─── */}
+        <NarrativeSection index={2} activeIndex={activeSection} label={sectionLabels[2]}>
+          <div className="text-center px-6 z-20 max-w-5xl">
+            <h2 className="font-display text-6xl md:text-[10rem] tracking-tighter lowercase leading-[0.85] mb-6">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-amber/80 to-[#555]">
+                we build
+              </span>
+              <br />
+              <span className="text-white">clarity.</span>
+            </h2>
+          </div>
+        </NarrativeSection>
+
+        {/* ─── SECTION 3: THE PROMISE ─── */}
+        <NarrativeSection index={3} activeIndex={activeSection} label={sectionLabels[3]}>
+          <div className="text-center px-6 z-20 max-w-4xl">
+            <div className="inline-block mb-10 px-6 py-2.5 border border-drift-green/25 bg-drift-green/5 text-drift-green font-mono text-xs uppercase tracking-[0.3em] rounded-full">
+              Free forever
+            </div>
+            <h2 className="font-display text-4xl md:text-7xl tracking-tighter text-white mb-10 leading-tight">
+              We never asked for<br />a single penny.
+            </h2>
+            <p className="text-lg md:text-xl text-[#999] font-light max-w-3xl mx-auto leading-relaxed mb-14">
+              No subscriptions. No commissions. No "premium" tier. Ratio x is a public utility for your portfolio — every fee audit, every drift analysis, every rebalancing recommendation, completely free.
+            </p>
+            <Magnetic strength={20}>
+              <button
+                onClick={() => navigate("/dashboard/fee-audit")}
+                className="group relative bg-transparent border border-[#333] text-white font-mono uppercase tracking-[0.2em] text-xs px-10 py-5 overflow-hidden transition-all duration-500 hover:border-amber/50"
+              >
+                <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
+                <span className="relative z-10 group-hover:text-black transition-colors duration-300">
+                  [ Run Free Audit ]
+                </span>
+              </button>
+            </Magnetic>
+          </div>
+        </NarrativeSection>
+
+        {/* ─── SECTION 4: THE ARCHITECTS ─── */}
+        <NarrativeSection index={4} activeIndex={activeSection} label={sectionLabels[4]}>
+          <div className="w-full max-w-6xl mx-auto px-6 md:px-12 z-20">
+            <div className="border-b border-[#222] pb-6 mb-8 md:mb-12 flex justify-between items-end">
+              <h2 className="font-display text-3xl md:text-5xl text-white tracking-tight">The Architects.</h2>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#666]">Task Force</span>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-px bg-[#1a1a1a]">
+              {/* Founder 1 */}
+              <a
+                href="https://portfolio-eight-umber-fian7abm8o.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-[#050508] p-8 md:p-14 hover:bg-white transition-colors duration-700 group"
+              >
+                <div className="font-mono text-[10px] uppercase tracking-widest text-[#555] group-hover:text-[#333] transition-colors mb-10">
+                  01 // Engine
+                </div>
+                <h3 className="font-display text-4xl md:text-6xl tracking-tighter uppercase text-white group-hover:text-black transition-colors mb-6">
+                  Aditya{" "}
+                  <span className="text-[#555] group-hover:text-[#888] font-mono text-sm tracking-[0.2em] ml-2 align-middle transition-colors">
+                    NAWLE ↗
+                  </span>
+                </h3>
+                <div className="w-0 group-hover:w-full h-px bg-black transition-all duration-700 mb-6" />
+                <p className="font-light text-sm md:text-base text-[#888] group-hover:text-[#444] transition-colors leading-relaxed font-body">
+                  "If the mutual fund industry thrives on opacity, we exist to dismantle it. True wealth creation demands absolute, uncompromising clarity."
+                </p>
+              </a>
+
+              {/* Founder 2 */}
+              <div className="bg-[#050508] p-8 md:p-14 hover:bg-white transition-colors duration-700 group">
+                <div className="font-mono text-[10px] uppercase tracking-widest text-[#555] group-hover:text-[#333] transition-colors mb-10">
+                  02 // Systems
+                </div>
+                <h3 className="font-display text-4xl md:text-6xl tracking-tighter uppercase text-white group-hover:text-black transition-colors mb-6">
+                  Sachin{" "}
+                  <span className="text-[#555] group-hover:text-[#888] font-mono text-sm tracking-[0.2em] ml-2 align-middle transition-colors">
+                    JADHAV
+                  </span>
+                </h3>
+                <div className="w-0 group-hover:w-full h-px bg-black transition-all duration-700 mb-6" />
+                <p className="font-light text-sm md:text-base text-[#888] group-hover:text-[#444] transition-colors leading-relaxed font-body">
+                  "Complexity is a tax on the uninformed. We built this protocol because if mutual funds won't give you transparency, we will build it ourselves."
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-10 text-center">
+              <button
+                onClick={() => {
+                  setIsTransitioning(true);
+                  setActiveSection(0);
+                  setTimeout(() => setIsTransitioning(false), 1200);
+                }}
+                className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#555] hover:text-white transition-colors p-4"
+              >
+                [ ↑ Back to Top ]
+              </button>
+            </div>
+          </div>
+        </NarrativeSection>
+
+        {/* ─── Progress Indicator (Right Edge) ─── */}
+        <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-3">
+          {Array.from({ length: totalSections }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                if (isTransitioning) return;
+                setIsTransitioning(true);
+                setActiveSection(i);
+                setTimeout(() => setIsTransitioning(false), 1200);
+              }}
+              className="group relative flex items-center"
+              title={sectionLabels[i]}
             >
-              [ Execute Free Audit ]
+              <div
+                className={`w-[3px] transition-all duration-700 rounded-full ${
+                  i === activeSection
+                    ? "h-8 bg-white"
+                    : "h-3 bg-[#333] group-hover:bg-[#666]"
+                }`}
+              />
             </button>
-          </Magnetic>
+          ))}
         </div>
 
-      </main>
+        {/* ─── Bottom Bar ─── */}
+        <div className="absolute bottom-8 left-8 right-8 md:bottom-10 md:left-16 md:right-16 z-50 flex items-center justify-between">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#444]">
+            {sectionLabels[activeSection]}
+          </span>
+          <span className="font-mono text-[10px] text-[#444]">
+            {String(activeSection + 1).padStart(2, "0")} / {String(totalSections).padStart(2, "0")}
+          </span>
+        </div>
+
+      </div>
     </div>
   );
 };

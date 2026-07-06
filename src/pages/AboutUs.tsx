@@ -276,7 +276,7 @@ const AboutUs: React.FC = () => {
   const [activeSection, setActiveSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const totalSections = 5;
+  const totalSections = 6;
 
   const setSectionRef = useCallback((el: HTMLDivElement | null, index: number) => {
     sectionRefs.current[index] = el;
@@ -320,6 +320,7 @@ const AboutUs: React.FC = () => {
     "02 // Mission",
     "03 // Promise",
     "04 // Architects",
+    "05 // Open Code",
   ];
 
   return (
@@ -542,7 +543,72 @@ const AboutUs: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-10 text-center">
+          </div>
+        </NarrativeSection>
+
+        {/* ─── SECTION 5: OPEN CODE ─── */}
+        <NarrativeSection index={5} activeIndex={activeSection} label={sectionLabels[5]} innerRef={(el) => setSectionRef(el, 5)}>
+          <div className="w-full max-w-5xl mx-auto px-6 md:px-12 z-20 text-center">
+            <div className="grid md:grid-cols-12 gap-8 md:gap-16 items-center w-full text-left">
+              <div className="md:col-span-7">
+                <div className="inline-block mb-6 px-4 py-1.5 border border-amber/25 bg-amber/5 text-amber font-mono text-[9px] uppercase tracking-[0.3em] rounded-full">
+                  Verified Transparency
+                </div>
+                <h2 className="font-display text-4xl md:text-6xl tracking-tighter text-white mb-6 leading-tight">
+                  Verified by code.<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#666] to-[#aaa]">Open for inspection.</span>
+                </h2>
+                <p className="text-base md:text-lg text-[#888] font-light leading-relaxed max-w-xl mb-8">
+                  We believe financial tools shouldn't just claim to be honest—they must prove it. Ratio X is open source. You can audit every line of our rebalancing algorithms, tax harvesting logic, and fee calculations on GitHub.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <a
+                    href="https://github.com/Adityanawle1/RatioX"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative bg-transparent border border-[#333] text-white font-mono uppercase tracking-[0.2em] text-xs px-8 py-4 overflow-hidden transition-all duration-500 hover:border-amber/50 rounded inline-block"
+                  >
+                    <div className="absolute inset-0 bg-amber transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0" />
+                    <span className="relative z-10 group-hover:text-black transition-colors duration-300">
+                      [ View GitHub Source ↗ ]
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="md:col-span-5 flex justify-center w-full">
+                {/* Git Log Terminal Mockup */}
+                <div className="w-full max-w-sm sm:max-w-md bg-[#020203] border border-[#1a1a1f] rounded-lg p-5 font-mono text-[10px] sm:text-[11px] text-[#888] shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-8 bg-[#09090b] border-b border-[#1a1a1f] px-4 flex items-center justify-between">
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-drift-green/40" />
+                      <div className="w-2 h-2 rounded-full bg-amber/40" />
+                      <div className="w-2 h-2 rounded-full bg-drift-red/40" />
+                    </div>
+                    <span className="text-[9px] uppercase tracking-widest text-[#444]">git log -n 3 --oneline</span>
+                  </div>
+                  <div className="mt-6 space-y-4 text-left leading-relaxed min-h-[140px] flex flex-col justify-center">
+                    <div>
+                      <div className="text-amber font-semibold">commit 272960d</div>
+                      <div className="text-[#444] text-[9px] mb-1">Author: aditya nawle | Sat Jul 4 2026</div>
+                      <div className="text-[#aaa] pl-2 border-l border-[#333]">design: redesign About Us page with native scroll snap</div>
+                    </div>
+                    <div>
+                      <div className="text-[#666]">commit 0ca9825</div>
+                      <div className="text-[#444] text-[9px] mb-1">Author: aditya nawle | Sat Jul 4 2026</div>
+                      <div className="text-[#777] pl-2 border-l border-[#333]">design: refine dashboard preview header styling</div>
+                    </div>
+                    <div>
+                      <div className="text-[#666]">commit 91ec1dd</div>
+                      <div className="text-[#444] text-[9px] mb-1">Author: aditya nawle | Tue Jun 30 2026</div>
+                      <div className="text-[#777] pl-2 border-l border-[#333]">added sitemap to help search engines find our ratiox.in pages</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-16 text-center">
               <button
                 onClick={() => {
                   const container = document.getElementById("about-scroll-container");

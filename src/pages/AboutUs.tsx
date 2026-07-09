@@ -105,6 +105,18 @@ const AboutUs: React.FC = () => {
       {/* Background Noise & Grain */}
       <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.015]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 
+      {/* Abstract Background Element (Spinning Wheel) */}
+      <div 
+        className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-[0.03] z-0 flex items-center justify-center"
+        style={{ transform: `translateY(${scrollY * 0.15}px) rotate(${scrollY * 0.05}deg)` }}
+      >
+        <svg viewBox="0 0 100 100" className="w-[80vw] h-[80vw] max-w-[800px] max-h-[800px]" fill="none" stroke="currentColor" strokeWidth="0.5">
+          <circle cx="50" cy="50" r="45" />
+          <circle cx="50" cy="50" r="30" />
+          <path d="M5 50h90M50 5v90M15 15l70 70M85 15L15 85" />
+        </svg>
+      </div>
+
       <main className="pt-24 md:pt-32 pb-16 md:pb-24 px-5 md:px-12 max-w-6xl mx-auto relative z-10">
         
         {/* Navigation Back */}

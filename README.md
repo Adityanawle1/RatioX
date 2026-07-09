@@ -1,114 +1,162 @@
 # RatioX — Portfolio Rebalancing Intelligence
 
-> Track drift. Restore balance. Invest with discipline.
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-3ECF8E.svg?style=flat&logo=supabase)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg?style=flat)]()
 
-RatioX is a portfolio management and rebalancing intelligence platform for self-directed investors in India. It monitors *drift*, the silent deviation of your actual asset allocation from your intended target caused by market movements, and generates actionable rebalancing plans to bring your portfolio back in line.
+> Track drift. Restore balance. Defend your capital against hidden decay.
+
+RatioX is a state-of-the-art portfolio management and rebalancing intelligence platform specifically engineered for self-directed investors in India. It monitors **drift**—the silent deviation of actual asset allocations from target models caused by market fluctuations—and generates tax-optimized, commission-free rebalancing plans.
 
 ---
 
-## The Problem
+## 🔍 The Problem
 
-You set a target allocation: 60% equity, 30% debt, 10% gold.
+You establish a target asset allocation: **60% Equity, 30% Debt, 10% Gold**.
 
-Markets move. Equity runs up. Without touching a single holding, your portfolio has shifted to 75% equity — carrying risk you never agreed to, and exposing you to a drawdown you never planned for.
+Over time, markets move. Equity rallies. Without purchasing any new shares, your actual allocation shifts to **75% Equity, 18% Debt, 7% Gold**. 
 
-This is **drift**. It happens to every portfolio. Most investors only notice it during a crash, when it is already too late. No broker tracks it for you. No dashboard warns you.
+This is **drift**. It exposes your portfolio to risks you never signed up for and downdraws you didn't plan. Most investors only realize their portfolio has drifted during a market correction when it is already too late. Standard dashboards and brokerage accounts do not track this metric for you.
 
 RatioX does.
 
 ---
 
-## Features
+## ✨ Features
 
-**Drift Analysis Engine**
-Calculates the gap between your current and target allocation in real time across fully customizable asset classes. The moment drift crosses your threshold, RatioX flags it.
+### ⚖️ Drift Analysis Engine
+- Calculates asset allocation variance in real-time across fully custom asset classes.
+- Instantly alerts you when drift thresholds are breached.
+- Computes portfolio health indexes, weighted cost basis, and CAGR using Internal Rate of Return (IRR) math.
 
-**Rebalance Intelligence**
-Generates a precise list of buy and sell orders to restore your target allocation. Accounts for fresh capital inflows (SIP or lumpsum) to minimize unnecessary selling and reduce transaction costs.
+### 🧠 Rebalance Intelligence
+- Generates precise, tax-optimized buy/sell adjustment checklists.
+- Incorporates fresh capital inflows (SIPs or lump sums) dynamically, prioritizing purchasing underweight assets first to minimize exit loads and tax events.
 
-**Tax Harvesting Guard**
-Every rebalancing suggestion is pre-tagged with its tax classification — Long Term Capital Gain (LTCG) or Short Term Capital Gain (STCG) — before you act. Built for Indian tax rules so you never trigger an avoidable short-term tax event.
+### 📊 Fee Audit & Wealth Drain Projection
+- Audits mutual fund portfolios for hidden distributor commission kickbacks (regular vs. direct funds).
+- Projects the 30-year wealth decay impact of direct vs. regular mutual fund TER (Total Expense Ratio).
 
-**Portfolio Health Score**
-A composite metric that quantifies overall portfolio health at a glance, backed by a custom financial math library handling weighted average cost basis, drift percentage, and CAGR via Internal Rate of Return methodology.
+### 🏦 Supported Broker Integrations
+- Streamlines portfolio data ingest with parser adapters for CAMS/KFintech Consolidated Account Statements (CAS).
+- Integrates cleanly with major Indian brokers including **Zerodha**, **Upstox**, and **Groww**.
 
-**Universal Instrument Search**
-Search and add live instruments across NSE and BSE equities, mutual funds via AMFI, and ETFs from a single search bar. Handles Indian market specifics like NSE/BSE ticker suffixes natively via a Yahoo Finance proxy.
+### 💸 Tax Harvesting Safeguards
+- Pre-calculates tax categories (LTCG vs. STCG) for every recommended transaction.
+- Aligns recommendations with Indian Income Tax rules to prevent accidental short-term tax events.
 
-**Immersive Dashboard**
-A high-fidelity interface with a Three.js canvas globe, Recharts allocation charts, and a custom DriftWatch design system. Designed to feel like a professional-grade tool.
-
----
-
-## Tech Stack
-
-| Category | Technology |
-|---|---|
-| Framework | Vite 5 + React 18 + TypeScript 6 |
-| Styling | Tailwind CSS 3 + custom DriftWatch design system |
-| UI Components | Shadcn/UI (Radix Primitives) |
-| State and Data Fetching | TanStack Query (React Query) |
-| Backend and Auth | Supabase (PostgreSQL + GoTrue Auth) |
-| Charts | Recharts |
-| 3D Graphics | Three.js + React Three Fiber |
-| Market Data | Yahoo Finance API (via Vite proxy) + AMFI API |
-| Forms | React Hook Form + Zod |
-| Fonts | Space Grotesk, Outfit, IBM Plex Mono |
-| Utilities | date-fns, Lucide React, Papaparse |
-| Testing | Vitest + Playwright |
+### 🌐 Live Instrument Search
+- Features a unified search bar parsing NSE/BSE equities, AMFI mutual funds, and ETFs.
+- Resolves ticker formats natively via a secure Yahoo Finance API proxy.
 
 ---
 
-## Project Structure
+## 🛠️ Tech Stack
+
+- **Frontend**: React 18, Vite 5, TypeScript 5
+- **Styling**: Vanilla Tailwind CSS 3 + custom glassmorphic DriftWatch design system
+- **State Management**: TanStack Query (React Query) v5
+- **Database & Auth**: Supabase (PostgreSQL, GoTrue Auth)
+- **Charts**: Recharts
+- **Animations / 3D**: Three.js, React Three Fiber, Framer Motion primitives
+- **Package Manager**: npm / Bun
+
+---
+
+## 📂 Project Structure
 
 ```
-src/
-├── api/
-│   └── portfolio.ts         # Portfolio CRUD and Supabase data layer
-├── components/
-│   ├── Globe.tsx            # Three.js canvas globe
-│   ├── Hero.tsx             # Landing page hero
-│   └── ui/                  # Shadcn component library
-├── context/
-│   └── AuthContext.tsx      # Auth state and session management
-├── lib/
-│   ├── drift-engine.ts      # Core math: drift %, health score, CAGR/IRR
-│   └── market-data.ts       # NSE/BSE and AMFI market data adapters
-├── pages/
-│   ├── Index.tsx            # Landing page
-│   ├── Dashboard.tsx        # Portfolio command center
-│   ├── Onboarding.tsx       # Portfolio setup wizard
-│   ├── LearnDrift.tsx       # Educational content on drift
-│   └── TaxHarvesting.tsx    # LTCG/STCG breakdown per trade
-└── main.tsx
+driftwatch-rebalance-main/
+├── .kiro/                  # Product specifications and onboarding specs
+├── migrations/             # PostgreSQL database migration scripts
+├── public/                 # Static assets, fonts, and icons
+├── src/
+│   ├── api/                # Data access layers (Supabase CRUD & queries)
+│   ├── components/         # Reusable UI components
+│   │   ├── ui/             # Radix UI and custom styling primitives
+│   │   ├── Nav.tsx         # Responsive header navigation
+│   │   └── Globe.tsx       # Interactive 3D Canvas Globe
+│   ├── context/            # AuthContext for session management
+│   ├── lib/
+│   │   ├── drift-engine.ts # Math formulas: drift calculation, CAGR, IRR
+│   │   └── market-data.ts  # Ticker adapters for NSE/BSE and AMFI
+│   ├── pages/              # Main routing views
+│   │   ├── AboutUs.tsx     # Reverted typographic about page
+│   │   ├── Dashboard.tsx   # Portfolio command center
+│   │   ├── Onboarding.tsx  # Wizard setup for target allocations
+│   │   └── TaxHarvesting.tsx # Tax-optimized harvest breakdown
+│   ├── App.tsx             # Route declarations
+│   └── main.tsx            # App entrypoint
+├── vercel.json             # Vercel client-side routing rewrites and API proxies
+└── tailwind.config.ts      # Tailwind configuration & typography rules
 ```
 
 ---
 
-## Routes
+## 🚀 Getting Started
 
-| Route | Purpose |
-|---|---|
-| `/` | Landing page |
-| `/onboarding` | 2-step setup: name your portfolio and define target allocations |
-| `/dashboard` | Live drift tracking, health score, positions ledger, rebalance plan |
-| `/dashboard/tax-harvesting` | Tax implication breakdown per suggested trade |
-| `/learn-drift` | Explainer on how drift works and why it matters |
+### Prerequisites
 
+You will need the following installed:
+- [Node.js](https://nodejs.org/) (v18 or higher) or [Bun](https://bun.sh/)
+- [npm](https://www.npmjs.com/) (usually bundled with Node.js)
 
-## Authors
+### Installation
 
-**Aditya Nawle** 
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Adityanawle1/RatioX.git
+   cd RatioX
+   ```
 
-**Anantha Vishwa Priya**
+2. **Install dependencies:**
+   Using npm:
+   ```bash
+   npm install
+   ```
+   Or using Bun:
+   ```bash
+   bun install
+   ```
+
+3. **Configure Environment Variables:**
+   Create a `.env` file in the root directory based on the `.env.example` template:
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in your Supabase project URL, Anon Key, and optionally, API keys for live market news.
+
+4. **Launch the development server:**
+   Using npm:
+   ```bash
+   npm run dev
+   ```
+   Or using Bun:
+   ```bash
+   bun dev
+   ```
+   The site will be available locally at `http://localhost:5173`.
+
+5. **Build for production:**
+   ```bash
+   npm run build
+   ```
 
 ---
 
-## License 
+## 👥 Authors & Credits
 
+- **Aditya Nawle** — Core Architecture, Mathematical Engine & Audit Log Logic
+- **Sachin Jadhav** — Frontend Architecture, Broker Integrations & System Infrastructure
+- **Anantha Vishwa Priya** — Contributor
 
-Copyright (c) 2025 Aditya Nawle and Anantha Vishwa Priya. All rights reserved.
+---
 
-This repository and all of its contents are proprietary and confidential. No part of this codebase may be reproduced, copied, modified, merged, published, distributed, sublicensed, or sold in any form, by any means, without explicit prior written permission from both authors.
+## 📄 License
 
-Unauthorized use of this code is strictly prohibited.
+Copyright (c) 2025-2026 Aditya Nawle, Sachin Jadhav, and Anantha Vishwa Priya. All rights reserved.
+
+This repository and its contents are public for inspection and collaborative review. Direct commercial reproduction, distribution, or unauthorized packaging of this codebase is prohibited. For details, contact the authors.

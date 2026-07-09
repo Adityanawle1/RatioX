@@ -1,157 +1,140 @@
-# RatioX — Portfolio Rebalancing Intelligence
+# RatioX 
 
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev/)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-3ECF8E.svg?style=flat&logo=supabase)](https://supabase.com/)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg?style=flat)]()
+> **Live Platform:** [ratiox.in](https://ratiox.in)
 
-> Track drift. Restore balance. Defend your capital against hidden decay.
-
-RatioX is a state-of-the-art portfolio management and rebalancing intelligence platform specifically engineered for self-directed investors in India. It monitors **drift**—the silent deviation of actual asset allocations from target models caused by market fluctuations—and generates tax-optimized, commission-free rebalancing plans.
+An asset allocation monitor and portfolio rebalancing engine designed for self-directed investors in India. RatioX continuously tracks **portfolio drift**—the silent asset class deviation caused by market moves—and calculates tax-optimized rebalancing protocols to defend your capital against hidden fees and unnecessary risk.
 
 ---
 
-## 🔍 The Problem
+## 📐 The Problem of Portfolio Drift
 
-You establish a target asset allocation: **60% Equity, 30% Debt, 10% Gold**.
+When you design a target allocation (e.g., **60% Equity, 30% Debt, 10% Gold**), market movements will immediately begin to pull your portfolio out of alignment. If equities rally, your exposure could quietly drift to **75% Equity** without you buying a single share. 
 
-Over time, markets move. Equity rallies. Without purchasing any new shares, your actual allocation shifts to **75% Equity, 18% Debt, 7% Gold**. 
+This shifts your risk profile dramatically right before a correction. Conventional broker dashboards only show current value and absolute returns; they do not calculate target deviations, drift thresholds, or the tax impact of restoring balance.
 
-This is **drift**. It exposes your portfolio to risks you never signed up for and downdraws you didn't plan. Most investors only realize their portfolio has drifted during a market correction when it is already too late. Standard dashboards and brokerage accounts do not track this metric for you.
-
-RatioX does.
+RatioX resolves this by providing **mathematical monitoring** and **one-click rebalancing intelligence** directly on top of your existing holdings.
 
 ---
 
 ## ✨ Features
 
-### ⚖️ Drift Analysis Engine
-- Calculates asset allocation variance in real-time across fully custom asset classes.
-- Instantly alerts you when drift thresholds are breached.
-- Computes portfolio health indexes, weighted cost basis, and CAGR using Internal Rate of Return (IRR) math.
+### 1. Drift Analysis Engine
+Monitors the exact value gap between your actual and target asset classes. Drift is updated dynamically, checking against configured variance thresholds (e.g., alert if drift exceeds 5%).
 
-### 🧠 Rebalance Intelligence
-- Generates precise, tax-optimized buy/sell adjustment checklists.
-- Incorporates fresh capital inflows (SIPs or lump sums) dynamically, prioritizing purchasing underweight assets first to minimize exit loads and tax events.
+### 2. Tax-Optimized Rebalancing
+Generates buy and sell checklists to bring your portfolio back to target weights. 
+* **Inflow Intelligence**: Allows allocating fresh capital (SIPs or lump sums) directly into underweight assets, reducing the need to sell and triggering fewer tax events.
+* **Tax Safeguards**: Dynamically tags recommended transactions with Indian tax rules, classifying assets by holding periods into **LTCG** (Long Term Capital Gains: 12.5% tax) and **STCG** (Short Term Capital Gains: 20% tax) to avoid premature selling.
 
-### 📊 Fee Audit & Wealth Drain Projection
-- Audits mutual fund portfolios for hidden distributor commission kickbacks (regular vs. direct funds).
-- Projects the 30-year wealth decay impact of direct vs. regular mutual fund TER (Total Expense Ratio).
+### 3. Mutual Fund Fee Audits
+A tracking utility that exposes the compounding wealth decay of regular mutual funds vs. direct funds. It models 30-year projections of your holdings to show how much is lost to silent distributor commission kickbacks.
 
-### 🏦 Supported Broker Integrations
-- Streamlines portfolio data ingest with parser adapters for CAMS/KFintech Consolidated Account Statements (CAS).
-- Integrates cleanly with major Indian brokers including **Zerodha**, **Upstox**, and **Groww**.
-
-### 💸 Tax Harvesting Safeguards
-- Pre-calculates tax categories (LTCG vs. STCG) for every recommended transaction.
-- Aligns recommendations with Indian Income Tax rules to prevent accidental short-term tax events.
-
-### 🌐 Live Instrument Search
-- Features a unified search bar parsing NSE/BSE equities, AMFI mutual funds, and ETFs.
-- Resolves ticker formats natively via a secure Yahoo Finance API proxy.
+### 4. Broker Adaptability
+Provides support for uploading Consolidated Account Statements (CAS) from **CAMS** and **KFintech**, with integration capabilities for major Indian brokerages such as **Zerodha**, **Upstox**, and **Groww**.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Code Architecture & Math
 
-- **Frontend**: React 18, Vite 5, TypeScript 5
-- **Styling**: Vanilla Tailwind CSS 3 + custom glassmorphic DriftWatch design system
-- **State Management**: TanStack Query (React Query) v5
-- **Database & Auth**: Supabase (PostgreSQL, GoTrue Auth)
-- **Charts**: Recharts
-- **Animations / 3D**: Three.js, React Three Fiber, Framer Motion primitives
-- **Package Manager**: npm / Bun
+The platform's core logic is managed in [drift-engine.ts](file:///c:/Users/nawal/OneDrive/Documents/rebalancerrrrrrrrr98990/driftwatch-rebalance-main/src/lib/drift-engine.ts). It enforces strict mathematical logic for portfolio health and drift thresholds:
+
+### Portfolio Drift Formula
+$$\text{Drift} = \text{Current \%} - \text{Target \%}$$
+$$\text{Value Gap} = \left(\frac{\text{Target \%}}{100} \times \text{Total Portfolio Value}\right) - \text{Current Value}$$
+
+### Health Score Model
+The platform assigns a composite score from $0$ to $100$ based on target deviations:
+$$\text{Health Score} = 100 - (\text{Average Absolute Deviation} \times 2)$$
+
+```typescript
+// Core implementation from src/lib/drift-engine.ts
+export function calculateHealthScore(driftResults: DriftResult[]): number {
+  if (driftResults.length === 0) return 0;
+
+  const deviations = driftResults.map(d => Math.abs(d.drift));
+  const avgDeviation = deviations.reduce((sum, dev) => sum + dev, 0) / deviations.length;
+  
+  // Perfectly balanced portfolio (0% deviation) → 100 health
+  const healthScore = Math.max(0, 100 - (avgDeviation * 2));
+  return parseFloat(healthScore.toFixed(1));
+}
+```
 
 ---
 
-## 📂 Project Structure
+## ⚙️ Tech Stack
+
+* **Client**: React 18, Vite 5, TypeScript 5, Tailwind CSS
+* **Design System**: Glassmorphic DriftWatch HUD using Radix UI primitives & Lucide icons
+* **Data Flow**: TanStack Query (React Query) v5
+* **Data Layer**: Supabase (PostgreSQL tables, database triggers, Row Level Security)
+* **3D Visuals**: Three.js & React Three Fiber (interactive canvas globe)
+* **Market Adapter**: Yahoo Finance API integration (via secure server rewrite rules) + AMFI live NAV integration
+
+---
+
+## 📁 Repository Structure
 
 ```
-driftwatch-rebalance-main/
-├── .kiro/                  # Product specifications and onboarding specs
-├── migrations/             # PostgreSQL database migration scripts
-├── public/                 # Static assets, fonts, and icons
+├── .kiro/                  # Product specifications and wizard specs
+├── migrations/             # PostgreSQL database schemas and table definitions
 ├── src/
-│   ├── api/                # Data access layers (Supabase CRUD & queries)
-│   ├── components/         # Reusable UI components
-│   │   ├── ui/             # Radix UI and custom styling primitives
-│   │   ├── Nav.tsx         # Responsive header navigation
-│   │   └── Globe.tsx       # Interactive 3D Canvas Globe
-│   ├── context/            # AuthContext for session management
+│   ├── api/                # Supabase database CRUD operations
+│   ├── components/         # HUD layout panels, 3D Globe, magnetic buttons
+│   ├── context/            # Authentication context and session tracking
 │   ├── lib/
-│   │   ├── drift-engine.ts # Math formulas: drift calculation, CAGR, IRR
-│   │   └── market-data.ts  # Ticker adapters for NSE/BSE and AMFI
-│   ├── pages/              # Main routing views
-│   │   ├── AboutUs.tsx     # Reverted typographic about page
-│   │   ├── Dashboard.tsx   # Portfolio command center
-│   │   ├── Onboarding.tsx  # Wizard setup for target allocations
-│   │   └── TaxHarvesting.tsx # Tax-optimized harvest breakdown
-│   ├── App.tsx             # Route declarations
+│   │   ├── drift-engine.ts # Core formulas (CAGR, tax, rebalance orders)
+│   │   └── market-data.ts  # Ticker normalization for NSE/BSE & AMFI APIs
+│   ├── pages/              # Main router entrypages (Dashboard, AboutUs, LearnDrift)
 │   └── main.tsx            # App entrypoint
-├── vercel.json             # Vercel client-side routing rewrites and API proxies
-└── tailwind.config.ts      # Tailwind configuration & typography rules
+├── vercel.json             # Reverse proxy routing rules for market API requests
+└── tailwind.config.ts      # Tokens for the dark-theme HUD interface
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Environment Setup
 
-### Prerequisites
+Copy the environment variables template file:
+```bash
+cp .env.example .env
+```
 
-You will need the following installed:
-- [Node.js](https://nodejs.org/) (v18 or higher) or [Bun](https://bun.sh/)
-- [npm](https://www.npmjs.com/) (usually bundled with Node.js)
+Define the connection variables in your `.env`:
+```ini
+# Supabase Project Credentials
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
 
-### Installation
+# Live Market API Keys (Optional, fallback mock data is used if empty)
+VITE_ALPHA_VANTAGE_API_KEY=your-alpha-vantage-key
+VITE_NEWSDATA_API_KEY=your-newsdata-key
+```
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Adityanawle1/RatioX.git
-   cd RatioX
-   ```
+### Running Locally
 
-2. **Install dependencies:**
-   Using npm:
+1. **Install dependencies:**
    ```bash
    npm install
-   ```
-   Or using Bun:
-   ```bash
+   # or
    bun install
    ```
 
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory based on the `.env.example` template:
-   ```bash
-   cp .env.example .env
-   ```
-   Fill in your Supabase project URL, Anon Key, and optionally, API keys for live market news.
-
-4. **Launch the development server:**
-   Using npm:
-   ```bash
-   npm run dev
-   ```
-   Or using Bun:
-   ```bash
-   bun dev
-   ```
-   The site will be available locally at `http://localhost:5173`.
-
-5. **Build for production:**
+2. **Run build verification:**
    ```bash
    npm run build
    ```
 
+3. **Deploy to your production domain:**
+   The codebase is configured for seamless deployment on Vercel. Pushing to your production branch will trigger auto-builds serving the application at [ratiox.in](https://ratiox.in).
+
 ---
 
-## 👥 Authors & Credits
+## 👥 Authors & Contributions
 
-- **Aditya Nawle** — Core Architecture, Mathematical Engine & Audit Log Logic
-- **Sachin Jadhav** — Frontend Architecture, Broker Integrations & System Infrastructure
-- **Anantha Vishwa Priya** — Contributor
+* **Aditya Nawle** — Core Architecture, Mathematical Engine & Audit Log Logic
+* **Sachin Jadhav** — Frontend Architecture, Broker Integrations & System Infrastructure
+* **Anantha Vishwa Priya** — Contributor
 
 ---
 
@@ -159,4 +142,4 @@ You will need the following installed:
 
 Copyright (c) 2025-2026 Aditya Nawle, Sachin Jadhav, and Anantha Vishwa Priya. All rights reserved.
 
-This repository and its contents are public for inspection and collaborative review. Direct commercial reproduction, distribution, or unauthorized packaging of this codebase is prohibited. For details, contact the authors.
+This repository is public for collaborative review and code auditing. Direct commercial repackaging, redistribution, or production mirroring of this codebase without the authors' prior consent is prohibited.

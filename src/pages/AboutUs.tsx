@@ -172,8 +172,8 @@ const AboutUs: React.FC = () => {
 
             <FounderCard 
               number="02"
-              name="Sachin"
-              surname="JADHAV"
+              name="Anantha"
+              surname="VISHWA PRIYA"
               description="Complexity is a tax on the uninformed. We built this protocol because if mutual funds won't give you transparency, we will build it ourselves."
               svgContent={{
                 icon: <svg width="28" height="28" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="6" className="text-[#666] group-hover:text-black transition-colors"><circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-20 50 50)"/></svg>,

@@ -133,13 +133,12 @@ VITE_NEWSDATA_API_KEY=your-newsdata-key
 ## 👥 Authors & Contributions
 
 * **Aditya Nawle** — Core Architecture, Mathematical Engine & Audit Log Logic
-* **Sachin Jadhav** — Frontend Architecture, Broker Integrations & System Infrastructure
-* **Anantha Vishwa Priya** — Contributor
+* **Anantha Vishwa Priya** — Frontend Architecture, Broker Integrations & System Infrastructure
 
 ---
 
 ## 📄 License
 
-Copyright (c) 2025-2026 Aditya Nawle, Sachin Jadhav, and Anantha Vishwa Priya. All rights reserved.
+Copyright (c) 2025-2026 Aditya Nawle and Anantha Vishwa Priya. All rights reserved.
 
 This repository is public for collaborative review and code auditing. Direct commercial repackaging, redistribution, or production mirroring of this codebase without the authors' prior consent is prohibited.

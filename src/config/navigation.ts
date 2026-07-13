@@ -12,9 +12,7 @@ export const MAIN_NAVIGATION: NavLink[] = [
       { label: "Learn Drift", href: "/learn-drift" },
     ]
   },
-  { label: "Market News", href: "/news" },
   { label: "About", href: "/about" },
-  { label: "Manifesto", href: "/manifesto" },
   {
     label: "Resources",
     children: [

@@ -23,10 +23,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import AboutUs from "./pages/AboutUs.tsx";
-import Manifesto from "./pages/Manifesto.tsx";
 import Security from "./pages/Security.tsx";
 import HelpCenter from "./pages/HelpCenter.tsx";
-import MarketNews from "./pages/MarketNews";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,13 +61,11 @@ const App = () => (
               <Route path="/learn-drift" element={<ProtectedRoute><LearnDrift /></ProtectedRoute>} />
               <Route path="/dashboard/tax-harvesting" element={<ProtectedRoute><TaxHarvesting /></ProtectedRoute>} />
               <Route path="/dashboard/fee-audit" element={<ProtectedRoute><FeeAudit /></ProtectedRoute>} />
-              <Route path="/news" element={<MarketNews />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<AboutUs />} />
-              <Route path="/manifesto" element={<Manifesto />} />
               <Route path="/security" element={<Security />} />
               <Route path="/help" element={<HelpCenter />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

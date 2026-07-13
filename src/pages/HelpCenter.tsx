@@ -67,7 +67,7 @@ const HelpCenter = () => {
             />
             <FAQItem 
               question="Do I need to pay for RatioX?" 
-              answer={<>No, RatioX is completely free to use. We do not charge subscriptions, nor do we run ads on the platform. However, running the platform costs money. If we helped you save money, you can choose to support us by visiting the <a href="/manifesto" className="text-white underline decoration-[#444] hover:decoration-white">Manifesto page</a>.</>}
+              answer="No, RatioX is completely free to use. We do not charge subscriptions, nor do we run ads on the platform."
             />
             <FAQItem 
               question="Is it safe to upload my CAS (Consolidated Account Statement)?" 
